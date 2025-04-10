@@ -1,0 +1,50 @@
+<section class="container mx-auto px-4">
+  <section class="hero min-h-[50vh] bg-base-200 rounded-lg">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">ngx-supabase-stripe</h1>
+        <p class="py-6">
+          A powerful Angular library for integrating Supabase and Stripe payments in your applications.
+          Test different payment scenarios with our demo app.
+        </p>
+        <div class="flex gap-4 justify-center flex-wrap">
+          <a routerLink="/checkout" class="btn btn-primary">Try Checkout</a>
+          <a routerLink="/subscriptions" class="btn btn-secondary">Try Subscriptions</a>
+          <a routerLink="/payouts" class="btn btn-accent">Try Payouts</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">One-time Payments</h2>
+        <p>Process one-time payments with Stripe's secure checkout flow integrated with Supabase authentication.</p>
+        <div class="card-actions justify-end">
+          <a routerLink="/checkout" class="btn btn-primary btn-sm">Try Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">Subscriptions</h2>
+        <p>Set up recurring payment plans and manage subscriptions with full customer management.</p>
+        <div class="card-actions justify-end">
+          <a routerLink="/subscriptions" class="btn btn-primary btn-sm">Try Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">Payouts</h2>
+        <p>Handle complex marketplace scenarios with secure payouts to connected accounts.</p>
+        <div class="card-actions justify-end">
+          <a routerLink="/payouts" class="btn btn-primary btn-sm">Try Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</section> 

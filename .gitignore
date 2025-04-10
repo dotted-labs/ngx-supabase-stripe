@@ -20,6 +20,9 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 
+# Environment local files with sensitive data
+**/environment.local.ts
+**/environment.prod.ts
 # Visual Studio Code
 .vscode/*
 !.vscode/settings.json
@@ -36,6 +39,10 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+
+# MCP
+.cursor/mcp.json
+.cursor/rules/think
 
 # System files
 .DS_Store

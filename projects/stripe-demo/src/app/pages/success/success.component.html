@@ -1,0 +1,31 @@
+<section class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow-xl max-w-lg mx-auto mt-8">
+    <div class="card-body items-center text-center">
+      <div class="text-success mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 class="card-title text-3xl">Payment Successful!</h2>
+      <p class="py-4">Thank you for your payment. Your transaction has been completed successfully.</p>
+      <div class="card-actions">
+        <a routerLink="/" class="btn btn-primary">Return to Home</a>
+        <a routerLink="/checkout" class="btn btn-outline">Make Another Payment</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup-browser border border-base-300 max-w-3xl mx-auto mt-12">
+    <div class="mockup-browser-toolbar">
+      <div class="input border border-base-300">Payment Confirmation</div>
+    </div>
+    <div class="bg-base-200 px-4 py-8 text-center">
+      <p class="text-lg">Order has been registered in our system</p>
+      <div class="mockup-code mt-4 text-left inline-block">
+        <pre data-prefix=">" class="text-success"><code>Payment processed</code></pre>
+        <pre data-prefix=">" class="text-success"><code>Receipt sent to email</code></pre>
+        <pre data-prefix=">" class="text-success"><code>Order ID: {{ orderId }}</code></pre>
+      </div>
+    </div>
+  </div>
+</section> 

@@ -1,0 +1,33 @@
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('../../../stripe-demo/src/app/pages/home/home.component').then(m => m.HomeComponent)
+  },
+  {
+    path: 'checkout',
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('../../../stripe-demo/src/app/pages/checkout/checkout.component').then(m => m.CheckoutComponent)
+      },
+      {
+        path: 'result',
+        loadComponent: () => import('../../../stripe-demo/src/app/pages/checkout/result/checkout-result.component').then(m => m.CheckoutResultComponent)
+      }
+    ]
+  },
+  {
+    path: 'subscriptions',
+    loadComponent: () => import('../../../stripe-demo/src/app/pages/subscriptions/subscriptions.component').then(m => m.SubscriptionsComponent)
+  },
+  {
+    path: 'payouts',
+    loadComponent: () => import('../../../stripe-demo/src/app/pages/payouts/payouts.component').then(m => m.PayoutsComponent)
+  },
+  {
+    path: '**',
+    redirectTo: ''
+  }
+];

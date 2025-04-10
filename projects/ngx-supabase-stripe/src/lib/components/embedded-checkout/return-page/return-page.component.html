@@ -1,0 +1,61 @@
+<div class="return-page-container">
+  <!-- Estado de carga -->
+  @if (checkoutStore.isStatusLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Verificando el estado de tu pago...</p>
+    </div>
+  }
+
+  <!-- Estado de éxito: Payment complete -->
+  @if (checkoutStore.isStatusSuccess() && checkoutStore.isPaymentComplete()) {
+    <div class="status-container success">
+      <div class="status-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 class="status-title">¡Pago completado con éxito!</h2>
+      <p class="status-message">Tu pago ha sido procesado correctamente.</p>
+      <div class="button-container">
+        <button class="status-button" (click)="navigate()">Volver</button>
+      </div>
+    </div>
+  }
+
+  <!-- Estado de procesamiento: Payment open -->
+  @if (checkoutStore.isStatusSuccess() && checkoutStore.isPaymentProcessing()) {
+    <div class="status-container processing">
+      <div class="status-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 class="status-title">Pago en procesamiento</h2>
+      <p class="status-message">Tu pago está siendo procesado. Recibirás una confirmación por correo electrónico cuando se complete.</p>
+      <div class="button-container">
+        <button class="status-button" (click)="navigate()">Volver</button>
+      </div>
+    </div>
+  }
+
+  <!-- Estado de error -->
+  @if (checkoutStore.isStatusError()) {
+    <div class="status-container error">
+      <div class="status-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+      </div>
+      <h2 class="status-title">Ha ocurrido un error</h2>
+      @if (checkoutStore.error()) {
+        <p class="status-message">{{ checkoutStore.error() }}</p>
+      } @else {
+        <p class="status-message">No se pudo procesar el pago. Por favor, inténtalo de nuevo o contacta con soporte.</p>
+      }
+      <div class="button-container">
+        <button class="status-button" (click)="navigate()">Volver</button>
+      </div>
+    </div>
+  }
+</div> 
