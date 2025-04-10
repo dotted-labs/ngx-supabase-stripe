@@ -31,11 +31,11 @@
             <div class="badge badge-error">Inactive</div>
           }
           
-          <!--@if (product?.default_price) {
+          @if (product.price_details) {
             <div class="text-xl font-bold mt-2">
-              {{ formatPrice(product.default_price) }}
+              {{ formatPrice(product.price_details) }}
             </div>
-          }-->
+          }
          
           <div class="card-actions justify-end mt-4">
             <button class="btn btn-primary" [disabled]="!product.active" (click)="onProductSelect(product)">

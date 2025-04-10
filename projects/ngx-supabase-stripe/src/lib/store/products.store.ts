@@ -1,10 +1,13 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { SupabaseClientService, StripeProduct } from '../services/supabase-client.service';
+import { SupabaseClientService, StripeProduct, StripePrice } from '../services/supabase-client.service';
 
 export type StripeProductPublic = Omit<StripeProduct, 'attrs'> & {
   images: string[];
+  price_details: StripePricePublic | null;
 }
+
+export type StripePricePublic = Omit<StripePrice, 'attrs'>;
 
 /**
  * Status of the products loading process
@@ -17,6 +20,8 @@ export type ProductsStatus = 'idle' | 'loading' | 'success' | 'error';
 type ProductsState = {
   // The list of products from Stripe
   products: StripeProductPublic[] | null;
+  // The list of prices from Stripe
+  prices: StripePricePublic[] | null;
   // The current status of the products loading process
   status: ProductsStatus;
   // Error message if any
@@ -28,6 +33,7 @@ type ProductsState = {
  */
 const initialProductsState: ProductsState = {
   products: null,
+  prices: null,
   status: 'idle',
   error: null
 };
@@ -53,38 +59,43 @@ export const ProductsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { data, error } = await supabaseService.selectStripeProducts();
+        const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
+        const { data: stripeProducts, error: productsError } = await supabaseService.selectStripeProducts();
 
-        console.log('🚀 [ProductsStore]: products', data);
-        console.log('🚀 [ProductsStore]: error', error);
-
-        if (error) {
+        if (pricesError) {
+          console.error('🚨 [ProductsStore]: Error loading prices', pricesError);
           patchState(store, {
             status: 'error',
-            error: (error as Error).message,
+            error: (pricesError as Error).message,
           });
-        } else {
-          const products: StripeProductPublic[] = [];
+        }
 
-          data.forEach(product => {
-            const { attrs, ...mainProperties } = product;
-
-            products.push({
-              ...mainProperties,
-              images: (attrs as any)?.images
-            });
-          });
-
-          //const transformProducts = (products: StripeProduct[]): StripeProductPublic[] => {
-          //  return products.map(transformProduct);
-          //};
-
-          console.log('🚀 [ProductsStore]: products parsed with images', products);
-
+        if (productsError) {
+          console.error('🚨 [ProductsStore]: Error loading products', productsError);
           patchState(store, {
-            status: 'success',
-            products: products
+            status: 'error',
+            error: (productsError as Error).message,
           });
+        }
+
+        if (prices && stripeProducts) {
+          {
+            const products: StripeProductPublic[] = [];
+  
+            stripeProducts.forEach(product => {
+              const { attrs, ...mainProperties } = product;
+              products.push({
+                ...mainProperties,
+                images: (attrs as any)?.images,
+                price_details: prices.find(price => price.product === product.id) || null
+              });
+            });
+  
+            patchState(store, {
+              status: 'success',
+              products: products
+            });
+          }
         }
 
       } catch (error) {
@@ -112,4 +123,4 @@ export const ProductsStore = signalStore(
       console.log('🧹 [ProductsStore] destroyed');
     }
   })
-) 
+)
