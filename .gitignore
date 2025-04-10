@@ -21,7 +21,7 @@ yarn-error.log
 *.sublime-workspace
 
 # Environment local files with sensitive data
-**/environment.local.ts
+**/environment.ts
 **/environment.prod.ts
 # Visual Studio Code
 .vscode/*
