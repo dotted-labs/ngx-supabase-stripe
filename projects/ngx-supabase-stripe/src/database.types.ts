@@ -15,6 +15,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_stripe_prices: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          currency: string
+          active: boolean
+          product: string
+          unit_amount: number
+          type: string
+          attrs: Json
+        }[]
+      }
       get_stripe_products: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -25,10 +37,6 @@ export type Database = {
           description: string
           attrs: Json
         }[]
-      }
-      test_function: {
-        Args: Record<PropertyKey, never>
-        Returns: unknown[]
       }
     }
     Enums: {
@@ -94,6 +102,39 @@ export type Database = {
         }
         Relationships: []
       }
+      prices: {
+        Row: {
+          active: boolean | null
+          attrs: Json | null
+          created: string | null
+          currency: string | null
+          id: string | null
+          product: string | null
+          type: string | null
+          unit_amount: number | null
+        }
+        Insert: {
+          active?: boolean | null
+          attrs?: Json | null
+          created?: string | null
+          currency?: string | null
+          id?: string | null
+          product?: string | null
+          type?: string | null
+          unit_amount?: number | null
+        }
+        Update: {
+          active?: boolean | null
+          attrs?: Json | null
+          created?: string | null
+          currency?: string | null
+          id?: string | null
+          product?: string | null
+          type?: string | null
+          unit_amount?: number | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           active: boolean | null
@@ -124,6 +165,33 @@ export type Database = {
           id?: string | null
           name?: string | null
           updated?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          attrs: Json | null
+          currency: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          customer: string | null
+          id: string | null
+        }
+        Insert: {
+          attrs?: Json | null
+          currency?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          customer?: string | null
+          id?: string | null
+        }
+        Update: {
+          attrs?: Json | null
+          currency?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          customer?: string | null
+          id?: string | null
         }
         Relationships: []
       }

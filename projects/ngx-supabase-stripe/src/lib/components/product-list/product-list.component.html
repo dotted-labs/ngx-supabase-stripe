@@ -20,6 +20,12 @@
           </figure>
         }
         <div class="card-body">
+          @if (product.price_details) {
+            <div class="text-xxl font-bold mt-2">
+              {{ formatPrice(product.price_details) }}
+            </div>
+          }
+         
           <h2 class="card-title">{{ product.name }}</h2>
           @if (product.description) {
             <p>{{ product.description }}</p>
@@ -31,12 +37,6 @@
             <div class="badge badge-error">Inactive</div>
           }
           
-          <!--@if (product?.default_price) {
-            <div class="text-xl font-bold mt-2">
-              {{ formatPrice(product.default_price) }}
-            </div>
-          }-->
-         
           <div class="card-actions justify-end mt-4">
             <button class="btn btn-primary" [disabled]="!product.active" (click)="onProductSelect(product)">
               {{ buttonText() }}

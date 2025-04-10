@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { createClient, QueryData, SupabaseClient } from '@supabase/supabase-js';
-import { SUPABASE_CONFIG } from '../config/supabase.config';
+import { inject, Injectable } from '@angular/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '../../database.types';
+import { SUPABASE_CONFIG } from '../config/supabase.config';
 
 // Stripe Schema Types
 type StripeSchemaType = Database['stripe'];
@@ -19,6 +19,9 @@ export type StripeCheckoutSession = Omit<StripeCheckoutSessionRow, 'created' | '
 
 type StripePaymentIntentRow = StripeRowType<'payment_intents'>;
 export type StripePaymentIntent = Omit<StripePaymentIntentRow, 'created' | 'updated'>;
+
+type StripePriceRow = StripeRowType<'prices'>;
+export type StripePrice = Omit<StripePriceRow, 'created' | 'updated'>;
 
 // Global Stripe type table con prefijo 'stripe.'
 type StripeTables = keyof StripeSchemaType['Tables'];
@@ -45,17 +48,6 @@ export class SupabaseClientService {
    */
   public getClient(): SupabaseClient<Database> {
     return this.client;
-  }
-
-  /**
-   * Select Stripe products
-   * @param query Optional query parameters
-   */
-  public async selectStripeProducts() {
-    return this.client
-      .schema('public')
-      .rpc('get_stripe_products')
-      .select('*');
   }
 
   /**
@@ -87,6 +79,67 @@ export class SupabaseClientService {
   ): Promise<{ data: StripePaymentIntent[] | null; error: Error | null }> {
     return this.select<StripePaymentIntent>('payment_intents', query);
   }
+
+  /**
+   * STRIPE PRICES
+   */
+
+  /**
+   * Select Stripe prices
+   * @param query Optional query parameters
+   */
+  public async selectStripePrices() {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_prices')
+      .select('*');
+  }
+
+  
+  /**
+   * STRIPE PRODUCTS
+  */
+
+  /**
+   * Select Stripe products
+   * @param query Optional query parameters
+   */
+  public async selectStripeProducts() {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_products')
+      .select('*');
+  }
+
+  /**
+   * Update a product
+   * @param id The product ID
+   * @param data The product data to update
+   */
+  public async updateProduct(
+    id: string,
+    data: StripeUpdateType<'products'>
+  ): Promise<{ data: StripeProduct | null; error: Error | null }> {
+    return this.update<StripeProduct>(
+      'products',
+      data,
+      { id }
+    );
+  }
+
+  /**
+   * Delete a product
+   * @param id The product ID
+   */
+  public async deleteProduct(
+    id: string
+  ): Promise<{ data: StripeProduct | null; error: Error | null }> {
+    return this.delete<StripeProduct>('products', { id });
+  }
+
+  /**
+   * CLIENT GENERIC FUNCTIONS
+  */
 
   /**
    * Select data from a table
@@ -199,21 +252,6 @@ export class SupabaseClientService {
     }
   }
 
-  /**
-   * Update a product
-   * @param id The product ID
-   * @param data The product data to update
-   */
-  public async updateProduct(
-    id: string,
-    data: StripeUpdateType<'products'>
-  ): Promise<{ data: StripeProduct | null; error: Error | null }> {
-    return this.update<StripeProduct>(
-      'products',
-      data,
-      { id }
-    );
-  }
 
   /**
    * Delete data from a table
@@ -246,15 +284,5 @@ export class SupabaseClientService {
     } catch (error) {
       return { data: null, error: error as Error };
     }
-  }
-
-  /**
-   * Delete a product
-   * @param id The product ID
-   */
-  public async deleteProduct(
-    id: string
-  ): Promise<{ data: StripeProduct | null; error: Error | null }> {
-    return this.delete<StripeProduct>('products', { id });
   }
 }

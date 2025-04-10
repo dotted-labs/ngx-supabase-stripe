@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, inject, output, OnInit, computed } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
-import { StripeProductPublic } from '../../store/products.store';
+import { StripePricePublic, StripeProductPublic } from '../../store/products.store';
 
 @Component({
   selector: 'lib-product-list',
@@ -34,7 +34,7 @@ export class ProductListComponent implements OnInit {
     this.productSelected.emit(product);
   }
 
-  formatPrice(price: any): string {
+  formatPrice(price: StripePricePublic): string {
     if (!price || !price.unit_amount) {
       return 'Price unavailable';
     }

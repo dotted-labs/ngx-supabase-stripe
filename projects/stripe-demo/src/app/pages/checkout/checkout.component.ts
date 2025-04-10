@@ -24,7 +24,7 @@ export class CheckoutComponent {
   public readonly useStripeProducts = signal(false);
 
   public selectPrice(product: StripeProductPublic): void {
-    this.selectedPrice.set(product.default_price);
+    this.selectedPrice.set(product.price_details?.id || product.default_price);
   }
 
   public resetSelection(): void {
