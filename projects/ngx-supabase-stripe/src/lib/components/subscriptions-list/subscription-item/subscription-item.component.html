@@ -1,0 +1,114 @@
+<div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+  <div class="card-body p-4">
+    <div class="flex justify-between">
+      <div>
+        <h3 class="card-title text-lg">
+          {{ subscription().plan?.nickname || 'Plan' }}
+          
+          @if (subscription().status === 'active') {
+            <span class="badge badge-success ml-2">Activa</span>
+          } @else if (subscription().status === 'canceled') {
+            <span class="badge badge-error ml-2">Cancelada</span>
+          } @else if (subscription().status === 'past_due') {
+            <span class="badge badge-warning ml-2">Pendiente de pago</span>
+          } @else if (subscription().status === 'paused') {
+            <span class="badge badge-ghost ml-2">Pausada</span>
+          } @else {
+            <span class="badge ml-2">{{ subscription().status }}</span>
+          }
+        </h3>
+        <p class="text-gray-600 text-sm">
+          ID: {{ subscription().id }}
+        </p>
+      </div>
+      
+      <div class="flex gap-2">
+        <button class="btn btn-sm btn-ghost" (click)="toggleExpand()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+          {{ isExpanded ? 'Ocultar' : 'Detalles' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="subscription-details mt-2">
+      <div class="flex justify-between text-sm">
+        <div>
+          <span class="font-medium">Precio:</span> {{ formatAmount(subscription().plan?.amount, subscription().currency) }}
+        </div>
+        <div>
+          <span class="font-medium">Período:</span> {{ subscription().plan?.interval_count || 1 }} {{ subscription().plan?.interval || 'mes' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Expanded Details -->
+    @if (isExpanded) {
+      <div class="subscription-expanded mt-4 border-t pt-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 class="text-md font-semibold mb-2">Detalles del Plan</h4>
+            <ul class="space-y-1 text-sm">
+              <li><span class="font-medium">Inicio:</span> {{ formatDate(subscription().start_date) }}</li>
+              <li><span class="font-medium">Renovación:</span> {{ formatDate(subscription().current_period_end) }}</li>
+              <li><span class="font-medium">Método de pago:</span> {{ subscription().default_payment_method?.card?.brand || 'No establecido' }}</li>
+            </ul>
+          </div>
+          
+          <!-- Metadata Editing Section -->
+          <div>
+            <h4 class="text-md font-semibold mb-2">Metadatos 
+              <button class="btn btn-xs btn-ghost ml-2" (click)="toggleEditMode()">
+                {{ isEditMode ? 'Cancelar' : 'Editar' }}
+              </button>
+            </h4>
+            
+            <!--@if (isEditMode) {
+              <div class="metadata-editor">
+                @for (key of Object.keys(editedMetadata); track key) {
+                  <div class="form-control mb-2">
+                    <label class="label">
+                      <span class="label-text text-xs">{{ key }}</span>
+                    </label>
+                    <input type="text" [(ngModel)]="editedMetadata[key]" class="input input-sm input-bordered" />
+                  </div>
+                }
+                
+                <button class="btn btn-sm btn-primary mt-2" [disabled]="isUpdating" (click)="updateSubscription()">
+                  {{ isUpdating ? 'Guardando...' : 'Guardar cambios' }}
+                </button>
+              </div>
+            } @else if (subscription().metadata) {
+              <div class="metadata-display space-y-1 text-sm">
+                @for (key of Object.keys(subscription().metadata); track key) {
+                  <div>
+                    <span class="font-medium">{{ key }}:</span> {{ subscription().metadata[key] }}
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-sm text-gray-500">No hay metadatos definidos</p>
+            }-->
+          </div>
+        </div>
+          
+        <!-- Action Buttons -->
+        <div class="card-actions mt-4 justify-end">
+          @if (subscription().status === 'active') {
+            <button class="btn btn-sm btn-error" (click)="cancelSubscription()">
+              {{ isConfirmingCancel ? '¿Confirmar cancelación?' : 'Cancelar suscripción' }}
+            </button>
+            @if (isConfirmingCancel) {
+              <button class="btn btn-sm btn-ghost" (click)="cancelConfirmation()">No</button>
+            }
+          }
+          
+          @if (subscription().status === 'paused') {
+            <button class="btn btn-sm btn-primary" (click)="resumeSubscription()">Reanudar suscripción</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div> 

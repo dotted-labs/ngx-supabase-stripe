@@ -16,26 +16,26 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { priceId, resultPagePath } = await req.json();
+    // Get customer ID from auth context
+    const auth = req.headers.get('Authorization')?.split(' ')[1];
+    if (!auth) {
+      throw new Error('No authorization header');
+    }
+    
+    // Decode JWT to get user info (would need implementation based on your auth strategy)
+    // For example purposes, we'll assume we can get a customer ID
+    const customerId = 'cus_example'; // Replace with actual customer ID retrieval logic
+    
+    console.log('🔌 [list_subscriptions]: Listing subscriptions for customer', customerId);
 
-    console.log('🔌 [checkout_session]: Creating checkout session', priceId, resultPagePath);
-
-    const session = await stripe.checkout.sessions.create({
-      ui_mode: 'embedded',
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1
-        }
-      ],
-      mode: 'payment',
-      return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+      status: 'all',
+      expand: ['data.default_payment_method']
     });
 
-    console.log('🔌 [checkout_session]: Checkout session created', session);
-    return new Response(JSON.stringify({
-      clientSecret: session.client_secret
-    }), {
+    console.log('🔌 [list_subscriptions]: Found', subscriptions.data.length, 'subscriptions');
+    return new Response(JSON.stringify(subscriptions.data), {
       headers: {
         ...corsHeaders,
         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ Deno.serve(async (req: Request) => {
       status: 200
     });
   } catch (error: unknown) {
-    console.error('[❌ checkout_session error]: ', error);
+    console.error('[❌ list_subscriptions error]: ', error);
     return new Response(JSON.stringify({
       error: 'An unknown error occurred'
     }), {
@@ -61,9 +61,8 @@ Deno.serve(async (req: Request) => {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/checkout_session' \
+  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/list_subscriptions' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
+    --header 'Content-Type: application/json'
 
-*/
+*/ 

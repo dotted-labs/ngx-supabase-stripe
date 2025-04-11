@@ -1,6 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { SupabaseClientService, StripeProduct, StripePrice } from '../services/supabase-client.service';
+import { StripePrice, StripeProduct } from '../models/database.model';
+import { SupabaseClientService } from '../services/supabase-client.service';
 
 export type StripeProductPublic = Omit<StripeProduct, 'attrs'> & {
   images: string[];
@@ -114,10 +115,8 @@ export const ProductsStore = signalStore(
     }
   })),
   withHooks({
-    onInit(store) {
+    onInit() {
       console.log('🔍 [ProductsStore] initialized');
-      // Automatically load products when the store is initialized
-      //store.loadProducts();
     },
     onDestroy() {
       console.log('🧹 [ProductsStore] destroyed');
