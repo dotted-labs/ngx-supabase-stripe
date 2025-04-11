@@ -3,17 +3,17 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   EmbeddedSubscriptionComponent,
+  ProductListComponent,
   StripeProductPublic,
-  SubscriptionsListComponent,
-  ProductListComponent
+  SubscriptionsListComponent
 } from '@ngx-supabase-stripe';
 
 @Component({
   selector: 'app-subscriptions',
   standalone: true,
   imports: [
-    RouterLink, 
     CommonModule, 
+    RouterLink, 
     EmbeddedSubscriptionComponent, 
     SubscriptionsListComponent,
     ProductListComponent

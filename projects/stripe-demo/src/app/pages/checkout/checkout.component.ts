@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { EmbeddedCheckoutComponent, StripeProductPublic } from '@ngx-supabase-stripe';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { ProductListComponent } from '@ngx-supabase-stripe';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { EmbeddedCheckoutComponent, ProductListComponent, StripeProductPublic } from '@ngx-supabase-stripe';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     EmbeddedCheckoutComponent, 
     ProductListComponent
   ],
@@ -16,8 +16,6 @@ import { ProductListComponent } from '@ngx-supabase-stripe';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckoutComponent {
-  private readonly router = inject(Router);
-
   public readonly selectedPrice = signal<string | null>(null);
   public readonly isLoading = signal(false);
   public readonly error = signal<string | null>(null);
@@ -33,10 +31,6 @@ export class CheckoutComponent {
 
   public onProductSelected(product: StripeProductPublic): void {
     this.selectPrice(product);
-  }
-
-  public goToHome() {
-    this.router.navigate(['/']);
   }
 
   public toggleProductView(): void {
