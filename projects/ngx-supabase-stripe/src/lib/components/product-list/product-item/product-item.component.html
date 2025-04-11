@@ -1,0 +1,31 @@
+<div class="card bg-base-100 shadow-xl">
+  @if (product().images && product().images.length) {
+    <figure>
+      <img src="{{ product().images[0] }}" alt="{{ product().name }}" class="h-48 w-full object-cover" />
+    </figure>
+  }
+  <div class="card-body">
+    @if (product().price_details) {
+      <span class="text-2xl font-bold mt-2">
+        {{ formatPrice(product().price_details) }}
+      </span>
+    }
+   
+    <h2 class="card-title">{{ product().name }}</h2>
+    @if (product().description) {
+      <p>{{ product().description }}</p>
+    }
+    
+    @if (product().active) {
+      <div class="badge badge-success">Active</div>
+    } @else {
+      <div class="badge badge-error">Inactive</div>
+    }
+    
+    <div class="card-actions justify-end mt-4">
+      <button class="btn btn-primary" [disabled]="!product().active" (click)="onSelect()">
+        {{ buttonText() }}
+      </button>
+    </div>
+  </div>
+</div> 

@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, inject, output, OnInit, computed } from '@angular/core';
+import { Component, OnInit, computed, inject, input, output } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
 import { StripePricePublic, StripeProductPublic } from '../../store/products.store';
+import { ProductItemSkeletonComponent } from './product-item-skeleton/product-item-skeleton.component';
+import { ProductItemComponent } from './product-item/product-item.component';
 
 @Component({
   selector: 'lib-product-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductItemComponent, ProductItemSkeletonComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })

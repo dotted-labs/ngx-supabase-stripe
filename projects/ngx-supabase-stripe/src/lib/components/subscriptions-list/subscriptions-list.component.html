@@ -19,9 +19,10 @@
   </div>
 
   @if (subscriptionsStore.isStatusLoading()) {
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <p>Cargando suscripciones...</p>
+    <div class="flex flex-col gap-4">
+      @for (item of [1,2,3]; track item) {
+        <lib-subscription-item-skeleton></lib-subscription-item-skeleton>
+      }
     </div>
   } @else if (subscriptionsStore.isStatusError()) {
     <div class="error-container">

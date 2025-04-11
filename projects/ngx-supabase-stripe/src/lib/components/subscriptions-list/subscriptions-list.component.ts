@@ -1,6 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { SubscriptionsStore } from '../../store/subscriptions.store';
+import { SubscriptionItemSkeletonComponent } from './subscription-item-skeleton/subscription-item-skeleton.component';
 import { SubscriptionItemComponent } from './subscription-item/subscription-item.component';
 
 @Component({
@@ -8,7 +9,7 @@ import { SubscriptionItemComponent } from './subscription-item/subscription-item
   templateUrl: './subscriptions-list.component.html',
   styleUrls: ['./subscriptions-list.component.css'],
   standalone: true,
-  imports: [CommonModule, SubscriptionItemComponent],
+  imports: [CommonModule, SubscriptionItemComponent, SubscriptionItemSkeletonComponent],
 })
 export class SubscriptionsListComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
