@@ -25,25 +25,30 @@
       <lib-subscriptions-list></lib-subscriptions-list>
     </div>
   } @else if (activeTab() === 'new') {
-    <div class="new-subscription-container">
-      <div class="mx-auto p-6">
-        <h2 class="text-2xl font-bold mb-4">Suscríbete a nuestro plan</h2>
-        <p class="mb-6">Completa el proceso de suscripción para comenzar a disfrutar de todos los beneficios.</p>
-        
-        <div class="divider"></div>
-
-        @if (selectedPrice()) {
+    @if (selectedPrice()) {
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="card-title">Checkout Subscription</h2>
+            <button class="btn btn-sm" (click)="resetSelection()">Cambiar selección</button>
+          </div>
           <lib-embedded-subscription 
             [priceId]="selectedPrice()!"
             returnPagePath="/subscriptions/result">
           </lib-embedded-subscription>
-        } @else {
-          <lib-product-list
-            [productType]="'recurring'"
-            (productSelected)="selectPrice($event)">
-          </lib-product-list>
-        }
+        </div>
       </div>
-    </div>
+    } @else {
+      <div class="card">
+        <div class="card-body">
+          <h2 class="text-2xl font-bold mb-4">Suscríbete a nuestro plan</h2>
+          <p class="mb-6">Selecciona el plan que deseas suscribirte y empieza a disfrutar de todos los beneficios.</p>
+          <lib-product-list
+          [productType]="'recurring'"
+          (productSelected)="selectPrice($event)">
+        </lib-product-list>
+        </div>
+      </div>
+    }
   }
 </section> 
