@@ -21,7 +21,7 @@
     </div>
   } @else if (activeTab() === 'new') {
     <div class="new-subscription-container">
-      <div class="mx-auto bg-base-100 p-6 rounded-lg shadow-md">
+      <div class="mx-auto p-6">
         <h2 class="text-2xl font-bold mb-4">Suscríbete a nuestro plan</h2>
         <p class="mb-6">Completa el proceso de suscripción para comenzar a disfrutar de todos los beneficios.</p>
         
@@ -30,10 +30,11 @@
         @if (selectedPrice()) {
           <lib-embedded-subscription 
             [priceId]="selectedPrice()!"
-            returnPagePath="/checkout/result">
+            returnPagePath="/subscriptions/result">
           </lib-embedded-subscription>
         } @else {
           <lib-product-list
+            [productType]="'recurring'"
             (productSelected)="selectPrice($event)">
           </lib-product-list>
         }

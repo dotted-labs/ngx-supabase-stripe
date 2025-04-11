@@ -24,14 +24,12 @@ Deno.serve(async (req: Request) => {
     
     // Decode JWT to get user info (would need implementation based on your auth strategy)
     // For example purposes, we'll assume we can get a customer ID
-    const customerId = 'cus_example'; // Replace with actual customer ID retrieval logic
+    // const customerId = 'cus_example'; // Replace with actual customer ID retrieval logic
     
-    console.log('🔌 [list_subscriptions]: Listing subscriptions for customer', customerId);
+    //console.log('🔌 [list_subscriptions]: Listing subscriptions for customer', customerId);
 
     const subscriptions = await stripe.subscriptions.list({
-      customer: customerId,
-      status: 'all',
-      expand: ['data.default_payment_method']
+      status: 'all'
     });
 
     console.log('🔌 [list_subscriptions]: Found', subscriptions.data.length, 'subscriptions');

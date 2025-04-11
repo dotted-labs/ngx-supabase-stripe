@@ -49,6 +49,8 @@ export const ProductsStore = signalStore(
     isStatusLoading: computed(() => state.status() === 'loading'),
     isStatusSuccess: computed(() => state.status() === 'success'),
     isStatusError: computed(() => state.status() === 'error'),
+    recurringProducts: computed(() => state.products()?.filter(product => product.price_details?.type === 'recurring') || []),
+    oneTimeProducts: computed(() => state.products()?.filter(product => product.price_details?.type === 'one_time') || []),
     hasProducts: computed(() => state.products() !== null && state.products()!.length > 0),
     isError: computed(() => state.error())
   })),
@@ -92,6 +94,8 @@ export const ProductsStore = signalStore(
               });
             });
   
+            console.log('🔍 [ProductsStore] products', products);
+
             patchState(store, {
               status: 'success',
               products: products

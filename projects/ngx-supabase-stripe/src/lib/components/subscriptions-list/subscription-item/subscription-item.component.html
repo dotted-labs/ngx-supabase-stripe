@@ -6,15 +6,15 @@
           {{ subscription().plan?.nickname || 'Plan' }}
           
           @if (subscription().status === 'active') {
-            <span class="badge badge-success ml-2">Activa</span>
+            <span class="badge badge-soft badge-success ml-2">Activa</span>
           } @else if (subscription().status === 'canceled') {
-            <span class="badge badge-error ml-2">Cancelada</span>
+            <span class="badge badge-soft badge-error ml-2">Cancelada</span>
           } @else if (subscription().status === 'past_due') {
-            <span class="badge badge-warning ml-2">Pendiente de pago</span>
+            <span class="badge badge-soft badge-warning ml-2">Pendiente de pago</span>
           } @else if (subscription().status === 'paused') {
-            <span class="badge badge-ghost ml-2">Pausada</span>
+            <span class="badge badge-soft badge-secondary ml-2">Pausada</span>
           } @else {
-            <span class="badge ml-2">{{ subscription().status }}</span>
+            <span class="badge badge-soft badge-primary ml-2">{{ subscription().status }}</span>
           }
         </h3>
         <p class="text-gray-600 text-sm">

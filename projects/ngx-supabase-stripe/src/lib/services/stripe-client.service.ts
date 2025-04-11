@@ -62,7 +62,7 @@ export class StripeClientService {
         .functions.invoke('create_subscription', {
           body: {
             priceId,
-            returnPath
+            resultPagePath: returnPath
           }
         });
 

@@ -21,9 +21,9 @@
         }
         <div class="card-body">
           @if (product.price_details) {
-            <div class="text-xxl font-bold mt-2">
+            <span class="text-2xl font-bold mt-2">
               {{ formatPrice(product.price_details) }}
-            </div>
+            </span>
           }
          
           <h2 class="card-title">{{ product.name }}</h2>

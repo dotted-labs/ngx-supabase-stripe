@@ -17,6 +17,7 @@ export interface SubscriptionState {
   currentSubscription: StripeSubscription | null;
   status: SubscriptionStatus;
   error: string | null;
+  sessionStatus: any | null;
 }
 
 /**
@@ -28,6 +29,7 @@ const initialSubscriptionState: SubscriptionState = {
   currentSubscription: null,
   status: 'idle',
   error: null,
+  sessionStatus: null,
 };
 
 /**
@@ -79,7 +81,8 @@ export const SubscriptionsStore = signalStore(
             embeddedCheckout?.mount('#embedded-checkout');
 
             patchState(store, {
-              status: 'success'
+              status: 'success',
+              embeddedSubscription: embeddedCheckout
             });
           }
         }
@@ -242,6 +245,27 @@ export const SubscriptionsStore = signalStore(
         });
       }
     },
+
+        /**
+     * Get the status of a checkout subcription session
+     * @param sessionId The ID of the checkout subcription session
+     */
+        async getSessionStatus({sessionId}: {sessionId: string}) {
+          patchState(store, { status: 'loading', error: null });
+    
+          try {
+            const { sessionStatus, error } = await stripeService.getCheckoutSessionStatus(sessionId);
+          
+            if (error) {
+              patchState(store, { status: 'error', error: (error as Error).message });
+            } else {
+              patchState(store, { status: 'success', sessionStatus });
+            }
+    
+          } catch (error) {
+            patchState(store, { status: 'error', error: (error as Error).message });
+          }
+        },
 
     /**
      * Destroy the embedded subscription

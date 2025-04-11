@@ -11,9 +11,11 @@ import { StripePricePublic, StripeProductPublic } from '../../store/products.sto
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit {
+  productType = input<'one_time' | 'recurring'>('one_time');
+
   public readonly productsService = inject(ProductsService);
 
-  public readonly products = computed(() => this.productsService.products() || []);
+  public readonly products = computed(() => this.productsService.getProductsByType(this.productType()));
   
   /**
    * Button text for product selection

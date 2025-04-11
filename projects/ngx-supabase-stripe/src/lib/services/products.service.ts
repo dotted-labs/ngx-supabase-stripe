@@ -20,6 +20,26 @@ export class ProductsService {
     await this.productsStore.loadProducts();
   }
 
+  public getProductsByType(type: 'one_time' | 'recurring'): StripeProductPublic[] {
+    if(type === 'one_time') {
+      return this.productsStore.oneTimeProducts();
+    }
+
+    if (type === 'recurring') {
+      return this.productsStore.recurringProducts();
+    }
+
+    return [];
+  }
+
+  public getRecurringProducts(): StripeProductPublic[] {
+    return this.productsStore.recurringProducts();
+  }
+
+  public getOneTimeProducts(): StripeProductPublic[] {
+    return this.productsStore.oneTimeProducts();
+  }
+
   /**
    * Check if products are being loaded
    */
