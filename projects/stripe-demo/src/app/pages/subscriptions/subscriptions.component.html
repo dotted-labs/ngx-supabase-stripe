@@ -1,29 +1,47 @@
-<section class="container mx-auto px-4">
+<section class="container mx-auto px-4 w-dvh">
   <section class="mb-8">
-    <h1 class="text-3xl font-bold">Subscriptions Demo</h1>
-    <p class="text-lg mt-2">Coming soon: Test subscription management functionality</p>
+    <h1 class="text-3xl font-bold">Gestión de Suscripciones</h1>
+    <p class="text-lg mt-2">Administra tus suscripciones y adquiere nuevos planes</p>
   </section>
 
-  <div class="card bg-base-100 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title">Feature in Development</h2>
-      <p>
-        The subscriptions feature is currently under development. This will allow you to:
-      </p>
-      <ul class="list-disc list-inside mt-4 space-y-2">
-        <li>Create and manage subscription plans</li>
-        <li>Process recurring payments</li>
-        <li>Handle subscription lifecycle events</li>
-        <li>Manage customer subscriptions</li>
-      </ul>
-      
-      <div class="mockup-code mt-8">
-        <pre data-prefix="$"><code>Subscriptions feature coming soon...</code></pre>
-      </div>
-      
-      <div class="card-actions justify-end mt-6">
-        <a routerLink="/" class="btn btn-primary">Back to Home</a>
+  <!-- Tabs de navegación -->
+  <div class="tabs tabs-boxed mb-6">
+    <a class="tab" [class.tab-active]="activeTab() === 'list'" (click)="setActiveTab('list')">
+      Mis Suscripciones
+    </a>
+    <a class="tab" [class.tab-active]="activeTab() === 'new'" (click)="setActiveTab('new')">
+      Nueva Suscripción
+    </a>
+  </div>
+
+  <!-- Contenido basado en la pestaña activa -->
+  @if (activeTab() === 'list') {
+    <div class="subscription-list-container">
+      <lib-subscriptions-list></lib-subscriptions-list>
+    </div>
+  } @else if (activeTab() === 'new') {
+    <div class="new-subscription-container">
+      <div class="mx-auto bg-base-100 p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">Suscríbete a nuestro plan</h2>
+        <p class="mb-6">Completa el proceso de suscripción para comenzar a disfrutar de todos los beneficios.</p>
+        
+        <div class="divider"></div>
+
+        @if (selectedPrice()) {
+          <lib-embedded-subscription 
+            [priceId]="selectedPrice()!"
+            returnPagePath="/checkout/result">
+          </lib-embedded-subscription>
+        } @else {
+          <lib-product-list
+            (productSelected)="selectPrice($event)">
+          </lib-product-list>
+        }
       </div>
     </div>
+  }
+  
+  <div class="mt-8 text-center">
+    <a routerLink="/" class="btn btn-outline">Volver al Inicio</a>
   </div>
 </section> 

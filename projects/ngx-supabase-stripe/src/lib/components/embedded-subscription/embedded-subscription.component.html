@@ -1,0 +1,25 @@
+<div class="subscription-container">
+  <div class="info-panel p-4 bg-primary-100 rounded-lg mb-4">
+    <div class="flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-primary-700">Plan de suscripción: <span class="font-semibold">{{ priceId() }}</span></p>
+    </div>
+  </div>
+  
+  @if (subscriptionsStore.isStatusLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Preparando suscripción...</p>
+    </div>
+  }
+  
+  @if (subscriptionsStore.isStatusError()) {
+    <div class="error">
+      <p>Error: {{ subscriptionsStore.error() }}</p>
+    </div>
+  }
+  
+  <div id="embedded-checkout" class="mt-4"></div>
+</div> 

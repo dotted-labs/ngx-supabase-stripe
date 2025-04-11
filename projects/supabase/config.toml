@@ -328,3 +328,69 @@ entrypoint = "./functions/session_status/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/session_status/*.html" ]
+
+[functions.create_subscription]
+enabled = true
+verify_jwt = true
+import_map = "./functions/create_subscription/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/create_subscription/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/create_subscription/*.html" ]
+
+[functions.cancel_subscription]
+enabled = true
+verify_jwt = true
+import_map = "./functions/cancel_subscription/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/cancel_subscription/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/cancel_subscription/*.html" ]
+
+[functions.get_subscription]
+enabled = true
+verify_jwt = true
+import_map = "./functions/get_subscription/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/get_subscription/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/get_subscription/*.html" ]
+
+[functions.list_subscriptions]
+enabled = true
+verify_jwt = true
+import_map = "./functions/list_subscriptions/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/list_subscriptions/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/list_subscriptions/*.html" ]
+
+[functions.resume_subscription]
+enabled = true
+verify_jwt = true
+import_map = "./functions/resume_subscription/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/resume_subscription/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/resume_subscription/*.html" ]
+
+[functions.update_subscription]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update_subscription/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/update_subscription/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/update_subscription/*.html" ]

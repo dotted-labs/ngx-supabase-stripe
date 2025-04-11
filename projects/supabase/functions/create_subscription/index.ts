@@ -18,7 +18,7 @@ Deno.serve(async (req: Request) => {
   try {
     const { priceId, resultPagePath } = await req.json();
 
-    console.log('🔌 [checkout_session]: Creating checkout session', priceId, resultPagePath);
+    console.log('🔌 [create_subscription]: Creating subscription', priceId, resultPagePath);
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
@@ -28,11 +28,11 @@ Deno.serve(async (req: Request) => {
           quantity: 1
         }
       ],
-      mode: 'payment',
+      mode: 'subscription',
       return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
     });
 
-    console.log('🔌 [checkout_session]: Checkout session created', session);
+    console.log('🔌 [create_subscription]: Subscription created', session);
     return new Response(JSON.stringify({
       clientSecret: session.client_secret
     }), {
@@ -43,7 +43,7 @@ Deno.serve(async (req: Request) => {
       status: 200
     });
   } catch (error: unknown) {
-    console.error('[❌ checkout_session error]: ', error);
+    console.error('[❌ create_subscription error]: ', error);
     return new Response(JSON.stringify({
       error: 'An unknown error occurred'
     }), {
@@ -61,7 +61,7 @@ Deno.serve(async (req: Request) => {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/checkout_session' \
+  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/create_subscription' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
     --header 'Content-Type: application/json' \
     --data '{"name":"Functions"}'
