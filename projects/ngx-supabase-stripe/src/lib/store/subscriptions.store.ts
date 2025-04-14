@@ -5,6 +5,15 @@ import { StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
 
+export type StripeSubscriptionPublic = Omit<StripeSubscription, 'attrs'> & {
+  status: string;
+  plan: {
+    amount: number;
+    active: boolean;
+    interval: string;
+  }
+};
+
 /**
  * Status of the subscription process
  */
@@ -14,9 +23,9 @@ export type SubscriptionStatus = 'idle' | 'loading' | 'success' | 'error';
  * Subscription state interface
  */
 export interface SubscriptionState {
-  subscriptions: StripeSubscription[] | null;
+  subscriptions: StripeSubscriptionPublic[] | null;
   embeddedSubscription: StripeEmbeddedCheckout | null;
-  currentSubscription: StripeSubscription | null;
+  currentSubscription: StripeSubscriptionPublic | null;
   status: SubscriptionStatus;
   error: string | null;
   sessionStatus: any | null;
@@ -46,10 +55,6 @@ export const SubscriptionsStore = signalStore(
     isStatusError: computed(() => state.status() === 'error'),
     hasSubscriptions: computed(() => state.subscriptions() !== null && state.subscriptions()!.length > 0),
     isError: computed(() => state.error()),
-    //hasActiveSubscription: computed(() => {
-    //  if (!state.subscriptions()) return false;
-    //  return state.subscriptions()!.some(sub => sub.status === 'active');
-    //})
   })),
   withMethods((store, stripeService = inject(StripeClientService), supabaseService = inject(SupabaseClientService)) => ({
     /**
@@ -104,8 +109,10 @@ export const SubscriptionsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { subscriptions, error } = await stripeService.listSubscriptions();
+        const { data: subscriptions, error } = await supabaseService.getStripeSubscriptions();
         console.log('🔍 [SubscriptionsStore] loaded subscriptions', subscriptions);
+
+        const parsedSubscriptions = subscriptions?.map((subscription) => parseSubscription(subscription as StripeSubscription));
 
         if (error) {
           patchState(store, {
@@ -115,7 +122,7 @@ export const SubscriptionsStore = signalStore(
         } else {
           patchState(store, {
             status: 'success',
-            subscriptions
+            subscriptions: parsedSubscriptions
           });
         }
       } catch (error) {
@@ -134,9 +141,12 @@ export const SubscriptionsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { subscription, error } = await stripeService.getSubscription(subscriptionId);
+        const { data, error } = await supabaseService.selectStripeSubscription(subscriptionId);
+        const [subscription] = data || [];
         console.log('🔍 [SubscriptionsStore] got subscription', subscription, error);
 
+        const parsedSubscription = parseSubscription(subscription as StripeSubscription);
+
         if (error) {
           patchState(store, {
             status: 'error',
@@ -145,7 +155,7 @@ export const SubscriptionsStore = signalStore(
         } else {
           patchState(store, {
             status: 'success',
-            currentSubscription: subscription
+            currentSubscription: parsedSubscription
           });
         }
       } catch (error) {
@@ -157,148 +167,25 @@ export const SubscriptionsStore = signalStore(
     },
 
     /**
-     * Update a subscription
-     * @param subscriptionId The subscription ID
-     * @param params The parameters to update
-     */
-    async updateSubscription(subscriptionId: string, params: any) {
-      patchState(store, { status: 'loading', error: null });
-
-      try {
-        const { subscription, error } = await stripeService.updateSubscription(subscriptionId, params);
-        console.log('🔍 [SubscriptionsStore] updated subscription', subscription, error);
-
-        if (error) {
-          patchState(store, {
-            status: 'error',
-            error: (error as Error).message,
-          });
-        } else {
-          patchState(store, {
-            status: 'success',
-            currentSubscription: subscription
-          });
-        }
-      } catch (error) {
-        patchState(store, {
-          status: 'error',
-          error: (error as Error).message,
-        });
-      }
-    },
-
-    /**
-     * Cancel a subscription
-     * @param subscriptionId The subscription ID
-     */
-    async cancelSubscription(subscriptionId: string) {
-      patchState(store, { status: 'loading', error: null });
-
-      try {
-        const { subscription: subscriptionCanceled, error: stripeError } = await stripeService.cancelSubscription(subscriptionId);
-
-        console.log('🔍 [SubscriptionsStore] cancelled subscription', subscriptionCanceled, stripeError);
-
-        if (stripeError) {
-          return patchState(store, {
-            status: 'error',
-            error: (stripeError as Error).message,
-          });
-        }
-
-        const { data, error: selectedSubscriptionError } = await supabaseService.selectStripeSubscription(subscriptionCanceled.id);
-        const [selectedSubscription] = data || [];
-
-        console.log('🔍 [SubscriptionsStore] selected subscription', selectedSubscription, selectedSubscriptionError);
-
-        if (selectedSubscriptionError) {
-          return patchState(store, {
-            status: 'error',
-            error: (selectedSubscriptionError as Error).message,
-          });
-        }
-
-        if (selectedSubscription) {
-          const subscriptions = store.subscriptions()?.map((subscription: StripeSubscription) => {
-            if (subscription.id === subscriptionId) {
-              return selectedSubscription;
-            }
-            return subscription;
-          });
-
-          patchState(store, {
-            status: 'success',
-            subscriptions: subscriptions as StripeSubscription[],
-          });
-        } else {
-          return patchState(store, {
-            status: 'error',
-            error: 'No subscription found',
-          });
-        }
-
-      } catch (error) {
-        patchState(store, {
-          status: 'error',
-          error: (error as Error).message,
-        });
-      }
-    },
-
-    /**
-     * Resume a paused subscription
-     * @param subscriptionId The subscription ID
-     * @param params Optional parameters for resumption
-     */
-    async resumeSubscription(subscriptionId: string, params?: any) {
-      patchState(store, { status: 'loading', error: null });
-
-      try {
-        const { subscription, error } = await stripeService.resumeSubscription(subscriptionId, params);
-        console.log('🔍 [SubscriptionsStore] resumed subscription', subscription, error);
-
-        if (error) {
-          patchState(store, {
-            status: 'error',
-            error: (error as Error).message,
-          });
-        } else {
-          patchState(store, {
-            status: 'success',
-            currentSubscription: subscription
-          });
-          
-          // Refresh the list after resumption
-          await this.loadSubscriptions();
-        }
-      } catch (error) {
-        patchState(store, {
-          status: 'error',
-          error: (error as Error).message,
-        });
-      }
-    },
-
-        /**
      * Get the status of a checkout subcription session
      * @param sessionId The ID of the checkout subcription session
      */
-        async getSessionStatus({sessionId}: {sessionId: string}) {
-          patchState(store, { status: 'loading', error: null });
-    
-          try {
-            const { sessionStatus, error } = await stripeService.getCheckoutSessionStatus(sessionId);
-          
-            if (error) {
-              patchState(store, { status: 'error', error: (error as Error).message });
-            } else {
-              patchState(store, { status: 'success', sessionStatus });
-            }
-    
-          } catch (error) {
-            patchState(store, { status: 'error', error: (error as Error).message });
-          }
-        },
+    async getSessionStatus({sessionId}: {sessionId: string}) {
+      patchState(store, { status: 'loading', error: null });
+
+      try {
+        const { sessionStatus, error } = await stripeService.getCheckoutSessionStatus(sessionId);
+      
+        if (error) {
+          patchState(store, { status: 'error', error: (error as Error).message });
+        } else {
+          patchState(store, { status: 'success', sessionStatus });
+        }
+
+      } catch (error) {
+        patchState(store, { status: 'error', error: (error as Error).message });
+      }
+    },
 
     /**
      * Destroy the embedded subscription
@@ -316,4 +203,19 @@ export const SubscriptionsStore = signalStore(
       patchState(store, initialSubscriptionState);
     }
   }))
-); 
+);
+
+function parseSubscription(subscription: StripeSubscription): StripeSubscriptionPublic {
+  const subscriptionAttrs = subscription.attrs as any;
+  
+  return {
+    ...subscription,
+    status: subscriptionAttrs.status,
+    plan: {
+      amount: subscriptionAttrs.plan.amount,
+      active: subscriptionAttrs.plan.active,
+      interval: subscriptionAttrs.plan.interval,
+    },
+  };
+}
+

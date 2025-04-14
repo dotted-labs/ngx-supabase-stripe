@@ -62,6 +62,16 @@ export class SupabaseClientService {
    */
 
   /**
+   * Get all Stripe subscriptions
+   */
+  public getStripeSubscriptions() {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_subscriptions')
+      .select('*');
+  }
+
+  /**
    * Select a Stripe subscription
    * @param subscriptionId The subscription ID
    */
@@ -71,7 +81,6 @@ export class SupabaseClientService {
       .rpc('get_stripe_subscription', { subscription_id: subscriptionId })
       .select('*');
   }
-
 
   /**
    * STRIPE PRICES

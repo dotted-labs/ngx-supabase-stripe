@@ -9,10 +9,7 @@
   </div>
   
   @if (checkoutStore.isStatusLoading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Cargando checkout...</p>
-    </div>
+    <lib-embedded-skeleton />
   }
   
   @if (checkoutStore.isStatusError()) {

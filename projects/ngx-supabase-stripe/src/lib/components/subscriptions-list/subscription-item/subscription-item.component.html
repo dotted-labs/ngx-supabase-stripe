@@ -3,7 +3,7 @@
     <div class="flex justify-between">
       <div>
         <h3 class="card-title text-lg">
-          {{ subscription().plan?.nickname || 'Plan' }}
+          customer: {{ subscription().customer }}
           
           @if (subscription().status === 'active') {
             <span class="badge badge-soft badge-success ml-2">Activa</span>
@@ -35,10 +35,10 @@
     <div class="subscription-details mt-2">
       <div class="flex justify-between text-sm">
         <div>
-          <span class="font-medium">Precio:</span> {{ formatAmount(subscription().plan?.amount, subscription().currency) }}
+          <span class="font-medium">Precio:</span> {{ formatAmount(subscription().plan.amount, 'EUR') }}
         </div>
         <div>
-          <span class="font-medium">Período:</span> {{ subscription().plan?.interval_count || 1 }} {{ subscription().plan?.interval || 'mes' }}
+          <span class="font-medium">Período:</span> {{ subscription().plan.interval }}
         </div>
       </div>
     </div>
@@ -50,63 +50,17 @@
           <div>
             <h4 class="text-md font-semibold mb-2">Detalles del Plan</h4>
             <ul class="space-y-1 text-sm">
-              <li><span class="font-medium">Inicio:</span> {{ formatDate(subscription().start_date) }}</li>
-              <li><span class="font-medium">Renovación:</span> {{ formatDate(subscription().current_period_end) }}</li>
-              <li><span class="font-medium">Método de pago:</span> {{ subscription().default_payment_method?.card?.brand || 'No establecido' }}</li>
+              <li><span class="font-medium">Inicio:</span> {{ formatDate(subscription().current_period_start ?? '') }}</li>
+              <li><span class="font-medium">Renovación:</span> {{ formatDate(subscription().current_period_end ?? '') }}</li>
             </ul>
-          </div>
-          
-          <!-- Metadata Editing Section -->
-          <div>
-            <h4 class="text-md font-semibold mb-2">Metadatos 
-              <button class="btn btn-xs btn-ghost ml-2" (click)="toggleEditMode()">
-                {{ isEditMode ? 'Cancelar' : 'Editar' }}
-              </button>
-            </h4>
-            
-            <!--@if (isEditMode) {
-              <div class="metadata-editor">
-                @for (key of Object.keys(editedMetadata); track key) {
-                  <div class="form-control mb-2">
-                    <label class="label">
-                      <span class="label-text text-xs">{{ key }}</span>
-                    </label>
-                    <input type="text" [(ngModel)]="editedMetadata[key]" class="input input-sm input-bordered" />
-                  </div>
-                }
-                
-                <button class="btn btn-sm btn-primary mt-2" [disabled]="isUpdating" (click)="updateSubscription()">
-                  {{ isUpdating ? 'Guardando...' : 'Guardar cambios' }}
-                </button>
-              </div>
-            } @else if (subscription().metadata) {
-              <div class="metadata-display space-y-1 text-sm">
-                @for (key of Object.keys(subscription().metadata); track key) {
-                  <div>
-                    <span class="font-medium">{{ key }}:</span> {{ subscription().metadata[key] }}
-                  </div>
-                }
-              </div>
-            } @else {
-              <p class="text-sm text-gray-500">No hay metadatos definidos</p>
-            }-->
           </div>
         </div>
           
         <!-- Action Buttons -->
         <div class="card-actions mt-4 justify-end">
-          @if (subscription().status === 'active') {
-            <button class="btn btn-sm btn-error" (click)="cancelSubscription()">
-              {{ isConfirmingCancel ? '¿Confirmar cancelación?' : 'Cancelar suscripción' }}
-            </button>
-            @if (isConfirmingCancel) {
-              <button class="btn btn-sm btn-ghost" (click)="cancelConfirmation()">No</button>
-            }
-          }
-          
-          @if (subscription().status === 'paused') {
-            <button class="btn btn-sm btn-primary" (click)="resumeSubscription()">Reanudar suscripción</button>
-          }
+          <button class="btn btn-sm btn-secondary" (click)="manageSubscription()">
+            Manage subscription
+          </button>
         </div>
       </div>
     }
