@@ -19,8 +19,8 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           id: string
-          currency: string
           active: boolean
+          currency: string
           product: string
           unit_amount: number
           type: string
@@ -35,6 +35,17 @@ export type Database = {
           active: boolean
           default_price: string
           description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_subscription: {
+        Args: { subscription_id: string }
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
           attrs: Json
         }[]
       }

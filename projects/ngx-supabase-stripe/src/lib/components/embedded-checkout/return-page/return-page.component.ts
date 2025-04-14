@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CheckoutStore } from '../../../store/checkout.store';
 
 @Component({
-  selector: 'lib-return-page',
+  selector: 'lib-checkout-return-page',
   templateUrl: './return-page.component.html',
   styleUrls: ['./return-page.component.css'],
   standalone: true,

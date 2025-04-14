@@ -5,8 +5,6 @@
 import Stripe from 'npm:stripe@17.7.0';
 import { corsHeaders } from '../_shared/cors.ts';
 
-//const BASE_URL = 'http://localhost:4200';
-
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
   apiVersion: '2025-02-24.acacia',
   httpClient: Stripe.createFetchHttpClient()

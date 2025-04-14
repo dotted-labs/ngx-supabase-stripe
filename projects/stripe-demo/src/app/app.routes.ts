@@ -20,7 +20,16 @@ export const routes: Routes = [
   },
   {
     path: 'subscriptions',
-    loadComponent: () => import('../../../stripe-demo/src/app/pages/subscriptions/subscriptions.component').then(m => m.SubscriptionsComponent)
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('../../../stripe-demo/src/app/pages/subscriptions/subscriptions.component').then(m => m.SubscriptionsComponent)
+      },
+      {
+        path: 'result',
+        loadComponent: () => import('../../../stripe-demo/src/app/pages/subscriptions/result/subscriptions-result.component').then(m => m.SubscriptionsResultComponent)
+      }
+    ]
   },
   {
     path: 'payouts',

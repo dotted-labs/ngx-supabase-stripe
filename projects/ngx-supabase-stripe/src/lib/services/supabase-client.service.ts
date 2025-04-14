@@ -2,30 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '../../database.types';
 import { SUPABASE_CONFIG } from '../config/supabase.config';
-
-// Stripe Schema Types
-type StripeSchemaType = Database['stripe'];
-type StripeTableType<T extends keyof StripeSchemaType['Tables']> = StripeSchemaType['Tables'][T];
-type StripeRowType<T extends keyof StripeSchemaType['Tables']> = StripeSchemaType['Tables'][T]['Row'];
-type StripeInsertType<T extends keyof StripeSchemaType['Tables']> = StripeSchemaType['Tables'][T]['Insert'];
-type StripeUpdateType<T extends keyof StripeSchemaType['Tables']> = StripeSchemaType['Tables'][T]['Update'];
-
-// Stripe Row Types
-type StripeProductRow = StripeRowType<'products'>;
-export type StripeProduct = Omit<StripeProductRow, 'created' | 'updated'>;
-
-type StripeCheckoutSessionRow = StripeRowType<'checkout_sessions'>;
-export type StripeCheckoutSession = Omit<StripeCheckoutSessionRow, 'created' | 'updated'>;
-
-type StripePaymentIntentRow = StripeRowType<'payment_intents'>;
-export type StripePaymentIntent = Omit<StripePaymentIntentRow, 'created' | 'updated'>;
-
-type StripePriceRow = StripeRowType<'prices'>;
-export type StripePrice = Omit<StripePriceRow, 'created' | 'updated'>;
-
-// Global Stripe type table con prefijo 'stripe.'
-type StripeTables = keyof StripeSchemaType['Tables'];
-
+import { StripeCheckoutSession, StripePaymentIntent, StripeProduct, StripeTables, StripeUpdateType } from '../models/database.model';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +56,22 @@ export class SupabaseClientService {
   ): Promise<{ data: StripePaymentIntent[] | null; error: Error | null }> {
     return this.select<StripePaymentIntent>('payment_intents', query);
   }
+
+  /**
+   * STRIPE SUBSCRIPTIONS
+   */
+
+  /**
+   * Select a Stripe subscription
+   * @param subscriptionId The subscription ID
+   */
+  public selectStripeSubscription(subscriptionId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_subscription', { subscription_id: subscriptionId })
+      .select('*');
+  }
+
 
   /**
    * STRIPE PRICES
