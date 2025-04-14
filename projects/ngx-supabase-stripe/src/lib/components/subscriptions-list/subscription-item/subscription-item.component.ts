@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, input, Output } from '@angular/core';
+import { Component, computed, EventEmitter, inject, input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../store/subscriptions.store';
-
+import { PortalAccountStore } from '../../../store/portal-account.store';
 @Component({
   selector: 'lib-subscription-item',
   templateUrl: './subscription-item.component.html',
@@ -12,6 +12,7 @@ import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../store/sub
 })
 export class SubscriptionItemComponent {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
+  public readonly portalAccountStore = inject(PortalAccountStore);
   
   // Input for the subscription data
   public readonly subscription = input.required<StripeSubscriptionPublic>();
@@ -19,6 +20,8 @@ export class SubscriptionItemComponent {
   // Output events
   @Output() onManageSubscription = new EventEmitter<string>();
 
+  public readonly isStatusLoading = computed(() => this.portalAccountStore.isStatusLoading());
+  
   // UI state
   public isExpanded = false;
   

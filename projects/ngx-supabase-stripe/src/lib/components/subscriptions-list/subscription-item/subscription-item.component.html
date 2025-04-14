@@ -35,10 +35,10 @@
     <div class="subscription-details mt-2">
       <div class="flex justify-between text-sm">
         <div>
-          <span class="font-medium">Precio:</span> {{ formatAmount(subscription().plan.amount, 'EUR') }}
+          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(subscription().plan.amount, 'EUR') }}</span>
         </div>
         <div>
-          <span class="font-medium">Período:</span> {{ subscription().plan.interval }}
+          <span class="font-medium">Período: </span><span class="text-md font-bold">{{ subscription().plan.interval }}</span>
         </div>
       </div>
     </div>
@@ -58,8 +58,13 @@
           
         <!-- Action Buttons -->
         <div class="card-actions mt-4 justify-end">
-          <button class="btn btn-sm btn-secondary" (click)="manageSubscription()">
-            Manage subscription
+          <button class="btn btn-sm btn-secondary" [disabled]="isStatusLoading()" (click)="manageSubscription()">
+            @if (isStatusLoading()) {
+              <span class="loading loading-spinner"></span>
+              loading account
+            } @else {
+              Manage subscription
+            }
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { StripeClientService } from '../services/stripe-client.service';
+import { Router } from '@angular/router';
 
 export interface PortalSessionResponse {
   url: string;
@@ -66,7 +67,6 @@ export const PortalAccountStore = signalStore(
           portalUrl: url
         });
 
-        // Redirect to the portal URL
         window.location.href = url;
       } catch (error) {
         console.error('🚨 [PortalAccountStore]', error);

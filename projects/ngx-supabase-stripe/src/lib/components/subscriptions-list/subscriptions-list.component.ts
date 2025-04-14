@@ -31,7 +31,7 @@ export class SubscriptionsListComponent implements OnInit {
     }
 
     // Create portal session for the customer
-    const returnUrl = `${window.location.origin}/portal-account`;
+    const returnUrl = `${window.location.origin}/subscriptions`;
     this.portalAccountStore.createPortalSession(customerId, returnUrl);
   }
   
