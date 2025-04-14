@@ -32,6 +32,10 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'portal-account',
+    loadComponent: () => import('../../../stripe-demo/src/app/pages/portal-account/portal-account.component').then(m => m.PortalAccountComponent)
+  },
+  {
     path: 'payouts',
     loadComponent: () => import('../../../stripe-demo/src/app/pages/payouts/payouts.component').then(m => m.PayoutsComponent)
   },

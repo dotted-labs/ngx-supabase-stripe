@@ -3,6 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { StripeSubscriptionPublic, SubscriptionsStore } from '../../store/subscriptions.store';
 import { SubscriptionItemSkeletonComponent } from './subscription-item-skeleton/subscription-item-skeleton.component';
 import { SubscriptionItemComponent } from './subscription-item/subscription-item.component';
+import { PortalAccountStore } from '../../store/portal-account.store';
 
 @Component({
   selector: 'lib-subscriptions-list',
@@ -13,6 +14,7 @@ import { SubscriptionItemComponent } from './subscription-item/subscription-item
 })
 export class SubscriptionsListComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
+  public readonly portalAccountStore = inject(PortalAccountStore);
   
   ngOnInit() {
     this.loadSubscriptions();
@@ -22,14 +24,15 @@ export class SubscriptionsListComponent implements OnInit {
     await this.subscriptionsStore.loadSubscriptions();
   }
 
-  public manageSubscription(subscriptionId: string): void {
-    if (!subscriptionId) {
-      console.error('🚨 [SubscriptionsListComponent] subscription has no id');
+  public manageSubscription(customerId: string): void {
+    if (!customerId) {
+      console.error('🚨 [SubscriptionsListComponent] subscription has no customer id');
       return;
     }
 
-    // TODO: Create Customer Portal Stripe
-    //this.subscriptionsStore.manageSubscription(subscription.id);
+    // Create portal session for the customer
+    const returnUrl = `${window.location.origin}/portal-account`;
+    this.portalAccountStore.createPortalSession(customerId, returnUrl);
   }
   
   public refreshSubscriptions(): void {

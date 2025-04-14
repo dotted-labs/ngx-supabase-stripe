@@ -33,7 +33,7 @@ export class SubscriptionItemComponent {
    * Manage subscription
    */
   public async manageSubscription(): Promise<void> {
-    this.onManageSubscription.emit(this.subscription().id ?? '');
+    this.onManageSubscription.emit(this.subscription().customer ?? '');
   }
   
   /**
