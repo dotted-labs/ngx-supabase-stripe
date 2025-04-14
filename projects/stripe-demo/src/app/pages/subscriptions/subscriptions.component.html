@@ -45,7 +45,9 @@
           <p class="mb-6">Selecciona el plan que deseas suscribirte y empieza a disfrutar de todos los beneficios.</p>
           <lib-product-list
           [productType]="'recurring'"
-          (productSelected)="selectPrice($event)">
+          (productSelected)="selectProduct($event)"
+          (priceSelected)="selectPrice($event)"
+          >
         </lib-product-list>
         </div>
       </div>

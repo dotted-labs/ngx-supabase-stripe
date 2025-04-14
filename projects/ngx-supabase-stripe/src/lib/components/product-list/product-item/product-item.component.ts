@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StripeProductPublic } from '../../../store/products.store';
+import { StripePricePublic, StripeProductPublic } from '../../../store/products.store';
 
 @Component({
   selector: 'lib-product-item',
@@ -11,7 +11,9 @@ import { StripeProductPublic } from '../../../store/products.store';
 export class ProductItemComponent {
   public readonly product = input.required<StripeProductPublic>();
   public readonly buttonText = input<string>('Select');
+
   public readonly productSelected = output<StripeProductPublic>();
+  public readonly priceSelected = output<StripePricePublic>();
 
   formatPrice(price: any): string {
     if (!price || !price.unit_amount) {
@@ -27,7 +29,8 @@ export class ProductItemComponent {
     }).format(amount);
   }
 
-  onSelect() {
+  onSelect(price: StripePricePublic) {
     this.productSelected.emit(this.product());
+    this.priceSelected.emit(price);
   }
 } 

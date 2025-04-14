@@ -5,7 +5,10 @@ import { SupabaseClientService } from '../services/supabase-client.service';
 
 export type StripeProductPublic = Omit<StripeProduct, 'attrs'> & {
   images: string[];
-  price_details: StripePricePublic | null;
+  prices: {
+    details: StripePricePublic;
+    recurringInterval: string;
+  }[];
 }
 
 export type StripePricePublic = Omit<StripePrice, 'attrs'>;
@@ -49,8 +52,8 @@ export const ProductsStore = signalStore(
     isStatusLoading: computed(() => state.status() === 'loading'),
     isStatusSuccess: computed(() => state.status() === 'success'),
     isStatusError: computed(() => state.status() === 'error'),
-    recurringProducts: computed(() => state.products()?.filter(product => product.price_details?.type === 'recurring') || []),
-    oneTimeProducts: computed(() => state.products()?.filter(product => product.price_details?.type === 'one_time') || []),
+    recurringProducts: computed(() => state.products()?.filter(product => product.prices?.some(price => price.details.type === 'recurring')) || []),
+    oneTimeProducts: computed(() => state.products()?.filter(product => product.prices?.some(price => price.details.type === 'one_time')) || []),
     hasProducts: computed(() => state.products() !== null && state.products()!.length > 0),
     isError: computed(() => state.error())
   })),
@@ -90,11 +93,14 @@ export const ProductsStore = signalStore(
               products.push({
                 ...mainProperties,
                 images: (attrs as any)?.images,
-                price_details: prices.find(price => price.product === product.id) || null
+                prices: prices.filter(price => price.product === product.id).map(price => ({
+                  details: price,
+                  recurringInterval: (price?.attrs as any)?.recurring?.interval || 'no-recurring'
+                })),
               });
             });
   
-            console.log('🔍 [ProductsStore] products', products);
+            console.log('🔍 [ProductsStore] products: ', products);
 
             patchState(store, {
               status: 'success',

@@ -226,40 +226,4 @@ export class StripeClientService {
       return { sessionStatus: null, error: error as Error };
     }
   }
-
-  /**
-   * Get customer subscriptions
-   */
-  //public async getSubscriptions(): Promise<{ data: any[] | null; error: Error | null }> {
-  //  try {
-  //    const { data, error } = await this.supabase.getClient()
-  //      .functions.invoke('get-subscriptions');
-
-  //    if (error) {
-  //      throw error;
-  //    }
-
-  //    return { data, error: null };
-  //  } catch (error) {
-  //    return { data: null, error: error as Error };
-  //  }
-  //}
-
-  /**
-   * Get available products and prices
-   */
-  //public async getProducts(): Promise<{ data: any[] | null; error: Error | null }> {
-  //  try {
-  //    const { data, error } = await this.supabase.getClient()
-  //      .functions.invoke('stripe-products');
-
-  //    if (error) {
-  //      throw error;
-  //    }
-
-  //    return { data, error: null };
-  //  } catch (error) {
-  //    return { data: null, error: error as Error };
-  //  }
-  //}
 }

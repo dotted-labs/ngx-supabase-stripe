@@ -1,8 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { StripeClientService } from '../services/stripe-client.service';
-import { StripeSubscription } from '../models/database.model';
 import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
+import { StripeSubscription } from '../models/database.model';
+import { StripeClientService } from '../services/stripe-client.service';
+import { SupabaseClientService } from '../services/supabase-client.service';
+
 /**
  * Status of the subscription process
  */
@@ -49,7 +51,7 @@ export const SubscriptionsStore = signalStore(
     //  return state.subscriptions()!.some(sub => sub.status === 'active');
     //})
   })),
-  withMethods((store, stripeService = inject(StripeClientService)) => ({
+  withMethods((store, stripeService = inject(StripeClientService), supabaseService = inject(SupabaseClientService)) => ({
     /**
      * Create a subscription
      * @param priceId The price ID for the subscription
@@ -59,7 +61,8 @@ export const SubscriptionsStore = signalStore(
 
       try {
         const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath);
-
+        console.log('🔍 [SubscriptionsStore] created subscription', clientSecret, error);
+        
         if (error) {
           patchState(store, {
             status: 'error',
@@ -102,6 +105,7 @@ export const SubscriptionsStore = signalStore(
 
       try {
         const { subscriptions, error } = await stripeService.listSubscriptions();
+        console.log('🔍 [SubscriptionsStore] loaded subscriptions', subscriptions);
 
         if (error) {
           patchState(store, {
@@ -131,6 +135,7 @@ export const SubscriptionsStore = signalStore(
 
       try {
         const { subscription, error } = await stripeService.getSubscription(subscriptionId);
+        console.log('🔍 [SubscriptionsStore] got subscription', subscription, error);
 
         if (error) {
           patchState(store, {
@@ -161,6 +166,7 @@ export const SubscriptionsStore = signalStore(
 
       try {
         const { subscription, error } = await stripeService.updateSubscription(subscriptionId, params);
+        console.log('🔍 [SubscriptionsStore] updated subscription', subscription, error);
 
         if (error) {
           patchState(store, {
@@ -189,22 +195,48 @@ export const SubscriptionsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { subscription, error } = await stripeService.cancelSubscription(subscriptionId);
+        const { subscription: subscriptionCanceled, error: stripeError } = await stripeService.cancelSubscription(subscriptionId);
 
-        if (error) {
-          patchState(store, {
+        console.log('🔍 [SubscriptionsStore] cancelled subscription', subscriptionCanceled, stripeError);
+
+        if (stripeError) {
+          return patchState(store, {
             status: 'error',
-            error: (error as Error).message,
+            error: (stripeError as Error).message,
           });
-        } else {
+        }
+
+        const { data, error: selectedSubscriptionError } = await supabaseService.selectStripeSubscription(subscriptionCanceled.id);
+        const [selectedSubscription] = data || [];
+
+        console.log('🔍 [SubscriptionsStore] selected subscription', selectedSubscription, selectedSubscriptionError);
+
+        if (selectedSubscriptionError) {
+          return patchState(store, {
+            status: 'error',
+            error: (selectedSubscriptionError as Error).message,
+          });
+        }
+
+        if (selectedSubscription) {
+          const subscriptions = store.subscriptions()?.map((subscription: StripeSubscription) => {
+            if (subscription.id === subscriptionId) {
+              return selectedSubscription;
+            }
+            return subscription;
+          });
+
           patchState(store, {
             status: 'success',
-            currentSubscription: subscription
+            subscriptions: subscriptions as StripeSubscription[],
           });
-          
-          // Refresh the list after cancellation
-          await this.loadSubscriptions();
+        } else {
+          return patchState(store, {
+            status: 'error',
+            error: 'No subscription found',
+          });
         }
+
       } catch (error) {
         patchState(store, {
           status: 'error',
@@ -223,6 +255,7 @@ export const SubscriptionsStore = signalStore(
 
       try {
         const { subscription, error } = await stripeService.resumeSubscription(subscriptionId, params);
+        console.log('🔍 [SubscriptionsStore] resumed subscription', subscription, error);
 
         if (error) {
           patchState(store, {

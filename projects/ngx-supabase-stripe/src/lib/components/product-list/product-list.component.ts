@@ -28,14 +28,18 @@ export class ProductListComponent implements OnInit {
    * Event emitted when a product is selected
    */
   public readonly productSelected = output<StripeProductPublic>();
+  public readonly priceSelected = output<StripePricePublic>();
 
   ngOnInit(): void {
     this.productsService.loadProducts();
   }
 
   onProductSelect(product: StripeProductPublic) {
-    console.log('Selected product:', product);
     this.productSelected.emit(product);
+  }
+
+  onPriceSelect(price: StripePricePublic) {
+    this.priceSelected.emit(price);
   }
 
   formatPrice(price: StripePricePublic): string {

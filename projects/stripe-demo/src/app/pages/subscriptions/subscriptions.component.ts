@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import {
   EmbeddedSubscriptionComponent,
   ProductListComponent,
+  StripePricePublic,
   StripeProductPublic,
   SubscriptionsListComponent
 } from '@ngx-supabase-stripe';
@@ -24,17 +25,18 @@ import {
 export class SubscriptionsComponent {
   public readonly activeTab = signal<'list' | 'new'>('list');
   public readonly selectedPrice = signal<string | null>(null);
+  public readonly selectedProduct = signal<StripeProductPublic | null>(null);
 
   public resetSelection(): void {
     this.selectedPrice.set(null);
   }
 
-  public onProductSelected(product: StripeProductPublic): void {
-    this.selectPrice(product);
+  public selectProduct(product: StripeProductPublic): void {
+    this.selectedProduct.set(product);
   }
 
-  public selectPrice(product: StripeProductPublic): void {
-    this.selectedPrice.set(product.price_details?.id || product.default_price);
+  public selectPrice(price: StripePricePublic): void {
+    this.selectedPrice.set(price.id);
   }
 
   setActiveTab(tab: 'list' | 'new'): void {

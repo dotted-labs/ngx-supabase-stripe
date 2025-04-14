@@ -36,9 +36,7 @@
       @for (subscription of subscriptionsStore.subscriptions(); track trackBySubscriptionId($index, subscription)) {
         <lib-subscription-item 
           [subscription]="subscription"
-          (onUpdate)="refreshSubscriptions()"
-          (onCancel)="refreshSubscriptions()"
-          (onResume)="refreshSubscriptions()">
+          (onCancel)="cancelSubscription(subscription)">
         </lib-subscription-item>
       }
     </div>

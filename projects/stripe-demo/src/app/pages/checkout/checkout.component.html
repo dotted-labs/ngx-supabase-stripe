@@ -11,7 +11,8 @@
 
   @if (!selectedPrice()) {
     <lib-product-list
-      (productSelected)="selectPrice($event)">
+      (priceSelected)="selectPrice($event)"
+      (productSelected)="selectProduct($event)">
     </lib-product-list>
   } @else {
     <div class="w-full">
