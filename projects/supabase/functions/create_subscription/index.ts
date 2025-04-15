@@ -29,6 +29,7 @@ Deno.serve(async (req: Request) => {
         }
       ],
       mode: 'subscription',
+      payment_method_types: ['card', 'paypal', 'amazon_pay'],
       return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
     });
 
