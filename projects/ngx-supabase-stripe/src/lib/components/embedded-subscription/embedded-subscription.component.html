@@ -9,10 +9,7 @@
   </div>
   
   @if (subscriptionsStore.isStatusLoading()) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Preparando suscripción...</p>
-    </div>
+    <lib-embedded-skeleton />
   }
   
   @if (subscriptionsStore.isStatusError()) {

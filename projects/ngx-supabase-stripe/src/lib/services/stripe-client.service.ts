@@ -226,4 +226,29 @@ export class StripeClientService {
       return { sessionStatus: null, error: error as Error };
     }
   }
+
+  /**
+   * Create a portal session
+   * @param customerId The customer ID
+   * @param returnUrl The URL to redirect to after the portal session
+   */
+  public async createPortalSession(customerId: string, returnUrl: string): Promise<{ url: string | null; error: Error | null }> {
+    try {
+      const { data, error } = await this.supabase.getClient()
+        .functions.invoke('create_portal_session', {
+          body: {
+            customerId,
+            returnUrl
+          }
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      return { url: data.url, error: null };
+    } catch (error) {
+      return { url: null, error: error as Error };
+    }
+  }
 }

@@ -49,6 +49,17 @@ export type Database = {
           attrs: Json
         }[]
       }
+      get_stripe_subscriptions: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
@@ -80,6 +91,33 @@ export type Database = {
           id?: string | null
           payment_intent?: string | null
           subscription?: string | null
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          attrs: Json | null
+          created: string | null
+          description: string | null
+          email: string | null
+          id: string | null
+          name: string | null
+        }
+        Insert: {
+          attrs?: Json | null
+          created?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string | null
+          name?: string | null
+        }
+        Update: {
+          attrs?: Json | null
+          created?: string | null
+          description?: string | null
+          email?: string | null
+          id?: string | null
+          name?: string | null
         }
         Relationships: []
       }

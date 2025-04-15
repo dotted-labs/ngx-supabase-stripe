@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { StripeSubscription } from '../../models/database.model';
-import { SubscriptionsStore } from '../../store/subscriptions.store';
+import { StripeSubscriptionPublic, SubscriptionsStore } from '../../store/subscriptions.store';
 import { SubscriptionItemSkeletonComponent } from './subscription-item-skeleton/subscription-item-skeleton.component';
 import { SubscriptionItemComponent } from './subscription-item/subscription-item.component';
+import { PortalAccountStore } from '../../store/portal-account.store';
 
 @Component({
   selector: 'lib-subscriptions-list',
@@ -14,6 +14,7 @@ import { SubscriptionItemComponent } from './subscription-item/subscription-item
 })
 export class SubscriptionsListComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
+  public readonly portalAccountStore = inject(PortalAccountStore);
   
   ngOnInit() {
     this.loadSubscriptions();
@@ -23,19 +24,22 @@ export class SubscriptionsListComponent implements OnInit {
     await this.subscriptionsStore.loadSubscriptions();
   }
 
-  public cancelSubscription(subscription: StripeSubscription): void {
-    if (!subscription.id) {
-      console.error('🚨 [SubscriptionsListComponent] subscription has no id');
+  public manageSubscription(customerId: string): void {
+    if (!customerId) {
+      console.error('🚨 [SubscriptionsListComponent] subscription has no customer id');
       return;
     }
-    this.subscriptionsStore.cancelSubscription(subscription.id);
+
+    // Create portal session for the customer
+    const returnUrl = `${window.location.origin}/subscriptions`;
+    this.portalAccountStore.createPortalSession(customerId, returnUrl);
   }
   
   public refreshSubscriptions(): void {
     this.loadSubscriptions();
   }
   
-  public trackBySubscriptionId(index: number, subscription: StripeSubscription): string | null {
+  public trackBySubscriptionId(index: number, subscription: StripeSubscriptionPublic): string | null {
     return subscription.id;
   }
 } 
