@@ -16,6 +16,10 @@
           } @else {
             <span class="badge badge-soft badge-primary ml-2">{{ subscription().status }}</span>
           }
+
+          @if (subscription().cancel.cancel_at_period_end) {
+            <span class="badge badge-soft badge-warning ml-2">Cancelada al final del periodo</span>
+          }
         </h3>
         <p class="text-gray-600 text-sm">
           ID: {{ subscription().id }}
@@ -54,8 +58,20 @@
               <li><span class="font-medium">Renovación:</span> {{ formatDate(subscription().current_period_end ?? '') }}</li>
             </ul>
           </div>
-        </div>
           
+          @if (subscription().cancel.cancel_at_period_end) {
+            <div>
+              <h4 class="text-md font-semibold mb-2">Detalles de la Cancelación</h4>
+              <ul class="space-y-1 text-sm">
+                <li><span class="font-medium">Cancelado el: </span> {{ subscription().cancel.canceled_at * 1000 | date:'dd/MM/yyyy' }}</li>
+                <li><span class="font-medium">No se renovará el: </span> {{ subscription().cancel.cancel_at * 1000 | date:'dd/MM/yyyy' }}</li>
+                <li><span class="font-medium">Feedback: </span> {{ subscription().cancel.cancellation_details.feedback }}</li>
+                <li><span class="font-medium">Comentario: </span> {{ subscription().cancel.cancellation_details.comment }}</li>
+              </ul>
+            </div>
+          }
+        </div>
+        
         <!-- Action Buttons -->
         <div class="card-actions mt-4 justify-end">
           <button class="btn btn-sm btn-secondary" [disabled]="isStatusLoading()" (click)="manageSubscription()">

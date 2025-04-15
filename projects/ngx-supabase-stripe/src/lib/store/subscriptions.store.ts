@@ -5,13 +5,27 @@ import { StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
 
+export type StripeSubscriptionCancellationDetails = {
+  cancel_at_period_end: boolean;
+  cancel_at: number;
+  canceled_at: number;
+  cancellation_details: {
+    comment: string;
+    feedback: string;
+    reason: string;
+  }
+}
+
+export type StripeSubscriptionPlan = {
+  amount: number;
+  active: boolean;
+  interval: string;
+}
+
 export type StripeSubscriptionPublic = Omit<StripeSubscription, 'attrs'> & {
   status: string;
-  plan: {
-    amount: number;
-    active: boolean;
-    interval: string;
-  }
+  plan: StripeSubscriptionPlan;
+  cancel: StripeSubscriptionCancellationDetails;
 };
 
 /**
@@ -216,6 +230,16 @@ function parseSubscription(subscription: StripeSubscription): StripeSubscription
       active: subscriptionAttrs.plan.active,
       interval: subscriptionAttrs.plan.interval,
     },
+    cancel: {
+      cancel_at_period_end: subscriptionAttrs.cancel_at_period_end ?? false,
+      cancel_at: subscriptionAttrs.cancel_at ?? null,
+      canceled_at: subscriptionAttrs.canceled_at ?? null,
+      cancellation_details: subscriptionAttrs.cancellation_details ?? {
+        comment: null,
+        feedback: null,
+        reason: null
+      }
+    }
   };
 }
 

@@ -96,7 +96,7 @@ export const ProductsStore = signalStore(
                 prices: prices.filter(price => price.product === product.id).map(price => ({
                   details: price,
                   recurringInterval: (price?.attrs as any)?.recurring?.interval || 'no-recurring'
-                })),
+                }))
               });
             });
   

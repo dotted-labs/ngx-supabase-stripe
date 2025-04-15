@@ -43,9 +43,8 @@ export class SubscriptionItemComponent {
    * Format date
    */
   public formatDate(timestamp: string): string {
-    const timestampNumber = parseInt(timestamp);
-    if (!timestampNumber) return 'N/A';
-    return new Date(timestampNumber * 1000).toLocaleDateString();
+    if (!timestamp) return 'N/A';
+    return new Date(timestamp).toLocaleDateString();
   }
   
   /**
