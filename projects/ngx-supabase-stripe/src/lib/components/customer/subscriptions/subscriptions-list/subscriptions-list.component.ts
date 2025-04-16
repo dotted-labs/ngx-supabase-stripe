@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../../store/subscriptions.store';
+import { Component, input, output } from '@angular/core';
+import { StripeSubscriptionPublic } from '../../../../store/subscriptions.store';
 import { SubscriptionItemSkeletonComponent } from './subscription-item-skeleton/subscription-item-skeleton.component';
 import { SubscriptionItemComponent } from './subscription-item/subscription-item.component';
-import { PortalAccountStore } from '../../../../store/portal-account.store';
 
 @Component({
   selector: 'lib-subscriptions-list',
@@ -12,34 +11,21 @@ import { PortalAccountStore } from '../../../../store/portal-account.store';
   standalone: true,
   imports: [CommonModule, SubscriptionItemComponent, SubscriptionItemSkeletonComponent],
 })
-export class SubscriptionsListComponent implements OnInit {
-  public readonly subscriptionsStore = inject(SubscriptionsStore);
-  public readonly portalAccountStore = inject(PortalAccountStore);
-  
-  ngOnInit() {
-    this.loadSubscriptions();
-  }
-  
-  private async loadSubscriptions() {
-    await this.subscriptionsStore.loadSubscriptions();
-  }
+export class SubscriptionsListComponent {
+  public readonly subscriptions = input.required<StripeSubscriptionPublic[]>();
+  public readonly loading = input<boolean>(false);
+  public readonly error = input<string | null>(null);
 
-  public manageSubscription(customerId: string): void {
-    if (!customerId) {
-      console.error('🚨 [SubscriptionsListComponent] subscription has no customer id');
-      return;
-    }
+  public readonly onManageSubscription = output<string>();
 
-    // Create portal session for the customer
-    const returnUrl = `${window.location.origin}/subscriptions`;
-    this.portalAccountStore.createPortalSession(customerId, returnUrl);
-  }
-  
   public refreshSubscriptions(): void {
-    this.loadSubscriptions();
+    console.log('🚩 [SubscriptionsListComponent] refreshSubscriptions');
   }
-  
-  public trackBySubscriptionId(index: number, subscription: StripeSubscriptionPublic): string | null {
-    return subscription.id;
+
+  /**
+   * Emit the customer ID to manage subscription
+   */
+  public manageSubscription(customerId: string): void {
+    this.onManageSubscription.emit(customerId);
   }
 } 

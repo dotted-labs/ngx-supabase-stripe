@@ -23,5 +23,8 @@ export type StripePrice = Omit<StripePriceRow, 'created' | 'updated'>;
 type StripeSubscriptionRow = StripeRowType<'subscriptions'>;
 export type StripeSubscription = Omit<StripeSubscriptionRow, 'created' | 'updated'>;
 
+type StripeCustomerRow = StripeRowType<'customers'>;
+export type StripeCustomer = Omit<StripeCustomerRow, 'created' | 'updated'>;
+
 // Global Stripe type table con prefijo 'stripe.'
 export type StripeTables = keyof StripeSchemaType['Tables'];

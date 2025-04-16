@@ -1,0 +1,15 @@
+.payment-intent-details {
+  transition: all 0.3s ease;
+}
+
+.status-badge {
+  text-transform: capitalize;
+}
+
+.payment-expanded {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  box-shadow: var(--tw-shadow-md);
+} 

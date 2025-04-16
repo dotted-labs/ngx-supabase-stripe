@@ -219,7 +219,7 @@ export const SubscriptionsStore = signalStore(
   }))
 );
 
-function parseSubscription(subscription: StripeSubscription): StripeSubscriptionPublic {
+export function parseSubscription(subscription: StripeSubscription): StripeSubscriptionPublic {
   const subscriptionAttrs = subscription.attrs as any;
   
   return {

@@ -140,6 +140,41 @@ export class SupabaseClientService {
   }
 
   /**
+   * CUSTOMER FUNCTIONS
+  */
+
+  /**
+   * Get customer by email
+   * @param email The customer email
+   */
+  public async getCustomerByEmail(email: string) {
+    return this.client.schema('public').rpc('get_stripe_customer', { customer_email: email });
+  }
+
+  /**
+   * Get customer payment intents
+   * @param customerId The customer ID
+   */
+  public async getCustomerPaymentIntents(customerId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_customer_payment_intents', { customer_id: customerId })
+      .select('*');
+  }
+
+  /**
+   * Get customer subscriptions
+   * @param customerId The customer ID
+   */
+  public async getCustomerSubscriptions(customerId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_customer_subscriptions', { customer_id: customerId })
+      .select('*');
+  }
+
+
+  /**
    * CLIENT GENERIC FUNCTIONS
   */
 

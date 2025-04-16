@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { StripeSubscriptionPublic } from '../../../../store/subscriptions.store';
-import { PortalAccountStore } from '../../../../store/portal-account.store';
 
 @Component({
   selector: 'lib-subscription-card',
@@ -10,10 +9,11 @@ import { PortalAccountStore } from '../../../../store/portal-account.store';
   imports: [CommonModule],
 })
 export class SubscriptionCardComponent {
-  public readonly portalAccountStore = inject(PortalAccountStore);
-  
   public readonly subscription = input.required<StripeSubscriptionPublic>();
-  public readonly redirectUrl = input<string>(window.location.origin + '/payments/account');
+  public readonly loading = input<boolean>(false);
+  public readonly error = input<string | null>(null);
+ 
+  public readonly onManageSubscription = output<string>();
   
   /**
    * Format the price amount from cents to dollars/euros
@@ -42,13 +42,9 @@ export class SubscriptionCardComponent {
   }
   
   /**
-   * Create portal session for the customer to manage subscription
+   * Emit the customer ID to manage subscription
    */
   public manageSubscription(): void {
-    if (!this.subscription().customer) {
-      console.error('🚨 [SubscriptionCardComponent] No customer ID provided');
-    } else {
-      this.portalAccountStore.createPortalSession(this.subscription().customer as string, this.redirectUrl());
-    }
+    this.onManageSubscription.emit(this.subscription().customer as string);
   }
 } 
