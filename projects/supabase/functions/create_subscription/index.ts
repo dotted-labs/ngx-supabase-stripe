@@ -16,9 +16,9 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { priceId, resultPagePath } = await req.json();
+    const { priceId, resultPagePath, customerEmail } = await req.json();
 
-    console.log('🔌 [create_subscription]: Creating subscription', priceId, resultPagePath);
+    console.log('🔌 [create_subscription]: Creating subscription', priceId, resultPagePath, customerEmail);
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
@@ -30,6 +30,7 @@ Deno.serve(async (req: Request) => {
       ],
       mode: 'subscription',
       payment_method_types: ['card', 'paypal', 'amazon_pay'],
+      customer_email: customerEmail ?? undefined,
       return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
     });
 

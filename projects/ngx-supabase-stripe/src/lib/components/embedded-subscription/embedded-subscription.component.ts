@@ -14,6 +14,7 @@ export class EmbeddedSubscriptionComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
   
   public readonly priceId = input.required<string>();
+  public readonly customerEmail = input<string | null>(null);
   public readonly returnPagePath = input<string>('/subscription-return');
 
   async ngOnInit() {
@@ -23,7 +24,7 @@ export class EmbeddedSubscriptionComponent implements OnInit {
   private createSubscription() {
     const baseUrl = window.location.origin;
     const returnPath = `${baseUrl}${this.returnPagePath()}`;
-    this.subscriptionsStore.createSubscription(this.priceId(), returnPath);
+    this.subscriptionsStore.createSubscription(this.priceId(), returnPath, this.customerEmail());
   }
 
   ngOnDestroy() {

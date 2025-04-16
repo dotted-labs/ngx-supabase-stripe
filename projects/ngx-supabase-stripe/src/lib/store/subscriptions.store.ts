@@ -75,11 +75,11 @@ export const SubscriptionsStore = signalStore(
      * Create a subscription
      * @param priceId The price ID for the subscription
      */
-    async createSubscription(priceId: string, returnPath: string) {
+    async createSubscription(priceId: string, returnPath: string, customerEmail: string | null) {
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath);
+        const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath, customerEmail);
         console.log('🔍 [SubscriptionsStore] created subscription', clientSecret, error);
         
         if (error) {
