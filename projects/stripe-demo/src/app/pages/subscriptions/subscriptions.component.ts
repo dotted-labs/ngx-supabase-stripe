@@ -27,6 +27,8 @@ export class SubscriptionsComponent {
   public readonly selectedPrice = signal<string | null>(null);
   public readonly selectedProduct = signal<StripeProductPublic | null>(null);
 
+   public customerEmail = signal<string | null>(null);
+
   public resetSelection(): void {
     this.selectedPrice.set(null);
   }
@@ -37,6 +39,10 @@ export class SubscriptionsComponent {
 
   public selectPrice(price: StripePricePublic): void {
     this.selectedPrice.set(price.id);
+  }
+
+  public startCreateSubscription(email: string): void {
+    this.customerEmail.set(email);
   }
 
   setActiveTab(tab: 'list' | 'new'): void {
