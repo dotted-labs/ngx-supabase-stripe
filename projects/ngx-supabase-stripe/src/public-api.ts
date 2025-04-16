@@ -24,8 +24,9 @@ export * from './lib/components/embedded-checkout/return-page/return-page.compon
 export * from './lib/components/product-list/product-list.component';
 export * from './lib/components/embedded-subscription/embedded-subscription.component';
 export * from './lib/components/embedded-subscription/return-page/subscription-return-page.component';
-export * from './lib/components/subscriptions-list/subscriptions-list.component';
-export * from './lib/components/subscriptions-list/subscription-item/subscription-item.component';
+export * from './lib/components/customer/subscriptions/subscriptions-list/subscriptions-list.component';
+export * from './lib/components/customer/subscriptions/subscriptions-list/subscription-item/subscription-item.component';
+export * from './lib/components/customer/subscriptions/subscription-card/subscription-card.component';
 
 // Export types
 export * from './database.types';

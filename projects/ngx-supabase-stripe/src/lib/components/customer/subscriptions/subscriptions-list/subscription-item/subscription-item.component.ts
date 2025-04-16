@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, EventEmitter, inject, input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../store/subscriptions.store';
-import { PortalAccountStore } from '../../../store/portal-account.store';
+import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../../../store/subscriptions.store';
+import { PortalAccountStore } from '../../../../../store/portal-account.store';
 @Component({
   selector: 'lib-subscription-item',
   templateUrl: './subscription-item.component.html',

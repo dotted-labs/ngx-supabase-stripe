@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { StripeSubscriptionPublic, SubscriptionsStore } from '../../store/subscriptions.store';
+import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../../store/subscriptions.store';
 import { SubscriptionItemSkeletonComponent } from './subscription-item-skeleton/subscription-item-skeleton.component';
 import { SubscriptionItemComponent } from './subscription-item/subscription-item.component';
-import { PortalAccountStore } from '../../store/portal-account.store';
+import { PortalAccountStore } from '../../../../store/portal-account.store';
 
 @Component({
   selector: 'lib-subscriptions-list',
