@@ -1,8 +1,9 @@
-import { withState, signalStore, withComputed, patchState, withMethods } from '@ngrx/signals';
+import { withState, signalStore, withComputed, patchState, withMethods, withHooks } from '@ngrx/signals';
 import { computed, inject } from '@angular/core';
 import { StripeCustomer, StripePaymentIntent } from '../models/database.model';
 import { parseSubscription, StripeSubscriptionPublic } from './subscriptions.store';
 import { SupabaseClientService } from '../services/supabase-client.service';
+import { ProductsStore } from './products.store';
 
 /**
  * Status of the subscription process
@@ -75,7 +76,7 @@ export const CustomerStore = signalStore(
     restSubscriptions: computed(() => state.subscriptions.data()?.slice(1)),
     isError: computed(() => state.paymentIntents.error()),
   })),
-  withMethods((state, supabaseService = inject(SupabaseClientService)) => ({
+  withMethods((state, supabaseService = inject(SupabaseClientService), productsStore = inject(ProductsStore)) => ({
 
     /**
      * Load customer
@@ -127,11 +128,44 @@ export const CustomerStore = signalStore(
       if (error) {
         patchState(state, { subscriptions: { error: error.message, status: 'error', data: [] } });
       } else {
-        const subscriptions = data.map((subscription) => parseSubscription(subscription));
+        const subscriptions = data.map((subscription) => {
+          const parsedSubscription = parseSubscription(subscription);
+          
+          // Get the product associated with this subscription
+          const productId = parsedSubscription.plan.productId;
+          if (productId && productsStore.products()) {
+            const product = productsStore.products()?.find(p => p.id === productId);
+            if (product) {
+              parsedSubscription.product = product;
+            }
+          }
+          
+          return parsedSubscription;
+        });
+
+        console.log('🔍 [CustomerStore] subscriptions: ', subscriptions);
+        
         patchState(state, { subscriptions: { data: subscriptions ?? [], status: 'success', error: null } });
       }
     },
-  }))
+  })),
+  withHooks(() => {
+    const productsStore = inject(ProductsStore);
+
+    if (!productsStore.hasProducts()) {
+      console.log('🔍 [CustomerStore] loading products...');
+      productsStore.loadProducts();
+    }
+
+    return {
+      onInit() {
+        console.log('🔍 [CustomerStore] initialized');
+      },
+      onDestroy() {
+        console.log('🧹 [CustomerStore] destroyed');
+      }
+    }
+  })
 );
 
 export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePaymentIntentsPublic {
@@ -145,4 +179,3 @@ export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePa
     paymentMethodType: paymentIntentAttrs.payment_method_types[0],
   };
 }
-

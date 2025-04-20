@@ -114,6 +114,17 @@ export class SupabaseClientService {
   }
 
   /**
+   * Select a Stripe product
+   * @param productId The product ID
+   */
+  public async selectStripeProduct(productId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_product', { product_id: productId })
+      .select('*');
+  }
+
+  /**
    * Update a product
    * @param id The product ID
    * @param data The product data to update

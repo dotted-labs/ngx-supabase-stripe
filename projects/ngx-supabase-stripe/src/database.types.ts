@@ -61,6 +61,17 @@ export type Database = {
           attrs: Json
         }[]
       }
+      get_stripe_product: {
+        Args: { product_id: string }
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
       get_stripe_products: {
         Args: Record<PropertyKey, never>
         Returns: {

@@ -3,13 +3,8 @@
     <div class="flex justify-between">
       <div>
         <h3 class="card-title text-lg">
-          <span class="badge {{ getStatusBadgeClass(paymentIntent().status) }} status-badge ml-2">
-            {{ paymentIntent().status }}
-          </span>
+          Customer: {{ paymentIntent().customer }}
         </h3>
-        <p class="text-gray-600 text-sm">
-          Cliente: {{ paymentIntent().customer }}
-        </p>
       </div>
       
       <div class="flex gap-2">
@@ -23,17 +18,13 @@
     </div>
 
     <div class="payment-intent-details mt-2">
-      <div class="flex justify-between text-sm">
+      <div class="flex justify-start items-center gap-4 text-sm">
         <div>
-          <span class="font-medium">Método: </span>
-          <span class="badge badge-outline">
-            {{ paymentIntent().paymentMethodType }}
-          </span>
+          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
         </div>
         <div>
-          <span class="font-medium">Modo: </span>
-          <span class="text-md">
-            {{ paymentIntent().liveMode ? 'Live' : 'Test' }}
+          <span class="badge badge-outline">
+            {{ paymentIntent().paymentMethodType }}
           </span>
         </div>
       </div>
@@ -56,7 +47,6 @@
           </div>
           
           <div>
-            <h4 class="text-md font-semibold mb-2">Estado</h4>
             <ul class="space-y-1 text-sm">
               <li>
                 <span class="font-medium">Estado: </span> 

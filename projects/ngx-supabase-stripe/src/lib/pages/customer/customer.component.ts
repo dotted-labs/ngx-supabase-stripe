@@ -46,7 +46,7 @@ export class CustomerDashboardComponent {
    * Refresh all customer data
    */
   public refreshData(): void {
-    //this.loadCustomerData();
+    console.log('🚩 [CustomerDashboardComponent] refreshData');
   }
   
   /**
@@ -54,5 +54,9 @@ export class CustomerDashboardComponent {
    */
   public manageSubscription(customerId: string): void {
     this.portalAccountStore.createPortalSession(customerId, this.returnUrl());
+  }
+
+  public refreshSubscriptions(): void {
+    console.log('🚩 [CustomerDashboardComponent] refreshSubscriptions');
   }
 }

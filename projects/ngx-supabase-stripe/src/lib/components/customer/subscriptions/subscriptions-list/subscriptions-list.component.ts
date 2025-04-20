@@ -7,7 +7,6 @@ import { SubscriptionItemComponent } from './subscription-item/subscription-item
 @Component({
   selector: 'lib-subscriptions-list',
   templateUrl: './subscriptions-list.component.html',
-  styleUrls: ['./subscriptions-list.component.css'],
   standalone: true,
   imports: [CommonModule, SubscriptionItemComponent, SubscriptionItemSkeletonComponent],
 })

@@ -22,7 +22,7 @@
   <!-- Contenido basado en la pestaña activa -->
   @if (activeTab() === 'list') {
     <div class="subscription-list-container">
-      <lib-subscriptions-list></lib-subscriptions-list>
+      <lib-subscriptions-list [subscriptions]="subscriptionsStore.subscriptions() ?? []"></lib-subscriptions-list>
     </div>
   } @else if (activeTab() === 'new') {
     @if (selectedPrice()) {

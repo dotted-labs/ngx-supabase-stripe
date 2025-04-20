@@ -1,9 +1,10 @@
 import { computed, inject } from '@angular/core';
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import { StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
+import { ProductsStore, StripeProductPublic } from './products.store';
 
 export type StripeSubscriptionCancellationDetails = {
   cancel_at_period_end: boolean;
@@ -20,12 +21,14 @@ export type StripeSubscriptionPlan = {
   amount: number;
   active: boolean;
   interval: string;
+  productId: string;
 }
 
 export type StripeSubscriptionPublic = Omit<StripeSubscription, 'attrs'> & {
   status: string;
   plan: StripeSubscriptionPlan;
   cancel: StripeSubscriptionCancellationDetails;
+  product?: StripeProductPublic | null;
 };
 
 /**
@@ -70,7 +73,9 @@ export const SubscriptionsStore = signalStore(
     hasSubscriptions: computed(() => state.subscriptions() !== null && state.subscriptions()!.length > 0),
     isError: computed(() => state.error()),
   })),
-  withMethods((store, stripeService = inject(StripeClientService), supabaseService = inject(SupabaseClientService)) => ({
+  withMethods((store, stripeService = inject(StripeClientService), 
+               supabaseService = inject(SupabaseClientService), 
+               productsStore = inject(ProductsStore)) => ({
     /**
      * Create a subscription
      * @param priceId The price ID for the subscription
@@ -126,7 +131,20 @@ export const SubscriptionsStore = signalStore(
         const { data: subscriptions, error } = await supabaseService.getStripeSubscriptions();
         console.log('🔍 [SubscriptionsStore] loaded subscriptions', subscriptions);
 
-        const parsedSubscriptions = subscriptions?.map((subscription) => parseSubscription(subscription as StripeSubscription));
+        const parsedSubscriptions = subscriptions?.map((subscription) => {
+          const parsedSubscription = parseSubscription(subscription as StripeSubscription);
+          
+          // Get the product associated with this subscription
+          const productId = parsedSubscription.plan.productId;
+          if (productId && productsStore.products()) {
+            const product = productsStore.products()?.find(p => p.id === productId);
+            if (product) {
+              parsedSubscription.product = product;
+            }
+          }
+          
+          return parsedSubscription;
+        });
 
         if (error) {
           patchState(store, {
@@ -160,6 +178,15 @@ export const SubscriptionsStore = signalStore(
         console.log('🔍 [SubscriptionsStore] got subscription', subscription, error);
 
         const parsedSubscription = parseSubscription(subscription as StripeSubscription);
+
+        // Get the product associated with this subscription
+        const productId = parsedSubscription.plan.productId;
+        if (productId && productsStore.products()) {
+          const product = productsStore.products()?.find(p => p.id === productId);
+          if (product) {
+            parsedSubscription.product = product;
+          }
+        }
 
         if (error) {
           patchState(store, {
@@ -216,7 +243,24 @@ export const SubscriptionsStore = signalStore(
     reset() {
       patchState(store, initialSubscriptionState);
     }
-  }))
+  })),
+  withHooks(() => {
+    const productsStore = inject(ProductsStore);
+
+    if (!productsStore.hasProducts()) {
+      productsStore.loadProducts();
+      console.log('🔍 [SubscriptionsStore] loading products');
+    }
+
+    return {
+      onInit() {
+        console.log('🔍 [SubscriptionsStore] initialized');
+      },
+      onDestroy() {
+        console.log('🧹 [SubscriptionsStore] destroyed');
+      }
+    }
+  })
 );
 
 export function parseSubscription(subscription: StripeSubscription): StripeSubscriptionPublic {
@@ -229,6 +273,7 @@ export function parseSubscription(subscription: StripeSubscription): StripeSubsc
       amount: subscriptionAttrs.plan.amount,
       active: subscriptionAttrs.plan.active,
       interval: subscriptionAttrs.plan.interval,
+      productId: subscriptionAttrs.plan.product,
     },
     cancel: {
       cancel_at_period_end: subscriptionAttrs.cancel_at_period_end ?? false,
@@ -239,7 +284,7 @@ export function parseSubscription(subscription: StripeSubscription): StripeSubsc
         feedback: null,
         reason: null
       }
-    }
+    },
+    product: subscriptionAttrs.product ? subscriptionAttrs.product as StripeProductPublic : undefined
   };
 }
-
