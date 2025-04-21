@@ -14,6 +14,7 @@ export class SubscriptionsListComponent {
   public readonly subscriptions = input.required<StripeSubscriptionPublic[]>();
   public readonly loading = input<boolean>(false);
   public readonly error = input<string | null>(null);
+  public readonly withEmptyState = input<boolean>(true);
 
   public readonly onManageSubscription = output<string>();
 

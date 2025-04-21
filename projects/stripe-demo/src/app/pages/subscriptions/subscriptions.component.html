@@ -6,10 +6,10 @@
       </a>
       <h1 class="text-3xl font-bold">Subscriptions Demo</h1>
     </div>
-    <p class="text-lg mt-2">Administra tus suscripciones y adquiere nuevos planes</p>
+    <p class="text-lg mt-2">Manage your subscriptions and acquire new plans</p>
   </section>
 
-  <!-- Tabs de navegación -->
+  <!-- Navigation Tabs -->
   <div class="tabs tabs-boxed mb-6">
     <a class="tab" [class.tab-active]="activeTab() === 'list'" (click)="setActiveTab('list')">
       Mis Suscripciones
@@ -19,10 +19,13 @@
     </a>
   </div>
 
-  <!-- Contenido basado en la pestaña activa -->
   @if (activeTab() === 'list') {
     <div class="subscription-list-container">
-      <lib-subscriptions-list [subscriptions]="subscriptionsStore.subscriptions() ?? []"></lib-subscriptions-list>
+      <lib-subscriptions-list 
+        [subscriptions]="subscriptionsStore.subscriptions() ?? []" 
+        [loading]="subscriptionsStore.isStatusLoading()" 
+        [error]="subscriptionsStore.error()">
+      </lib-subscriptions-list>
     </div>
   } @else if (activeTab() === 'new') {
     @if (selectedPrice()) {
@@ -30,16 +33,10 @@
         <div class="card-body">
           <div class="flex justify-between items-center mb-4">
             <h2 class="card-title">Checkout Subscription</h2>
-            <button class="btn btn-sm" (click)="resetSelection()">Cambiar selección</button>
-          </div>
-          <div class="flex flex-col justify-start items-start gap-2 mb-4">
-            <label for="customerEmail">Test customer Email</label>
-            <input type="email" id="customerEmail" #emailInput class="input input-bordered w-full max-w-xs">
-            <button class="btn btn-sm btn-primary" (click)="startCreateSubscription(emailInput.value)">Iniciar checkout</button>
+            <button class="btn btn-sm" (click)="resetSelection()">Change selection</button>
           </div>
           <lib-embedded-subscription 
             [priceId]="selectedPrice()!"
-            [customerEmail]="customerEmail()"
             returnPagePath="/subscriptions/result">
           </lib-embedded-subscription>
         </div>
@@ -47,8 +44,8 @@
     } @else {
       <div class="card">
         <div class="card-body">
-          <h2 class="text-2xl font-bold mb-4">Suscríbete a nuestro plan</h2>
-          <p class="mb-6">Selecciona el plan que deseas suscribirte y empieza a disfrutar de todos los beneficios.</p>
+          <h2 class="text-2xl font-bold mb-4">Subscribe to our plan</h2>
+          <p class="mb-6">Select the plan you want to subscribe to and start enjoying all the benefits.</p>
           <lib-product-list
           [productType]="'recurring'"
           (productSelected)="selectProduct($event)"

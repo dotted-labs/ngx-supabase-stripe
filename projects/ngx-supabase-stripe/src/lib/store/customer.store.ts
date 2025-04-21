@@ -77,7 +77,6 @@ export const CustomerStore = signalStore(
     isError: computed(() => state.paymentIntents.error()),
   })),
   withMethods((state, supabaseService = inject(SupabaseClientService), productsStore = inject(ProductsStore)) => ({
-
     /**
      * Load customer
      * @param customerEmail The customer email
@@ -92,10 +91,15 @@ export const CustomerStore = signalStore(
         patchState(state, { customer: { error: error.message, status: 'error', data: null } });
       } else {
         
-        this.loadPaymentIntents(customer.id as string);
-        this.loadSubscriptions(customer.id as string);
+        if (customer) {
+          this.loadPaymentIntents(customer.id as string);
+          this.loadSubscriptions(customer.id as string);
 
-        patchState(state, { customer: { data: customer, status: 'success', error: null } });
+          patchState(state, { customer: { data: customer, status: 'success', error: null } });
+        } else {
+          patchState(state, { customer: { data: null, status: 'error', error: 'no customer found' } });
+        }
+
       }
     },
 
