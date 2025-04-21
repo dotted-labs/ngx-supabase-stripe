@@ -17,6 +17,7 @@ export class PaymentIntentsListComponent {
   public readonly paymentIntents = input.required<StripePaymentIntentsPublic[]>();
   public readonly loading = input<boolean>(false);
   public readonly error = input<string | null>(null);
+  public readonly withControls = input<boolean>(true);
   
   public readonly onRefresh = output<void>();
   

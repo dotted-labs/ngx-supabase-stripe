@@ -1,4 +1,9 @@
-<div class="card bg-base-100 w-96 shadow-sm ">
+@if (loading()) {
+  <lib-subscription-card-skeleton></lib-subscription-card-skeleton>
+} @else if (error()) {
+  <div class="alert alert-error">{{ error() }}</div>
+} @else if (subscription()) {
+  <div class="card bg-base-100 w-96 shadow-sm ">
   @if (hasValidProductImages()) {
     <figure class="flex items-center justify-center">
       <img [src]="getProductImage()" [alt]="getProductName()" class="h-48 w-full object-cover" />
@@ -21,5 +26,6 @@
         Manage Subscription
       </button>
     </div>
+    </div>
   </div>
-</div> 
+}

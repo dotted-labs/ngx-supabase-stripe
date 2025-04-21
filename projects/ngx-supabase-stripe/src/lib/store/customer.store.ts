@@ -77,7 +77,6 @@ export const CustomerStore = signalStore(
     isError: computed(() => state.paymentIntents.error()),
   })),
   withMethods((state, supabaseService = inject(SupabaseClientService), productsStore = inject(ProductsStore)) => ({
-
     /**
      * Load customer
      * @param customerEmail The customer email

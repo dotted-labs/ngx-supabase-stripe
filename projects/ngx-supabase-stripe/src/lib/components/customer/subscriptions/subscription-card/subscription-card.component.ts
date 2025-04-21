@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { StripeSubscriptionPublic } from '../../../../store/subscriptions.store';
+import { SubscriptionCardSkeletonComponent } from './subscription-card-skeleton/subscription-card-skeleton.component';
 
 @Component({
   selector: 'lib-subscription-card',
   templateUrl: './subscription-card.component.html',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SubscriptionCardSkeletonComponent],
 })
 export class SubscriptionCardComponent {
   public readonly subscription = input.required<StripeSubscriptionPublic>();
