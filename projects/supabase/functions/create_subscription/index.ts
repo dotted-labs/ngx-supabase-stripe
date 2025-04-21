@@ -16,23 +16,39 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { priceId, resultPagePath, customerEmail } = await req.json();
+    const { priceId, resultPagePath, customer } = await req.json();
 
-    console.log('🔌 [create_subscription]: Creating subscription', priceId, resultPagePath, customerEmail);
+    console.log('🔌 [create_subscription]: Creating subscription', priceId, resultPagePath, customer);
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionOptions: Stripe.Checkout.SessionCreateParams = {
       ui_mode: 'embedded',
       line_items: [
         {
           price: priceId,
-          quantity: 1
+          quantity: 1 
         }
       ],
       mode: 'subscription',
       payment_method_types: ['card', 'paypal', 'amazon_pay'],
-      customer_email: customerEmail ?? undefined,
-      return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
-    });
+      return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`,
+    }
+
+    // If the customer already exists, use their ID
+    if (customer && customer.id) {
+      sessionOptions.customer = customer.id;
+    } else {
+      // If the customer has an email, use it
+      if (customer && customer.email) {
+        sessionOptions.customer_email = customer.email;
+      }
+
+      // If the customer doesn't exist, create a new one
+      sessionOptions.customer_creation = 'always';
+    }
+
+    console.log('🔌 [create_subscription]: Session options', JSON.stringify(sessionOptions));
+
+    const session = await stripe.checkout.sessions.create(sessionOptions);
 
     console.log('🔌 [create_subscription]: Subscription created', session);
     return new Response(JSON.stringify({

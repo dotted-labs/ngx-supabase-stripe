@@ -5,6 +5,7 @@ import { StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
 import { ProductsStore, StripeProductPublic } from './products.store';
+import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
 export type StripeSubscriptionCancellationDetails = {
   cancel_at_period_end: boolean;
@@ -75,7 +76,8 @@ export const SubscriptionsStore = signalStore(
   })),
   withMethods((store, stripeService = inject(StripeClientService), 
                supabaseService = inject(SupabaseClientService), 
-               productsStore = inject(ProductsStore)) => ({
+               productsStore = inject(ProductsStore),
+               customerStore = inject(CustomerStore)) => ({
     /**
      * Create a subscription
      * @param priceId The price ID for the subscription
@@ -84,7 +86,13 @@ export const SubscriptionsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath, customerEmail);
+        let customer: StripeCustomerPublic | null = null;
+
+        if (customerEmail) {
+          customer = customerStore.customer().data;
+        }
+
+        const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath, customer);
         console.log('🔍 [SubscriptionsStore] created subscription', clientSecret, error);
         
         if (error) {

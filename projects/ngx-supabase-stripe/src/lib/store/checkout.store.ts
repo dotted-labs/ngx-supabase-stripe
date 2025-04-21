@@ -2,6 +2,7 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import { StripeClientService } from '../services/stripe-client.service';
+import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
 /**
  * Status of the checkout process
@@ -53,7 +54,7 @@ export const CheckoutStore = signalStore(
     isPaymentProcessing: computed(() => state.sessionStatus()?.status === 'open'),
     isError: computed(() => state.error())
   })),
-  withMethods((store, stripeService = inject(StripeClientService)) => ({
+  withMethods((store, stripeService = inject(StripeClientService), customerStore = inject(CustomerStore)) => ({
     /**
      * Create a checkout session
      * @param priceId The price ID to checkout
@@ -63,7 +64,13 @@ export const CheckoutStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { clientSecret, error } = await stripeService.createCheckoutSession(priceId, returnPagePath, customerEmail);
+        let customer: StripeCustomerPublic | null = null;
+        
+        if (customerEmail) {
+          customer = customerStore.customer().data;
+        }
+
+        const { clientSecret, error } = await stripeService.createCheckoutSession(priceId, returnPagePath, customer);
 
         if (error) {
           patchState(store, {

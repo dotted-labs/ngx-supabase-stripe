@@ -34,9 +34,11 @@
       </div>
     </div>
   } @else if (paymentIntents().length > 0) {
-    @for (paymentIntent of paymentIntents(); track paymentIntent.id) {
-      <lib-payment-intent-item [paymentIntent]="paymentIntent"></lib-payment-intent-item>
-    }
+    <div class="flex flex-col gap-4">
+      @for (paymentIntent of paymentIntents(); track paymentIntent.id) {
+        <lib-payment-intent-item [paymentIntent]="paymentIntent"></lib-payment-intent-item>
+      }
+    </div>
   } @else {
     <div class="empty-state">
       <div class="card bg-base-100 shadow-sm">

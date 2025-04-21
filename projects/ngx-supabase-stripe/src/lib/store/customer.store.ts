@@ -10,14 +10,14 @@ import { ProductsStore } from './products.store';
  */
 export type CustomerStatus = 'idle' | 'loading' | 'success' | 'error';
 
-export type PaymentMethodType = 'card' | 'paypal' | 'link' | 'amazon';
+//export type PaymentMethodType = 'card' | 'paypal' | 'link' | 'amazon';
 
 export type StripePaymentIntentsPublic = Omit<StripePaymentIntent, 'attrs'> & {
   status: string;
   invoiceId: string;
   liveMode: boolean;
   confirmationMethod: string;
-  paymentMethodType: PaymentMethodType;
+  paymentMethodId: string;
 };
 
 export type StripeCustomerPublic = Omit<StripeCustomer, 'attrs'>
@@ -173,6 +173,8 @@ export const CustomerStore = signalStore(
 );
 
 export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePaymentIntentsPublic {
+  console.log('🔍 [CustomerStore] parsePaymentIntent: ', paymentIntent);
+
   const paymentIntentAttrs = paymentIntent.attrs as any;
   return {
     ...paymentIntent,
@@ -180,6 +182,6 @@ export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePa
     invoiceId: paymentIntentAttrs.invoice as string,
     liveMode: paymentIntentAttrs.livemode as boolean,
     confirmationMethod: paymentIntentAttrs.confirmation_method,
-    paymentMethodType: paymentIntentAttrs.payment_method_types[0],
+    paymentMethodId: paymentIntentAttrs.payment_method,
   };
 }
