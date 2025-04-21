@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { EmbeddedCheckoutComponent, ProductListComponent, StripePricePublic, StripeProductPublic } from '@ngx-supabase-stripe';
 
@@ -8,6 +9,7 @@ import { EmbeddedCheckoutComponent, ProductListComponent, StripePricePublic, Str
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterLink,
     EmbeddedCheckoutComponent, 
     ProductListComponent
@@ -18,9 +20,9 @@ import { EmbeddedCheckoutComponent, ProductListComponent, StripePricePublic, Str
 export class CheckoutComponent {
   public readonly selectedPrice = signal<string | null>(null);
   public readonly selectedProduct = signal<StripeProductPublic | null>(null);
-  public readonly isLoading = signal(false);
-  public readonly error = signal<string | null>(null);
   public readonly useStripeProducts = signal(false);
+
+  public customerEmail = signal<string | null>(null);
 
   public selectPrice(price: StripePricePublic): void {
     this.selectedPrice.set(price.id);
@@ -37,5 +39,9 @@ export class CheckoutComponent {
   public toggleProductView(): void {
     this.useStripeProducts.update(value => !value);
     this.resetSelection();
+  }
+
+  public startCheckout(email: string): void {
+    this.customerEmail.set(email);
   }
 } 

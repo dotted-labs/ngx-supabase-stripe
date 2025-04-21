@@ -3,18 +3,18 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('../../../stripe-demo/src/app/pages/home/home.component').then(m => m.HomeComponent)
+    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'checkout',
     children: [
       {
         path: '',
-        loadComponent: () => import('../../../stripe-demo/src/app/pages/checkout/checkout.component').then(m => m.CheckoutComponent)
+        loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent)
       },
       {
         path: 'result',
-        loadComponent: () => import('../../../stripe-demo/src/app/pages/checkout/result/checkout-result.component').then(m => m.CheckoutResultComponent)
+        loadComponent: () => import('./pages/checkout/result/checkout-result.component').then(m => m.CheckoutResultComponent)
       }
     ]
   },
@@ -23,17 +23,21 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('../../../stripe-demo/src/app/pages/subscriptions/subscriptions.component').then(m => m.SubscriptionsComponent)
+        loadComponent: () => import('./pages/subscriptions/subscriptions.component').then(m => m.SubscriptionsComponent)
       },
       {
         path: 'result',
-        loadComponent: () => import('../../../stripe-demo/src/app/pages/subscriptions/result/subscriptions-result.component').then(m => m.SubscriptionsResultComponent)
+        loadComponent: () => import('./pages/subscriptions/result/subscriptions-result.component').then(m => m.SubscriptionsResultComponent)
       }
     ]
   },
   {
+    path: 'customers',
+    loadComponent: () => import('./pages/customers/customers.component').then(m => m.CustomersComponent)
+  },
+  {
     path: 'payouts',
-    loadComponent: () => import('../../../stripe-demo/src/app/pages/payouts/payouts.component').then(m => m.PayoutsComponent)
+    loadComponent: () => import('./pages/payouts/payouts.component').then(m => m.PayoutsComponent)
   },
   {
     path: '**',

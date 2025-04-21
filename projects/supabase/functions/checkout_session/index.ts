@@ -16,9 +16,9 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { priceId, resultPagePath } = await req.json();
+    const { priceId, resultPagePath, customerEmail } = await req.json();
 
-    console.log('🔌 [checkout_session]: Creating checkout session', priceId, resultPagePath);
+    console.log('🔌 [checkout_session]: Creating checkout session', priceId, resultPagePath, customerEmail);
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
@@ -29,7 +29,8 @@ Deno.serve(async (req: Request) => {
         }
       ],
       mode: 'payment',
-      payment_method_types: ['card', 'paypal', 'amazon_pay'],
+      payment_method_types: ['card', 'paypal', 'amazon_pay', 'alipay'],
+      customer_email: customerEmail ?? undefined,
       return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
     });
 

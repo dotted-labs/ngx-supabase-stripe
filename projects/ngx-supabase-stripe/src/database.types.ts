@@ -15,6 +15,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_stripe_customer: {
+        Args: { customer_email: string }
+        Returns: {
+          id: string
+          email: string
+          name: string
+          description: string
+          created: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_customer_payment_intents: {
+        Args: { customer_id: string }
+        Returns: {
+          id: string
+          customer: string
+          amount: number
+          currency: string
+          payment_method: string
+          created: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_customer_subscriptions: {
+        Args: { customer_id: string }
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
       get_stripe_prices: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -24,6 +58,17 @@ export type Database = {
           product: string
           unit_amount: number
           type: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_product: {
+        Args: { product_id: string }
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
           attrs: Json
         }[]
       }

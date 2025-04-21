@@ -1,0 +1,51 @@
+<div class="payment-intents-container">
+  <header class="mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Payment Intents</h2>
+    <p class="text-gray-600">Payment intents history.</p>
+  </header>
+
+  <div class="controls mb-4 flex justify-between items-center">
+    <div class="stats">
+      @if (paymentIntents().length > 0) {
+        <span class="badge badge-primary">{{ paymentIntents().length }} payment intents</span>
+      }
+    </div>
+    <button class="btn btn-sm btn-outline" (click)="refreshPaymentIntents()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Actualizar
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="flex flex-col gap-4">
+      @for (item of [1,2,3]; track item) {
+        <lib-payment-intent-item-skeleton></lib-payment-intent-item-skeleton>
+      }
+    </div>
+  } @else if (error()) {
+    <div class="error-container">
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>{{ error() }}</span>
+      </div>
+    </div>
+  } @else if (paymentIntents().length > 0) {
+    @for (paymentIntent of paymentIntents(); track paymentIntent.id) {
+      <lib-payment-intent-item [paymentIntent]="paymentIntent"></lib-payment-intent-item>
+    }
+  } @else {
+    <div class="empty-state">
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body items-center text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          </svg>
+          <h2 class="card-title text-xl">No hay payment intents recientes</h2>
+          <p class="text-gray-600">No se encontraron payment intents en tu historial.</p>
+        </div>
+      </div>
+    </div>
+  }
+</div> 

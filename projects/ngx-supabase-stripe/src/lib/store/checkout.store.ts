@@ -59,11 +59,11 @@ export const CheckoutStore = signalStore(
      * @param priceId The price ID to checkout
      * @param returnPagePath The return page path after checkout
      */
-    async createCheckoutSession({priceId, returnPagePath}: {priceId: string, returnPagePath: string}) {
+    async createCheckoutSession({priceId, returnPagePath, customerEmail}: {priceId: string, returnPagePath: string, customerEmail: string | null}) {
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { clientSecret, error } = await stripeService.createCheckoutSession(priceId, returnPagePath);
+        const { clientSecret, error } = await stripeService.createCheckoutSession(priceId, returnPagePath, customerEmail);
 
         if (error) {
           patchState(store, {

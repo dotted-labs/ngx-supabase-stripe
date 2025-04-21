@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, inject, input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../store/subscriptions.store';
-import { PortalAccountStore } from '../../../store/portal-account.store';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { StripeSubscriptionPublic, SubscriptionsStore } from '../../../../../store/subscriptions.store';
+import { PortalAccountStore } from '../../../../../store/portal-account.store';
 @Component({
   selector: 'lib-subscription-item',
   templateUrl: './subscription-item.component.html',
   styleUrls: ['./subscription-item.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
 })
 export class SubscriptionItemComponent {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
@@ -18,7 +17,7 @@ export class SubscriptionItemComponent {
   public readonly subscription = input.required<StripeSubscriptionPublic>();
   
   // Output events
-  @Output() onManageSubscription = new EventEmitter<string>();
+  public readonly onManageSubscription = output<string>();
 
   public readonly isStatusLoading = computed(() => this.portalAccountStore.isStatusLoading());
   

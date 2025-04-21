@@ -114,6 +114,17 @@ export class SupabaseClientService {
   }
 
   /**
+   * Select a Stripe product
+   * @param productId The product ID
+   */
+  public async selectStripeProduct(productId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_product', { product_id: productId })
+      .select('*');
+  }
+
+  /**
    * Update a product
    * @param id The product ID
    * @param data The product data to update
@@ -138,6 +149,41 @@ export class SupabaseClientService {
   ): Promise<{ data: StripeProduct | null; error: Error | null }> {
     return this.delete<StripeProduct>('products', { id });
   }
+
+  /**
+   * CUSTOMER FUNCTIONS
+  */
+
+  /**
+   * Get customer by email
+   * @param email The customer email
+   */
+  public async getCustomerByEmail(email: string) {
+    return this.client.schema('public').rpc('get_stripe_customer', { customer_email: email });
+  }
+
+  /**
+   * Get customer payment intents
+   * @param customerId The customer ID
+   */
+  public async getCustomerPaymentIntents(customerId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_customer_payment_intents', { customer_id: customerId })
+      .select('*');
+  }
+
+  /**
+   * Get customer subscriptions
+   * @param customerId The customer ID
+   */
+  public async getCustomerSubscriptions(customerId: string) {
+    return this.client
+      .schema('public')
+      .rpc('get_stripe_customer_subscriptions', { customer_id: customerId })
+      .select('*');
+  }
+
 
   /**
    * CLIENT GENERIC FUNCTIONS

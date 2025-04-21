@@ -39,7 +39,7 @@
     <div class="subscription-details mt-2">
       <div class="flex justify-between text-sm">
         <div>
-          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(subscription().plan.amount, 'EUR') }}</span>
+          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(subscription().plan.amount, subscription().currency ?? 'EUR') }}</span>
         </div>
         <div>
           <span class="font-medium">Período: </span><span class="text-md font-bold">{{ subscription().plan.interval }}</span>

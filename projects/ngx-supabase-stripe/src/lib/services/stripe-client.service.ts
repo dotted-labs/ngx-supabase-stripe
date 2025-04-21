@@ -31,14 +31,16 @@ export class StripeClientService {
    */
   public async createCheckoutSession(
     priceId: string,
-    resultPagePath: string
+    resultPagePath: string,
+    customerEmail: string | null
   ): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
         .functions.invoke('checkout_session', {
           body: {
             priceId,
-            resultPagePath
+            resultPagePath,
+            customerEmail
           }
         });
 
@@ -56,13 +58,14 @@ export class StripeClientService {
    * Create a subscription
    * @param priceId The price ID for the subscription
    */
-  public async createSubscription(priceId: string, returnPath: string): Promise<{ clientSecret: string | null; error: Error | null }> {
+  public async createSubscription(priceId: string, returnPath: string, customerEmail: string | null): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
         .functions.invoke('create_subscription', {
           body: {
             priceId,
-            resultPagePath: returnPath
+            resultPagePath: returnPath,
+            customerEmail
           }
         });
 

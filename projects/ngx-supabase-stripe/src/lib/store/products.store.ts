@@ -87,19 +87,11 @@ export const ProductsStore = signalStore(
         if (prices && stripeProducts) {
           {
             const products: StripeProductPublic[] = [];
-  
+
             stripeProducts.forEach(product => {
-              const { attrs, ...mainProperties } = product;
-              products.push({
-                ...mainProperties,
-                images: (attrs as any)?.images,
-                prices: prices.filter(price => price.product === product.id).map(price => ({
-                  details: price,
-                  recurringInterval: (price?.attrs as any)?.recurring?.interval || 'no-recurring'
-                }))
-              });
+              products.push(parseProduct(product, prices));
             });
-  
+
             console.log('🔍 [ProductsStore] products: ', products);
 
             patchState(store, {
@@ -133,3 +125,16 @@ export const ProductsStore = signalStore(
     }
   })
 )
+
+export function parseProduct(product: StripeProduct, prices: StripePrice[] = []): StripeProductPublic {
+  const { attrs, ...mainProperties } = product;
+  return {
+    ...mainProperties,
+    images: (attrs as any)?.images || [],
+    prices: prices.filter(price => price.product === product.id).map(price => ({
+      details: price,
+      recurringInterval: (price?.attrs as any)?.recurring?.interval || 'no-recurring'
+    }))
+  };
+}
+
