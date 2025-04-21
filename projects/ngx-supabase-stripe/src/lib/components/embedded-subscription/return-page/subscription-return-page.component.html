@@ -1,32 +1,30 @@
-<div class="subscription-return-container">
-  <div class="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-    <div class="text-center mb-6">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <h2 class="text-2xl font-bold text-gray-800">¡Gracias por suscribirte!</h2>
-      <p class="text-gray-600 mt-2">Tu suscripción ha sido procesada correctamente.</p>
-    </div>
-    
-    @if (subscriptionsStore.isStatusLoading()) {
-      <div class="loading-container">
-        <div class="spinner"></div>
-        <p>Cargando detalles de la suscripción...</p>
-      </div>
-    } @else if (subscriptionsStore.isStatusError()) {
-      <div class="error-container">
-        <p class="text-red-500">{{ subscriptionsStore.error() }}</p>
-      </div>
-    } @else if (subscriptionsStore.hasSubscriptions()) {
-      <div class="success-container">
-        <p class="text-green-600 font-medium">Tu suscripción está activa.</p>
-      </div>
-    }
-    
-    <div class="mt-6 text-center">
-      <button class="btn btn-primary" (click)="navigate()">
-        Volver al inicio
-      </button>
-    </div>
+<div class="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
+  <div class="text-center mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h2 class="text-2xl font-bold text-gray-800">¡Gracias por suscribirte!</h2>
+    <p class="text-gray-600 mt-2">Tu suscripción ha sido procesada correctamente.</p>
   </div>
-</div> 
+  
+  @if (subscriptionsStore.isStatusLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando detalles de la suscripción...</p>
+    </div>
+  } @else if (subscriptionsStore.isStatusError()) {
+    <div class="error-container">
+      <p class="text-red-500">{{ subscriptionsStore.error() }}</p>
+    </div>
+  } @else if (subscriptionsStore.hasSubscriptions()) {
+    <div class="success-container">
+      <p class="text-green-600 font-medium">Tu suscripción está activa.</p>
+    </div>
+  }
+  
+  <div class="mt-6 text-center">
+    <button class="btn btn-primary" (click)="navigate()">
+      Volver al inicio
+    </button>
+  </div>
+</div>
