@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
 import { StripePricePublic, StripeProductPublic } from '../../store/products.store';
 import { ProductItemSkeletonComponent } from './product-item-skeleton/product-item-skeleton.component';
@@ -12,7 +12,7 @@ import { ProductItemComponent } from './product-item/product-item.component';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   productType = input<'one_time' | 'recurring'>('one_time');
 
   public readonly productsService = inject(ProductsService);
@@ -29,6 +29,12 @@ export class ProductListComponent {
    */
   public readonly productSelected = output<StripeProductPublic>();
   public readonly priceSelected = output<StripePricePublic>();
+
+  ngOnInit(): void {
+    if (!this.productsService.hasProducts()) {
+      this.productsService.loadProducts();
+    }
+  }
 
   onProductSelect(product: StripeProductPublic) {
     this.productSelected.emit(product);
