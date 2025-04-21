@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit } from '@angular/core';
 import { CheckoutStore } from '../../store/checkout.store';
 import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleton.component';
+import { CustomerStore, StripeCustomerPublic } from '../../store/customer.store';
 
 @Component({
   selector: 'lib-embedded-checkout',
@@ -12,50 +13,12 @@ import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleto
 })
 export class EmbeddedCheckoutComponent implements OnInit {
   public readonly checkoutStore = inject(CheckoutStore);
+  public readonly customerStore = inject(CustomerStore);
   
   public readonly priceId = input.required<string>();
-  public readonly customerEmail = input<string | null>(null);
   public readonly returnPagePath = input<string>('/return');
-
-  private firstRun = true;
-  private previousInputs = {
-    priceId: '',
-    customerEmail: null as string | null,
-    returnPath: ''
-  };
-
-  constructor() {
-    effect(() => {
-      const currentPriceId = this.priceId();
-      const currentEmail = this.customerEmail();
-      const currentReturnPath = this.returnPagePath();
-
-      if (!this.firstRun && 
-          (this.previousInputs.priceId !== currentPriceId ||
-           this.previousInputs.customerEmail !== currentEmail ||
-           this.previousInputs.returnPath !== currentReturnPath)) {
-        
-        console.log('🔄 [EmbeddedCheckoutComponent] Inputs changed, recreating checkout');
-        
-        this.checkoutStore.destroyEmbeddedCheckout();
-        
-        this.updatePreviousInputs(currentPriceId, currentEmail, currentReturnPath);
-        
-        this.createCheckoutSession();
-      } else if (this.firstRun) {
-        this.updatePreviousInputs(currentPriceId, currentEmail, currentReturnPath);
-        this.firstRun = false;
-      }
-    });
-  }
-
-  private updatePreviousInputs(priceId: string, email: string | null, returnPath: string) {
-    this.previousInputs = {
-      priceId,
-      customerEmail: email,
-      returnPath
-    };
-  }
+  
+  public readonly customer = computed(() => this.customerStore.customer().data);
 
   async ngOnInit() {
     this.createCheckoutSession();
@@ -69,7 +32,7 @@ export class EmbeddedCheckoutComponent implements OnInit {
     this.checkoutStore.createCheckoutSession({
       priceId: this.priceId(),
       returnPagePath: returnPath,
-      customerEmail: this.customerEmail()
+      customerEmail: this.customer()?.email ?? ''
     });
   }
 

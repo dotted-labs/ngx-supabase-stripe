@@ -35,14 +35,8 @@
             <h2 class="card-title">Checkout Subscription</h2>
             <button class="btn btn-sm" (click)="resetSelection()">Change selection</button>
           </div>
-          <div class="flex flex-col justify-start items-start gap-2 mb-4">
-            <label for="customerEmail">Test customer Email</label>
-            <input type="email" id="customerEmail" #emailInput class="input input-bordered w-full max-w-xs">
-            <button class="btn btn-sm btn-primary" (click)="startCreateSubscription(emailInput.value)">Start checkout</button>
-          </div>
           <lib-embedded-subscription 
             [priceId]="selectedPrice()!"
-            [customerEmail]="customerEmail()"
             returnPagePath="/subscriptions/result">
           </lib-embedded-subscription>
         </div>

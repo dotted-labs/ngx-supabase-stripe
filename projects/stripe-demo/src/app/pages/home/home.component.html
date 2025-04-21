@@ -20,6 +20,11 @@
                 <p>Customer saved: {{ customerStore.customer().data?.email }}</p>
               </div>
             }
+            @if(customerStore.customer().error) {
+              <div role="alert" class="alert alert-error alert-outline">
+                <span>Error! {{ customerStore.customer().error }}</span>
+              </div>
+            }
           </div>
         </div>
         <div class="flex gap-4 justify-center flex-wrap">
