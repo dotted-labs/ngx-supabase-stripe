@@ -4,32 +4,17 @@ import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import { StripeClientService } from '../services/stripe-client.service';
 import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
-/**
- * Status of the checkout process
- */
 export type CheckoutStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Main state interface for checkout store
- */
 type CheckoutState = {
-  // The embedded checkout instance
   embeddedCheckout: StripeEmbeddedCheckout | null;
-  // The current status of the checkout process
   status: CheckoutStatus;
-  // The ID of the current checkout session
   sessionId: string | null;
-  // Return page path
   returnPagePath: string;
-  // Error message if any
   error: string | null;
-  // Session details from Stripe
   sessionStatus: any | null;
 }
 
-/**
- * Initial state for checkout store
- */
 const initialCheckoutState: CheckoutState = {
   embeddedCheckout: null,
   status: 'idle',
@@ -39,9 +24,6 @@ const initialCheckoutState: CheckoutState = {
   sessionStatus: null
 };
 
-/**
- * Store for managing checkout state with NgRx Signals
- */
 export const CheckoutStore = signalStore(
   { providedIn: 'root' },
   withState(initialCheckoutState),

@@ -32,14 +32,8 @@ export type StripeSubscriptionPublic = Omit<StripeSubscription, 'attrs'> & {
   product?: StripeProductPublic | null;
 };
 
-/**
- * Status of the subscription process
- */
 export type SubscriptionStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Subscription state interface
- */
 export interface SubscriptionState {
   subscriptions: StripeSubscriptionPublic[] | null;
   embeddedSubscription: StripeEmbeddedCheckout | null;
@@ -49,9 +43,6 @@ export interface SubscriptionState {
   sessionStatus: any | null;
 }
 
-/**
- * Initial state for subscription store
- */
 const initialSubscriptionState: SubscriptionState = {
   subscriptions: null,
   embeddedSubscription: null,
@@ -61,9 +52,6 @@ const initialSubscriptionState: SubscriptionState = {
   sessionStatus: null,
 };
 
-/**
- * Store for managing subscriptions state with NgRx Signals
- */
 export const SubscriptionsStore = signalStore(
   { providedIn: 'root' },
   withState(initialSubscriptionState),

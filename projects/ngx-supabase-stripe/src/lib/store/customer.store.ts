@@ -5,12 +5,7 @@ import { parseSubscription, StripeSubscriptionPublic } from './subscriptions.sto
 import { SupabaseClientService } from '../services/supabase-client.service';
 import { ProductsStore } from './products.store';
 
-/**
- * Status of the subscription process
- */
 export type CustomerStatus = 'idle' | 'loading' | 'success' | 'error';
-
-//export type PaymentMethodType = 'card' | 'paypal' | 'link' | 'amazon';
 
 export type StripePaymentIntentsPublic = Omit<StripePaymentIntent, 'attrs'> & {
   status: string;

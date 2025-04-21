@@ -22,9 +22,6 @@ export class SubscriptionsListComponent {
     console.log('🚩 [SubscriptionsListComponent] refreshSubscriptions');
   }
 
-  /**
-   * Emit the customer ID to manage subscription
-   */
   public manageSubscription(customerId: string): void {
     this.onManageSubscription.emit(customerId);
   }

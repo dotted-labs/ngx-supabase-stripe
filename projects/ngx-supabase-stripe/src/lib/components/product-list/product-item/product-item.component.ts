@@ -10,8 +10,7 @@ import { StripePricePublic, StripeProductPublic } from '../../../store/products.
 })
 export class ProductItemComponent {
   public readonly product = input.required<StripeProductPublic>();
-  public readonly buttonText = input<string>('Select');
-
+  
   public readonly productSelected = output<StripeProductPublic>();
   public readonly priceSelected = output<StripePricePublic>();
 

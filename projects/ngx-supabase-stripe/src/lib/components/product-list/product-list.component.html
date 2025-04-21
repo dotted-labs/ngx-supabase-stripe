@@ -1,14 +1,14 @@
-@if (productsService.isLoading()) {
+@if (productsStore.isStatusLoading()) {
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     @for (item of [1,2,3]; track item) {
       <lib-product-item-skeleton></lib-product-item-skeleton>
     }
   </div>
-} @else if (productsService.isError()) {
+} @else if (productsStore.isStatusError()) {
   <div class="alert alert-error">
-    <span>{{ productsService.getError() }}</span>
+    <span>{{ productsStore.error() }}</span>
   </div>
-} @else if (!productsService.hasProducts()) {
+} @else if (!productsStore.hasProducts()) {
   <div class="alert alert-info">
     <span>No products available</span>
   </div>
@@ -17,7 +17,6 @@
     @for (product of products(); track product.id) {
       <lib-product-item
         [product]="product"
-        [buttonText]="buttonText()"
         (productSelected)="onProductSelect($event)"
         (priceSelected)="onPriceSelect($event)">
       </lib-product-item>

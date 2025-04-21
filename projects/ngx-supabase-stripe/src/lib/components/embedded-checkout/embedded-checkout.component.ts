@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, input, OnInit } from '@angular/core';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
 import { CheckoutStore } from '../../store/checkout.store';
+import { CustomerStore } from '../../store/customer.store';
 import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleton.component';
-import { CustomerStore, StripeCustomerPublic } from '../../store/customer.store';
 
 @Component({
   selector: 'lib-embedded-checkout',
   templateUrl: './embedded-checkout.component.html',
-  styleUrls: ['./embedded-checkout.component.css'],
   standalone: true,
   imports: [CommonModule, EmbeddedSkeletonComponent],
 })

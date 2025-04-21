@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, output } from '@angular/core';
-import { ProductsService } from '../../services/products.service';
-import { StripePricePublic, StripeProductPublic } from '../../store/products.store';
+import { ProductsStore, StripePricePublic, StripeProductPublic } from '../../store/products.store';
 import { ProductItemSkeletonComponent } from './product-item-skeleton/product-item-skeleton.component';
 import { ProductItemComponent } from './product-item/product-item.component';
 
@@ -9,30 +8,21 @@ import { ProductItemComponent } from './product-item/product-item.component';
   selector: 'lib-product-list',
   standalone: true,
   imports: [CommonModule, ProductItemComponent, ProductItemSkeletonComponent],
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss']
+  templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit {
+  public readonly productsStore = inject(ProductsStore);
+
   productType = input<'one_time' | 'recurring'>('one_time');
 
-  public readonly productsService = inject(ProductsService);
-
-  public readonly products = computed(() => this.productsService.getProductsByType(this.productType()));
+  public readonly products = computed(() => this.getProductsByType(this.productType()));
   
-  /**
-   * Button text for product selection
-   */
-  public buttonText = input<string>('Select');
-  
-  /**
-   * Event emitted when a product is selected
-   */
   public readonly productSelected = output<StripeProductPublic>();
   public readonly priceSelected = output<StripePricePublic>();
 
   ngOnInit(): void {
-    if (!this.productsService.hasProducts()) {
-      this.productsService.loadProducts();
+    if (!this.productsStore.hasProducts()) {
+      this.productsStore.loadProducts();
     }
   }
 
@@ -42,6 +32,18 @@ export class ProductListComponent implements OnInit {
 
   onPriceSelect(price: StripePricePublic) {
     this.priceSelected.emit(price);
+  }
+
+  public getProductsByType(type: 'one_time' | 'recurring'): StripeProductPublic[] {
+    if(type === 'one_time') {
+      return this.productsStore.oneTimeProducts();
+    }
+
+    if (type === 'recurring') {
+      return this.productsStore.recurringProducts();
+    }
+
+    return [];
   }
 
   formatPrice(price: StripePricePublic): string {

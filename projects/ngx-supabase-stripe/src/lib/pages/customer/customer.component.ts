@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { PaymentIntentsListComponent } from '../../components/customer/payment-intents/payment-intents-list/payment-intents-list.component';
-import { CustomerStore } from '../../store/customer.store';
 import { SubscriptionsComponent } from '../../components/customer/subscriptions/subscriptions.component';
+import { CustomerStore } from '../../store/customer.store';
 
 @Component({
   selector: 'lib-customer-dashboard',
@@ -22,9 +22,6 @@ export class CustomerDashboardComponent {
     
   public previousCustomerEmail = '';
 
-  /**
-   * Refresh all customer data
-   */
   public refreshData(): void {
     console.log('🚩 [CustomerDashboardComponent] refreshData');
   }

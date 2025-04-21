@@ -13,28 +13,15 @@ export type StripeProductPublic = Omit<StripeProduct, 'attrs'> & {
 
 export type StripePricePublic = Omit<StripePrice, 'attrs'>;
 
-/**
- * Status of the products loading process
- */
 export type ProductsStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Main state interface for products store
- */
 type ProductsState = {
-  // The list of products from Stripe
   products: StripeProductPublic[] | null;
-  // The list of prices from Stripe
   prices: StripePricePublic[] | null;
-  // The current status of the products loading process
   status: ProductsStatus;
-  // Error message if any
   error: string | null;
 }
 
-/**
- * Initial state for products store
- */
 const initialProductsState: ProductsState = {
   products: null,
   prices: null,
@@ -42,9 +29,6 @@ const initialProductsState: ProductsState = {
   error: null
 };
 
-/**
- * Store for managing products state with NgRx Signals
- */
 export const ProductsStore = signalStore(
   { providedIn: 'root' },
   withState(initialProductsState),

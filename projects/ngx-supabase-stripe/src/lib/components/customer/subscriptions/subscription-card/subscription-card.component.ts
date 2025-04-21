@@ -16,38 +16,23 @@ export class SubscriptionCardComponent {
  
   public readonly onManageSubscription = output<string>();
   
-  /**
-   * Check if product has valid images
-   */
   public hasValidProductImages(): boolean {
     const subscription = this.subscription();
     return !!subscription?.product && Array.isArray(subscription.product.images) && subscription.product.images.length > 0;
   }
 
-  /**
-   * Get product image safely
-   */
   public getProductImage(): string {
     return this.subscription()?.product?.images?.[0] || '';
   }
 
-  /**
-   * Get product name safely
-   */
   public getProductName(): string {
     return this.subscription()?.product?.name || '';
   }
   
-  /**
-   * Format the price amount from cents to dollars/euros
-   */
   public formatAmount(amount: number): string {
     return (amount / 100).toFixed(2);
   }
   
-  /**
-   * Get the status badge class based on subscription status
-   */
   public getStatusBadgeClass(status: string): string {
     switch (status) {
       case 'active': 

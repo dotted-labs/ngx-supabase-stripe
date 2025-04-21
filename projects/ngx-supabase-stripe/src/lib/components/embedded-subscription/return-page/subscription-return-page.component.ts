@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SubscriptionsStore } from '../../../store/subscriptions.store';
 import { CheckoutStore } from '../../../store/checkout.store';
+import { SubscriptionsStore } from '../../../store/subscriptions.store';
 
 @Component({
   selector: 'lib-subscription-return-page',
   templateUrl: './subscription-return-page.component.html',
-  styleUrls: ['./subscription-return-page.component.css'],
   standalone: true,
   imports: [CommonModule],
 })
@@ -23,8 +22,6 @@ export class SubscriptionReturnPageComponent implements OnInit {
   async ngOnInit() {
     this.route.queryParams.subscribe(async params => {
       const sessionId = params['session_id'];
-      //await this.subscriptionsStore.loadSubscriptions();
-
       this.getSessionStatus(sessionId);
     });
   }
