@@ -39,7 +39,7 @@
     <div class="subscription-details mt-2">
       <div class="flex justify-between text-sm">
         <div>
-          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(subscription().plan.amount, subscription().currency ?? 'EUR') }}</span>
+          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ utils.formatAmount(subscription().plan.amount, subscription().currency ?? 'EUR') }}</span>
         </div>
         <div>
           <span class="font-medium">Período: </span><span class="text-md font-bold">{{ subscription().plan.interval }}</span>
@@ -54,8 +54,8 @@
           <div>
             <h4 class="text-md font-semibold mb-2">Detalles del Plan</h4>
             <ul class="space-y-1 text-sm">
-              <li><span class="font-medium">Inicio:</span> {{ formatDate(subscription().current_period_start ?? '') }}</li>
-              <li><span class="font-medium">Renovación:</span> {{ formatDate(subscription().current_period_end ?? '') }}</li>
+              <li><span class="font-medium">Inicio:</span> {{ utils.formatDate(subscription().current_period_start ?? '') }}</li>
+              <li><span class="font-medium">Renovación:</span> {{ utils.formatDate(subscription().current_period_end ?? '') }}</li>
             </ul>
           </div>
           

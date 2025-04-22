@@ -45,18 +45,4 @@ export class ProductListComponent implements OnInit {
 
     return [];
   }
-
-  formatPrice(price: StripePricePublic): string {
-    if (!price || !price.unit_amount) {
-      return 'Price unavailable';
-    }
-
-    const amount = price.unit_amount / 100; // Convert cents to dollars/euros
-    const currency = price.currency?.toUpperCase() || 'USD';
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount);
-  }
 } 

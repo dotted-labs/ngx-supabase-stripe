@@ -1,5 +1,6 @@
-import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject, input, output } from '@angular/core';
+import { UtilsService } from '../../../services/utils.service';
 import { StripePricePublic, StripeProductPublic } from '../../../store/products.store';
 
 @Component({
@@ -14,19 +15,7 @@ export class ProductItemComponent {
   public readonly productSelected = output<StripeProductPublic>();
   public readonly priceSelected = output<StripePricePublic>();
 
-  formatPrice(price: any): string {
-    if (!price || !price.unit_amount) {
-      return 'Price unavailable';
-    }
-
-    const amount = price.unit_amount / 100;
-    const currency = price.currency?.toUpperCase() || 'USD';
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-    }).format(amount);
-  }
+  public readonly utils = inject(UtilsService);
 
   onSelect(price: StripePricePublic) {
     this.productSelected.emit(this.product());

@@ -16,9 +16,10 @@ import { CustomerStore } from '../../store/customer.store';
 })  
 export class CustomerDashboardComponent {
   public readonly customerStore = inject(CustomerStore);
+
+  public readonly returnUrl = input<string>(window.location.origin + '/account');
   
   public readonly customer = computed(() => this.customerStore.customer().data);
-  public readonly returnUrl = input<string>(window.location.origin + '/account');
     
   public previousCustomerEmail = '';
 

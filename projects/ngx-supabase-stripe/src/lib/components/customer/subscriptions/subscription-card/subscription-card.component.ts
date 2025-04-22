@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { StripeSubscriptionPublic } from '../../../../store/subscriptions.store';
 import { SubscriptionCardSkeletonComponent } from './subscription-card-skeleton/subscription-card-skeleton.component';
+import { UtilsService } from '../../../../services/utils.service';
 
 @Component({
   selector: 'lib-subscription-card',
@@ -13,6 +14,8 @@ export class SubscriptionCardComponent {
   public readonly subscription = input.required<StripeSubscriptionPublic>();
   public readonly loading = input<boolean>(false);
   public readonly error = input<string | null>(null);
+
+  public readonly utils = inject(UtilsService);
  
   public readonly onManageSubscription = output<string>();
   
@@ -27,26 +30,6 @@ export class SubscriptionCardComponent {
 
   public getProductName(): string {
     return this.subscription()?.product?.name || '';
-  }
-  
-  public formatAmount(amount: number): string {
-    return (amount / 100).toFixed(2);
-  }
-  
-  public getStatusBadgeClass(status: string): string {
-    switch (status) {
-      case 'active': 
-        return 'badge-success';
-      case 'canceled': 
-      case 'unpaid':
-        return 'badge-error';
-      case 'trialing': 
-        return 'badge-warning';
-      case 'past_due': 
-        return 'badge-warning';
-      default: 
-        return 'badge-ghost';
-    }
   }
   
   /**

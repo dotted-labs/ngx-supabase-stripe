@@ -20,7 +20,7 @@
     <div class="payment-intent-details mt-2">
       <div class="flex justify-start items-center gap-4 text-sm">
         <div>
-          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
+          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ utils.formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
         </div>
         <div>
           <span class="badge badge-outline">
@@ -50,7 +50,7 @@
             <ul class="space-y-1 text-sm">
               <li>
                 <span class="font-medium">Estado: </span> 
-                <span class="badge {{ getStatusBadgeClass(paymentIntent().status) }} status-badge">
+                <span class="badge {{ utils.getStatusBadgeClass(paymentIntent().status) }} status-badge">
                   {{ paymentIntent().status }}
                 </span>
               </li>
