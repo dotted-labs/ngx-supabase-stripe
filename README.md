@@ -18,7 +18,7 @@ An Angular library for integrating Supabase and Stripe into your applications, p
 ### Step 1: Install the package
 
 ```bash
-npm install ngx-supabase-stripe
+npm install @dotted-labs/ngx-supabase-stripe
 ```
 
 ### Step 2: Configuration in app.config.ts
@@ -285,6 +285,140 @@ begin
 end;
 $$;
 ```
+
+### Step 4: Supabase Edge Functions Setup
+
+The library relies on several Supabase Edge Functions to handle Stripe interactions. You need to deploy these functions to your Supabase project.
+
+#### Required Edge Functions
+
+You need to implement the following Edge Functions:
+
+1. `checkout_session` - Creates a Stripe Checkout session for one-time payments
+2. `create_subscription` - Creates a Stripe Checkout session for subscriptions
+3. `session_status` - Retrieves the status of a Stripe session
+4. `create_portal_session` - Creates a Stripe Customer Portal session
+
+#### Implementation Steps
+
+1. **Set up Supabase CLI**:
+   ```bash
+   npm install -g supabase
+   ```
+
+2. **Initialize Supabase in your project**:
+   ```bash
+   supabase init
+   ```
+
+3. **Create the Edge Functions structure**:
+   For each function, create a directory in the `functions` folder. For example:
+   ```
+   /supabase
+     /functions
+       /checkout_session
+         index.ts
+       /create_subscription
+         index.ts
+       ...
+   ```
+
+4. **Implement the Edge Functions**:
+   Here's an example implementation for the `checkout_session` function:
+
+   ```typescript
+   // functions/checkout_session/index.ts
+   import Stripe from 'npm:stripe@17.7.0';
+   import { corsHeaders } from '../_shared/cors.ts';
+
+   const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
+     apiVersion: '2025-02-24.acacia',
+     httpClient: Stripe.createFetchHttpClient()
+   });
+
+   Deno.serve(async (req: Request) => {
+     if (req.method === 'OPTIONS') {
+       return new Response('ok', { headers: corsHeaders })
+     }
+
+     try {
+       const { priceId, resultPagePath, customer } = await req.json();
+
+       const sessionOptions: Stripe.Checkout.SessionCreateParams = {
+         ui_mode: 'embedded',
+         line_items: [
+           {
+             price: priceId,
+             quantity: 1
+           }
+         ],
+         mode: 'payment',
+         payment_method_types: ['card', 'paypal', 'amazon_pay', 'alipay'],
+         return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`,
+       }
+
+       // If the customer already exists, use their ID
+       if (customer && customer.id) {
+         sessionOptions.customer = customer.id;
+       } else {
+         // If the customer has an email, use it
+         if (customer && customer.email) {
+           sessionOptions.customer_email = customer.email;
+         }
+
+         // If the customer doesn't exist, create a new one
+         sessionOptions.customer_creation = 'always';
+       }
+
+       const session = await stripe.checkout.sessions.create(sessionOptions);
+
+       return new Response(JSON.stringify({
+         clientSecret: session.client_secret
+       }), {
+         headers: {
+           ...corsHeaders,
+           'Content-Type': 'application/json',
+         },
+         status: 200
+       });
+     } catch (error: unknown) {
+       return new Response(JSON.stringify({
+         error: 'An unknown error occurred'
+       }), {
+         headers: {
+           ...corsHeaders,
+           'Content-Type': 'application/json',
+         },
+         status: 500
+       });
+     }
+   });
+   ```
+
+   Also create a shared CORS helper:
+
+   ```typescript
+   // functions/_shared/cors.ts
+   export const corsHeaders = {
+     'Access-Control-Allow-Origin': '*',
+     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+   }
+   ```
+
+5. **Deploy the functions to your Supabase project**:
+   ```bash
+   supabase functions deploy checkout_session
+   supabase functions deploy create_subscription
+   # ... deploy the remaining functions
+   ```
+
+6. **Set environment variables in your Supabase project**:
+   Go to your Supabase dashboard > Settings > API > Edge Functions and add:
+   - `STRIPE_SECRET_KEY` - Your Stripe secret key
+
+#### Example Implementation Repository
+
+For full implementation examples of all required Edge Functions, you can clone our [example repository](https://github.com/yourusername/ngx-supabase-stripe-functions) which contains ready-to-use functions.
 
 ## Available Components
 
