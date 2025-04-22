@@ -6,7 +6,6 @@ import { CheckoutStore } from '../../../store/checkout.store';
 @Component({
   selector: 'lib-checkout-return-page',
   templateUrl: './return-page.component.html',
-  styleUrls: ['./return-page.component.css'],
   standalone: true,
   imports: [CommonModule],
 })

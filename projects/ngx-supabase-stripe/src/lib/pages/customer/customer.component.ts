@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { PaymentIntentsListComponent } from '../../components/customer/payment-intents/payment-intents-list/payment-intents-list.component';
-import { CustomerStore } from '../../store/customer.store';
 import { SubscriptionsComponent } from '../../components/customer/subscriptions/subscriptions.component';
+import { CustomerStore } from '../../store/customer.store';
 
 @Component({
   selector: 'lib-customer-dashboard',
@@ -16,15 +16,13 @@ import { SubscriptionsComponent } from '../../components/customer/subscriptions/
 })  
 export class CustomerDashboardComponent {
   public readonly customerStore = inject(CustomerStore);
+
+  public readonly returnUrl = input<string>(window.location.origin + '/account');
   
   public readonly customer = computed(() => this.customerStore.customer().data);
-  public readonly returnUrl = input<string>(window.location.origin + '/account');
     
   public previousCustomerEmail = '';
 
-  /**
-   * Refresh all customer data
-   */
   public refreshData(): void {
     console.log('🚩 [CustomerDashboardComponent] refreshData');
   }

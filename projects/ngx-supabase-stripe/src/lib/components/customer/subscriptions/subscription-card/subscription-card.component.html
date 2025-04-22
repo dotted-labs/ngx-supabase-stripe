@@ -12,7 +12,7 @@
   <div class="card-body">
     <div class="flex justify-between items-center">
       <h2 class="card-title">{{ getProductName() }}</h2>
-      <span class="badge badge-soft {{ getStatusBadgeClass(subscription().status) }} subscription-status">
+      <span class="badge badge-soft {{ utils.getStatusBadgeClass(subscription().status) }} subscription-status">
         {{ subscription().status }}
       </span>
     </div>

@@ -29,7 +29,7 @@
                 <div class="text-[11px] font-medium">One time payment</div>
               }
               <div class="flex flex-col items-baseline">
-                <span class="text-2xl font-bold">{{ formatPrice(price.details) }}</span>
+                <span class="text-2xl font-bold">{{ utils.formatAmount(price.details.unit_amount ?? 0, price.details.currency ?? 'USD') }}</span>
               </div>
               @if (price.recurringInterval === 'year') {
                 <div class="badge badge-sm badge-neutral">Save 15%</div>

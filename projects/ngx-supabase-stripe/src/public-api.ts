@@ -16,10 +16,8 @@ export * from './lib/store/customer.store';
 // Export services
 export * from './lib/services/stripe-client.service';
 export * from './lib/services/supabase-client.service';
-export * from './lib/services/products.service';
 
 // Export components
-export * from './lib/ngx-supabase-stripe.component';
 export * from './lib/components/embedded-checkout/embedded-checkout.component';
 export * from './lib/components/embedded-checkout/return-page/return-page.component';
 export * from './lib/components/product-list/product-list.component';

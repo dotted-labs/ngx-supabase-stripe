@@ -20,11 +20,11 @@
     <div class="payment-intent-details mt-2">
       <div class="flex justify-start items-center gap-4 text-sm">
         <div>
-          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
+          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ utils.formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
         </div>
         <div>
           <span class="badge badge-outline">
-            {{ paymentIntent().paymentMethodType }}
+            {{ paymentIntent().paymentMethodId }}
           </span>
         </div>
       </div>
@@ -38,7 +38,7 @@
             <h4 class="text-md font-semibold mb-2">Detalles del Pago</h4>
             <ul class="space-y-1 text-sm">
               <li><span class="font-medium">ID Completo:</span> {{ paymentIntent().id }}</li>
-              <li><span class="font-medium">Método de pago:</span> {{ paymentIntent().paymentMethodType }}</li>
+              <li><span class="font-medium">Método de pago:</span> {{ paymentIntent().paymentMethodId }}</li>
               <li><span class="font-medium">Método de confirmación:</span> {{ paymentIntent().confirmationMethod }}</li>
               @if (paymentIntent().invoiceId) {
                 <li><span class="font-medium">ID de factura:</span> {{ paymentIntent().invoiceId }}</li>
@@ -50,7 +50,7 @@
             <ul class="space-y-1 text-sm">
               <li>
                 <span class="font-medium">Estado: </span> 
-                <span class="badge {{ getStatusBadgeClass(paymentIntent().status) }} status-badge">
+                <span class="badge {{ utils.getStatusBadgeClass(paymentIntent().status) }} status-badge">
                   {{ paymentIntent().status }}
                 </span>
               </li>

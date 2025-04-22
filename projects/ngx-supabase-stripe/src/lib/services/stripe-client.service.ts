@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { STRIPE_CONFIG } from '../config/stripe.config';
 import { SupabaseClientService } from './supabase-client.service';
+import { StripeCustomerPublic } from '../store/customer.store';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,7 @@ export class StripeClientService {
   public async createCheckoutSession(
     priceId: string,
     resultPagePath: string,
-    customerEmail: string | null
+    customer: StripeCustomerPublic | null
   ): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
@@ -40,7 +41,7 @@ export class StripeClientService {
           body: {
             priceId,
             resultPagePath,
-            customerEmail
+            customer
           }
         });
 
@@ -58,14 +59,14 @@ export class StripeClientService {
    * Create a subscription
    * @param priceId The price ID for the subscription
    */
-  public async createSubscription(priceId: string, returnPath: string, customerEmail: string | null): Promise<{ clientSecret: string | null; error: Error | null }> {
+  public async createSubscription(priceId: string, returnPath: string, customer: StripeCustomerPublic | null): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
         .functions.invoke('create_subscription', {
           body: {
             priceId,
             resultPagePath: returnPath,
-            customerEmail
+            customer
           }
         });
 

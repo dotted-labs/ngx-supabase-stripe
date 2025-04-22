@@ -2,33 +2,19 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import { StripeClientService } from '../services/stripe-client.service';
+import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
-/**
- * Status of the checkout process
- */
 export type CheckoutStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Main state interface for checkout store
- */
 type CheckoutState = {
-  // The embedded checkout instance
   embeddedCheckout: StripeEmbeddedCheckout | null;
-  // The current status of the checkout process
   status: CheckoutStatus;
-  // The ID of the current checkout session
   sessionId: string | null;
-  // Return page path
   returnPagePath: string;
-  // Error message if any
   error: string | null;
-  // Session details from Stripe
   sessionStatus: any | null;
 }
 
-/**
- * Initial state for checkout store
- */
 const initialCheckoutState: CheckoutState = {
   embeddedCheckout: null,
   status: 'idle',
@@ -38,9 +24,6 @@ const initialCheckoutState: CheckoutState = {
   sessionStatus: null
 };
 
-/**
- * Store for managing checkout state with NgRx Signals
- */
 export const CheckoutStore = signalStore(
   { providedIn: 'root' },
   withState(initialCheckoutState),
@@ -53,7 +36,7 @@ export const CheckoutStore = signalStore(
     isPaymentProcessing: computed(() => state.sessionStatus()?.status === 'open'),
     isError: computed(() => state.error())
   })),
-  withMethods((store, stripeService = inject(StripeClientService)) => ({
+  withMethods((store, stripeService = inject(StripeClientService), customerStore = inject(CustomerStore)) => ({
     /**
      * Create a checkout session
      * @param priceId The price ID to checkout
@@ -63,7 +46,13 @@ export const CheckoutStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { clientSecret, error } = await stripeService.createCheckoutSession(priceId, returnPagePath, customerEmail);
+        let customer: StripeCustomerPublic | null = null;
+        
+        if (customerEmail) {
+          customer = customerStore.customer().data;
+        }
+
+        const { clientSecret, error } = await stripeService.createCheckoutSession(priceId, returnPagePath, customer);
 
         if (error) {
           patchState(store, {

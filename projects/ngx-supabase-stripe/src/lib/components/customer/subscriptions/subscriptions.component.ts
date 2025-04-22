@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input} from '@angular/core';
-import { SubscriptionCardComponent } from './subscription-card/subscription-card.component';
-import { SubscriptionsListComponent } from './subscriptions-list/subscriptions-list.component';
+import { Component, inject, input } from '@angular/core';
 import { CustomerStore } from '../../../store/customer.store';
 import { PortalAccountStore } from '../../../store/portal-account.store';
+import { SubscriptionCardComponent } from './subscription-card/subscription-card.component';
+import { SubscriptionsListComponent } from './subscriptions-list/subscriptions-list.component';
 
 @Component({
   selector: 'lib-subscriptions',
@@ -17,16 +17,10 @@ export class SubscriptionsComponent {
 
   public readonly returnUrl = input<string>(window.location.origin + '/account');
 
-  /**
-   * Manage customer account via portal
-   */
   public manageSubscription(customerId: string): void {
     this.portalAccountStore.createPortalSession(customerId, this.returnUrl());
   }
 
-  /**
-   * Refresh subscriptions
-   */
   public refreshSubscriptions(): void {
     console.log('🚩 [CustomerDashboardComponent] refreshSubscriptions');
   }

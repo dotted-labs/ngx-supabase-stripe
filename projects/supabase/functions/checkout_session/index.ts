@@ -16,11 +16,11 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { priceId, resultPagePath, customerEmail } = await req.json();
+    const { priceId, resultPagePath, customer } = await req.json();
 
-    console.log('🔌 [checkout_session]: Creating checkout session', priceId, resultPagePath, customerEmail);
+    console.log('🔌 [checkout_session]: Creating checkout session', priceId, resultPagePath, customer);
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionOptions: Stripe.Checkout.SessionCreateParams = {
       ui_mode: 'embedded',
       line_items: [
         {
@@ -30,9 +30,25 @@ Deno.serve(async (req: Request) => {
       ],
       mode: 'payment',
       payment_method_types: ['card', 'paypal', 'amazon_pay', 'alipay'],
-      customer_email: customerEmail ?? undefined,
-      return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`
-    });
+      return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`,
+    }
+
+    // If the customer already exists, use their ID
+    if (customer && customer.id) {
+      sessionOptions.customer = customer.id;
+    } else {
+      // If the customer has an email, use it
+      if (customer && customer.email) {
+        sessionOptions.customer_email = customer.email;
+      }
+
+      // If the customer doesn't exist, create a new one
+      sessionOptions.customer_creation = 'always';
+    }
+
+    console.log('🔌 [checkout_session]: Session options', JSON.stringify(sessionOptions));
+
+    const session = await stripe.checkout.sessions.create(sessionOptions);
 
     console.log('🔌 [checkout_session]: Checkout session created', session);
     return new Response(JSON.stringify({

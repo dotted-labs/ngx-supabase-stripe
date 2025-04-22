@@ -7,7 +7,6 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
   imports: [ReturnPageComponent, RouterModule],
   templateUrl: './checkout-result.component.html',
-  styleUrl: './checkout-result.component.css'
 })
 export class CheckoutResultComponent {
   private readonly router = inject(Router);

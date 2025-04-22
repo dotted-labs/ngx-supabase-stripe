@@ -5,6 +5,7 @@ import { StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
 import { ProductsStore, StripeProductPublic } from './products.store';
+import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
 export type StripeSubscriptionCancellationDetails = {
   cancel_at_period_end: boolean;
@@ -31,14 +32,8 @@ export type StripeSubscriptionPublic = Omit<StripeSubscription, 'attrs'> & {
   product?: StripeProductPublic | null;
 };
 
-/**
- * Status of the subscription process
- */
 export type SubscriptionStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Subscription state interface
- */
 export interface SubscriptionState {
   subscriptions: StripeSubscriptionPublic[] | null;
   embeddedSubscription: StripeEmbeddedCheckout | null;
@@ -48,9 +43,6 @@ export interface SubscriptionState {
   sessionStatus: any | null;
 }
 
-/**
- * Initial state for subscription store
- */
 const initialSubscriptionState: SubscriptionState = {
   subscriptions: null,
   embeddedSubscription: null,
@@ -60,9 +52,6 @@ const initialSubscriptionState: SubscriptionState = {
   sessionStatus: null,
 };
 
-/**
- * Store for managing subscriptions state with NgRx Signals
- */
 export const SubscriptionsStore = signalStore(
   { providedIn: 'root' },
   withState(initialSubscriptionState),
@@ -75,7 +64,8 @@ export const SubscriptionsStore = signalStore(
   })),
   withMethods((store, stripeService = inject(StripeClientService), 
                supabaseService = inject(SupabaseClientService), 
-               productsStore = inject(ProductsStore)) => ({
+               productsStore = inject(ProductsStore),
+               customerStore = inject(CustomerStore)) => ({
     /**
      * Create a subscription
      * @param priceId The price ID for the subscription
@@ -84,7 +74,13 @@ export const SubscriptionsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath, customerEmail);
+        let customer: StripeCustomerPublic | null = null;
+
+        if (customerEmail) {
+          customer = customerStore.customer().data;
+        }
+
+        const { clientSecret, error } = await stripeService.createSubscription(priceId, returnPath, customer);
         console.log('🔍 [SubscriptionsStore] created subscription', clientSecret, error);
         
         if (error) {

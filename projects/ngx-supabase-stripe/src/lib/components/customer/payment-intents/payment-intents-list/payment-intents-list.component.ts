@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { PaymentIntentItemSkeletonComponent } from './payment-intents-item-skeleton/payment-intent-item-skeleton.component';
 import { StripePaymentIntentsPublic } from '../../../../store/customer.store';
+import { PaymentIntentItemSkeletonComponent } from './payment-intents-item-skeleton/payment-intent-item-skeleton.component';
 import { PaymentIntentItemComponent } from './payment-intents-item/payment-intent-item.component';
+
 @Component({
   selector: 'lib-payment-intents-list',
   templateUrl: './payment-intents-list.component.html',
@@ -23,9 +24,6 @@ export class PaymentIntentsListComponent {
   
   protected readonly trackByPaymentIntentId = (index: number, item: StripePaymentIntentsPublic) => item.id;
   
-  /**
-   * Refresh payment intents list
-   */
   public refreshPaymentIntents(): void {
     this.onRefresh.emit();
   }

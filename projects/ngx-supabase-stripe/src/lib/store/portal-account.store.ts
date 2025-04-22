@@ -1,38 +1,25 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { StripeClientService } from '../services/stripe-client.service';
-import { Router } from '@angular/router';
 
 export interface PortalSessionResponse {
   url: string;
 }
 
-/**
- * Status of the portal session process
- */
 export type PortalStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * Portal state interface
- */
 export interface PortalState {
   status: PortalStatus;
   error: string | null;
   portalUrl: string | null;
 }
 
-/**
- * Initial state for portal store
- */
 const initialPortalState: PortalState = {
   status: 'idle',
   error: null,
   portalUrl: null
 };
 
-/**
- * Store for managing portal account sessions with NgRx Signals
- */
 export const PortalAccountStore = signalStore(
   { providedIn: 'root' },
   withState(initialPortalState),

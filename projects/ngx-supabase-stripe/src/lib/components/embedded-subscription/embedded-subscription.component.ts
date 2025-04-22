@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, input, OnInit } from '@angular/core';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { CustomerStore } from '../../store/customer.store';
 import { SubscriptionsStore } from '../../store/subscriptions.store';
 import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleton.component';
-import { CustomerStore } from '../../store/customer.store';
 
 @Component({
   selector: 'lib-embedded-subscription',
   templateUrl: './embedded-subscription.component.html',
-  styleUrls: ['./embedded-subscription.component.css'],
   standalone: true,
   imports: [CommonModule, EmbeddedSkeletonComponent]
 })
