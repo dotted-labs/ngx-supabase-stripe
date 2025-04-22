@@ -32,10 +32,4 @@
     [withEmptyState]="false"
     (onManageSubscription)="manageSubscription($event)">
   </lib-subscriptions-list>
-
-  @if (!customerStore.hasSubscriptions()) {
-    <div class="alert alert-info">
-      <p>You don't have any subscriptions yet</p>
-    </div>
-  }
 </div>
