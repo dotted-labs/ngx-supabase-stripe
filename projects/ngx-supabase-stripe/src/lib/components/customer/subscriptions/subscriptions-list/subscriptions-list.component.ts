@@ -18,10 +18,6 @@ export class SubscriptionsListComponent {
 
   public readonly onManageSubscription = output<string>();
 
-  public refreshSubscriptions(): void {
-    console.log('🚩 [SubscriptionsListComponent] refreshSubscriptions');
-  }
-
   public manageSubscription(customerId: string): void {
     this.onManageSubscription.emit(customerId);
   }

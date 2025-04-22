@@ -22,7 +22,9 @@ export class SubscriptionsComponent {
   }
 
   public refreshSubscriptions(): void {
-    console.log('🚩 [CustomerDashboardComponent] refreshSubscriptions');
+    if (this.customerStore.customer().data?.id) {
+      this.customerStore.loadSubscriptions(this.customerStore.customer().data?.id as string);
+    }
   }
 }
 

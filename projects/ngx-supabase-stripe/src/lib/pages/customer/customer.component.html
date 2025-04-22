@@ -10,7 +10,7 @@
       [paymentIntents]="customerStore.paymentIntents.data()"
       [loading]="customerStore.isPaymentIntentsStatusLoading()"
       [error]="customerStore.paymentIntents.error()"
-      (onRefresh)="refreshData()">
+      (onRefresh)="refreshPaymentIntents()">
     </lib-payment-intents-list>
   </section>
 </div>

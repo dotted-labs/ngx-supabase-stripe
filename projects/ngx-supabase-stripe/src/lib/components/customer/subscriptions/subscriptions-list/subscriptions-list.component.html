@@ -21,7 +21,7 @@
         </lib-subscription-item>
       }
     </div>
-  } @else if (withEmptyState()) {
+  } @else if (withEmptyState() && subscriptions().length === 0 && !loading()) {
     <div class="empty-state">
       <div class="card bg-base-100 shadow-sm">
           <div class="card-body items-center text-center">

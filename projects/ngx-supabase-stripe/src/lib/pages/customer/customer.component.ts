@@ -23,7 +23,7 @@ export class CustomerDashboardComponent {
     
   public previousCustomerEmail = '';
 
-  public refreshData(): void {
-    console.log('🚩 [CustomerDashboardComponent] refreshData');
+  public refreshPaymentIntents(): void {
+    this.customerStore.loadPaymentIntents(this.customerStore.customer().data?.id as string);
   }
 }
