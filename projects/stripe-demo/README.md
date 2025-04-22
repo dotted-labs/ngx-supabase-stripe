@@ -50,7 +50,7 @@ cd ngx-supabase-stripe
 npm install
 
 # Run the demo application
-ng serve stripe-demo
+npm run start:stripe-demo
 ```
 
 5. Open your browser at `http://localhost:4200`
@@ -155,14 +155,7 @@ export class MyComponent {
 
 ## Notes
 
-This is a demo application intended for testing and demonstration purposes only. For production use, consider the following:
-
-* Implement proper error handling and loading states
-* Add more robust user authentication and authorization
-* Configure appropriate Stripe webhook handlers
-* Customize the UI to match your brand
-* Implement comprehensive testing
-* Set up proper environment variables for API keys
+This is a demo application intended for testing and demonstration purposes only.
 
 ## Contributing
 
