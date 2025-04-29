@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { PaymentIntentsListComponent } from '../../components/customer/payment-intents/payment-intents-list/payment-intents-list.component';
+import { PaymentIntentsTableComponent } from '../../components/customer/payment-intents/payment-intents-table/payment-intents-table.component';
 import { SubscriptionsComponent } from '../../components/customer/subscriptions/subscriptions.component';
 import { CustomerStore } from '../../store/customer.store';
 
@@ -11,6 +12,7 @@ import { CustomerStore } from '../../store/customer.store';
   imports: [
     CommonModule,
     PaymentIntentsListComponent,
+    PaymentIntentsTableComponent,
     SubscriptionsComponent
   ]
 })  
@@ -20,10 +22,16 @@ export class CustomerDashboardComponent {
   public readonly returnUrl = input<string>(window.location.origin + '/account');
   
   public readonly customer = computed(() => this.customerStore.customer().data);
+  
+  public readonly activeTab = signal<'list' | 'table'>('list');
     
   public previousCustomerEmail = '';
 
   public refreshPaymentIntents(): void {
     this.customerStore.loadPaymentIntents(this.customerStore.customer().data?.id as string);
+  }
+  
+  public setActiveTab(tab: 'list' | 'table'): void {
+    this.activeTab.set(tab);
   }
 }
