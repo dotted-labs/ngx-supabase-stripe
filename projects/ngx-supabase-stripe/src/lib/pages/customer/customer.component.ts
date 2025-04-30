@@ -3,7 +3,7 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { PaymentIntentsListComponent } from '../../components/customer/payment-intents/payment-intents-list/payment-intents-list.component';
 import { PaymentIntentsTableComponent } from '../../components/customer/payment-intents/payment-intents-table/payment-intents-table.component';
 import { SubscriptionsComponent } from '../../components/customer/subscriptions/subscriptions.component';
-import { CustomerStore } from '../../store/customer.store';
+import { CustomerStore, StripePaymentIntentsPublic } from '../../store/customer.store';
 
 @Component({
   selector: 'lib-customer-dashboard',
@@ -33,5 +33,9 @@ export class CustomerDashboardComponent {
   
   public setActiveTab(tab: 'list' | 'table'): void {
     this.activeTab.set(tab);
+  }
+
+  public exportSelectedPaymentIntents(paymentIntents: StripePaymentIntentsPublic[]): void {
+    console.log('[💰 CustomerDashboardComponent] exportSelectedPaymentIntents: ', paymentIntents);
   }
 }

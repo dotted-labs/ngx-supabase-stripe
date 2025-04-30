@@ -8,7 +8,7 @@
     <div class="controls mb-4 flex justify-between items-center">
       <div class="stats">
       @if (paymentIntents().length > 0) {
-        <span class="badge badge-primary">{{ paymentIntents().length }} payment intents</span>
+        <span class="badge badge-soft badge-info">{{ paymentIntents().length }} payment intents</span>
       }
     </div>
     <button class="btn btn-sm btn-outline" (click)="refreshPaymentIntents()">

@@ -25,6 +25,7 @@ export class PaymentIntentsTableComponent {
   public readonly error = input<string | null>(null);
   public readonly withControls = input<boolean>(true);
   
+  public readonly exportSelected = output<StripePaymentIntentsPublic[]>();
   public readonly onRefresh = output<void>();
   
   public readonly utils = inject(UtilsService);
@@ -41,6 +42,10 @@ export class PaymentIntentsTableComponent {
 
   public allPaymentIntentsSelected(): boolean {
     return this.paymentIntentsTable().every(paymentIntent => paymentIntent.selected);
+  }
+
+  public somePaymentIntentsSelected(): boolean {
+    return this.paymentIntentsTable().some(paymentIntent => paymentIntent.selected);
   }
 
   public toggleAllPaymentIntents(event: Event): void {
@@ -66,4 +71,8 @@ export class PaymentIntentsTableComponent {
       modalElement.showModal();
     }
   }  
+
+  public exportSelectedPaymentIntents(): void {
+    this.exportSelected.emit(this.paymentIntentsTable().filter(paymentIntent => paymentIntent.selected));
+  }
 } 

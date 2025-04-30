@@ -28,6 +28,7 @@
         [paymentIntents]="customerStore.paymentIntents.data()"
         [loading]="customerStore.isPaymentIntentsStatusLoading()"
         [error]="customerStore.paymentIntents.error()"
+        (exportSelected)="exportSelectedPaymentIntents($event)"
         (onRefresh)="refreshPaymentIntents()">
       </lib-payment-intents-table>
     }
