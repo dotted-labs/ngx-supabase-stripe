@@ -6,7 +6,7 @@
   <div class="controls mb-4 flex justify-between items-center w-full">
     <div class="stats">
       @if (customerStore.subscriptions.data().length > 0) {
-        <span class="badge badge-primary">{{ customerStore.subscriptions.data().length}} subscriptions</span>
+        <span class="badge badge-outline badge-info">{{ customerStore.subscriptions.data().length}} subscriptions</span>
       }
     </div>
     <button class="btn btn-sm btn-outline" (click)="refreshSubscriptions()">
