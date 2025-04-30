@@ -13,6 +13,14 @@ import { UtilsService } from '../../../../services/utils.service';
 })
 export class PaymentIntentsTableComponent {
   public readonly paymentIntents = input.required<StripePaymentIntentsPublic[]>();
+
+  public paymentIntentsTable = computed(() => {
+    return this.paymentIntents().map(paymentIntent => ({
+      ...paymentIntent,
+      selected: false
+    }));
+  });
+
   public readonly loading = input<boolean>(false);
   public readonly error = input<string | null>(null);
   public readonly withControls = input<boolean>(true);
@@ -29,6 +37,27 @@ export class PaymentIntentsTableComponent {
   
   public refreshPaymentIntents(): void {
     this.onRefresh.emit();
+  }
+
+  public allPaymentIntentsSelected(): boolean {
+    return this.paymentIntentsTable().every(paymentIntent => paymentIntent.selected);
+  }
+
+  public toggleAllPaymentIntents(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    const isChecked = checkbox.checked;
+    this.paymentIntentsTable().forEach(paymentIntent => {
+      paymentIntent.selected = isChecked;
+    });
+  }
+
+  public togglePaymentIntent(event: Event, id: string): void {
+    const checkbox = event.target as HTMLInputElement;
+    const isChecked = checkbox.checked;
+    const paymentIntent = this.paymentIntentsTable().find(paymentIntent => paymentIntent.id === id);
+    if (paymentIntent) {
+      paymentIntent.selected = isChecked;
+    }
   }
 
   public showDetails(id: string): void {

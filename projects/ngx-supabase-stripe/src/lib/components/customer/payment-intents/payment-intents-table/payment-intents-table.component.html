@@ -8,7 +8,7 @@
     <div class="controls mb-4 flex justify-between items-center">
       <div class="stats">
         @if (hasPaymentIntents()) {
-          <span class="badge badge-primary">{{ paymentIntents().length }} payment intents</span>
+          <span class="badge badge-primary">{{ paymentIntentsTable().length }} payment intents</span>
         }
       </div>
       <button class="btn btn-sm btn-outline" (click)="refreshPaymentIntents()">
@@ -37,7 +37,11 @@
         <!-- head -->
         <thead>
           <tr>
-            <th></th>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox" (change)="toggleAllPaymentIntents($event)" [checked]="allPaymentIntentsSelected()" />
+              </label>
+            </th>
             <th>Amount</th>
             <th>Payment Method</th>
             <th>Status</th>
@@ -46,9 +50,13 @@
           </tr>
         </thead>
         <tbody>
-          @for (paymentIntent of paymentIntents(); track trackByPaymentIntentId(0, paymentIntent)) {
+          @for (paymentIntent of paymentIntentsTable(); track trackByPaymentIntentId(0, paymentIntent)) {
             <tr>
-              <th>{{ $index + 1 }}</th>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox" (change)="togglePaymentIntent($event, paymentIntent.id ?? '')" [checked]="paymentIntent.selected" />
+                </label>
+              </th>
               <td>{{ utils.formatAmount(paymentIntent.amount ?? 0, paymentIntent.currency ?? 'EUR') }}</td>
               <td>
                 <span class="badge badge-outline">
