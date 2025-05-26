@@ -97,7 +97,6 @@ export class SupabaseClientService {
       .select('*');
   }
 
-  
   /**
    * STRIPE PRODUCTS
   */

@@ -24,8 +24,6 @@ export class CustomerDashboardComponent {
   public readonly customer = computed(() => this.customerStore.customer().data);
   
   public readonly activeTab = signal<'list' | 'table'>('list');
-    
-  public previousCustomerEmail = '';
 
   public refreshPaymentIntents(): void {
     this.customerStore.loadPaymentIntents(this.customerStore.customer().data?.id as string);

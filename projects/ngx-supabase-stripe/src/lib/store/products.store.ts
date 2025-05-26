@@ -43,22 +43,41 @@ export const ProductsStore = signalStore(
   })),
   withMethods((store, supabaseService = inject(SupabaseClientService)) => ({
     /**
+     * Load product by id
+     */
+    async loadProductById(id: string) {
+      patchState(store, { status: 'loading', error: null });
+
+      try {
+        const { data: product, error: productError } = await supabaseService.selectStripeProduct(id);
+        
+        if (productError) {
+          console.error('🚨 [ProductsStore]: Error loading product', productError);
+          patchState(store, { status: 'error', error: (productError as Error).message });
+        }
+
+        const products: StripeProductPublic[] = [];
+        
+        if (product && product.length > 0) {
+          const productParsed = parseProduct(product[0], store.prices() as StripePrice[]);
+          products.push(productParsed);
+        }
+
+        patchState(store, { status: 'success', products });
+        
+      } catch (error) {
+        patchState(store, { status: 'error', error: (error as Error).message });
+      }
+    },
+
+    /**
      * Load products from Stripe
      */
     async loadProducts() {
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
         const { data: stripeProducts, error: productsError } = await supabaseService.selectStripeProducts();
-
-        if (pricesError) {
-          console.error('🚨 [ProductsStore]: Error loading prices', pricesError);
-          patchState(store, {
-            status: 'error',
-            error: (pricesError as Error).message,
-          });
-        }
 
         if (productsError) {
           console.error('🚨 [ProductsStore]: Error loading products', productsError);
@@ -68,12 +87,12 @@ export const ProductsStore = signalStore(
           });
         }
 
-        if (prices && stripeProducts) {
+        if (stripeProducts) {
           {
             const products: StripeProductPublic[] = [];
 
             stripeProducts.forEach(product => {
-              products.push(parseProduct(product, prices));
+              products.push(parseProduct(product, store.prices() as StripePrice[]));
             });
 
             console.log('🔍 [ProductsStore] products: ', products);
@@ -100,14 +119,18 @@ export const ProductsStore = signalStore(
       patchState(store, initialProductsState);
     }
   })),
-  withHooks({
-    onInit() {
-      console.log('🔍 [ProductsStore] initialized');
-    },
-    onDestroy() {
-      console.log('🧹 [ProductsStore] destroyed');
+  withHooks((store, supabaseService = inject(SupabaseClientService)) => ({
+    async onInit() {
+      const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
+
+      if (pricesError) {
+        console.error('🚨 [ProductsStore]: Error loading prices', pricesError);
+        patchState(store, { status: 'error', error: (pricesError as Error).message });
+      }
+
+      patchState(store, { prices });
     }
-  })
+  }))
 )
 
 export function parseProduct(product: StripeProduct, prices: StripePrice[] = []): StripeProductPublic {
