@@ -81,8 +81,6 @@ Remember select the stripe schema.
 
 > ⚠️ **Warning**: Please follow the above steps to install the Stripe Wrappers. If you create the Stripe extension manually you can get the next error related to the permission denied for table wrappers_fdw_stats. [this GitHub issue](https://github.com/supabase/wrappers/issues/203) for known the problem and the solution.
 
-
-
 #### Create Public Functions
 
 Create the following public functions that the library uses to access Stripe data. We need to create these functions in the `public` schema:
