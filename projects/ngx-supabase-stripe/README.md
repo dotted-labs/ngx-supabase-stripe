@@ -52,12 +52,34 @@ To properly integrate Stripe with Supabase, you need to set up foreign tables th
 
 First, you need to install the Stripe API wrapper extension in your Supabase project:
 
-1. Go to the Supabase Dashboard
-2. Navigate to your project's Database section 
-3. Select "Integrations" and add Stripe Wrapper 
-4. Install the next Stripe Wrappers. This step will create the following tables:
+1. Go to SQL Editor
+2. Set the next commands:
+
+```sql
+-- install wrappers in extensions
+DROP EXTENSION IF EXISTS wrappers CASCADE;
+
+CREATE EXTENSION IF NOT EXISTS wrappers WITH SCHEMA extensions;
+
+-- the data wrappers is created globally not at the schema level
+CREATE FOREIGN DATA WRAPPER wasm_wrapper HANDLER extensions.wasm_fdw_handler VALIDATOR extensions.wasm_fdw_validator;
+```
+
+3. Then, create the stripe schema:
+
+```sql
+DROP SCHEMA IF EXISTS stripe CASCADE;
+
+CREATE SCHEMA IF NOT EXISTS stripe;
+```
+
+4. Install the next Stripe Wrappers from the dashboard. This step will create the following tables:
 
 ![image](./stripe-wrappers.png)
+
+Remember select the stripe schema.
+
+> ⚠️ **Warning**: Please follow the above steps to install the Stripe Wrappers. If you create the Stripe extension manually you can get the next error related to the permission denied for table wrappers_fdw_stats. [this GitHub issue](https://github.com/supabase/wrappers/issues/203) for known the problem and the solution.
 
 #### Create Public Functions
 
