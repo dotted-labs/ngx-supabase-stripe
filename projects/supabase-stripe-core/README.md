@@ -1,327 +1,248 @@
 # Supabase Stripe Core
 
-A TypeScript core library for Supabase and Stripe integration.
+A TypeScript core library for Supabase and Stripe integration, designed for optimal performance in both Node.js and Deno environments (Supabase Edge Functions).
 
-## Installation
+## 🚀 Key Features
+
+- **Modular Architecture**: Import only what you need for smaller bundle sizes
+- **Edge Functions Optimized**: Designed specifically for Supabase Edge Functions
+- **TypeScript First**: Full type safety with comprehensive TypeScript definitions
+- **Cross-Platform**: Works in Node.js, Deno, and browser environments
+- **Zero Framework Dependencies**: Completely framework-agnostic
+- **Production Ready**: Battle-tested functions replicated from real Edge Functions
+
+## 📦 Build and npm publish
+
+```bash
+npm run build:supabase-stripe-core
+npm run publish:supabase-stripe-core
+```
+
+## 📦 Installation
 
 ```bash
 npm install supabase-stripe-core
 ```
 
-## Usage
-
-### Full Import (Traditional)
-
-```typescript
-import { 
-  createCheckoutSession, 
-  createSubscription,
-  createPortalSession,
-  getSessionStatus,
-  createStripeInstance 
-} from 'supabase-stripe-core';
-```
-
-### Modular Imports (Recommended for Edge Functions)
-
-To optimize bundle size and improve performance, you can import individual functions:
-
-#### Checkout Session
-```typescript
-import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
-```
-
-#### Create Subscription
-```typescript
-import { createSubscription } from 'supabase-stripe-core/create-subscription';
-```
-
-#### Customer Portal
-```typescript
-import { createPortalSession } from 'supabase-stripe-core/create-portal-session';
-```
-
-#### Session Status
-```typescript
-import { getSessionStatus } from 'supabase-stripe-core/session-status';
-```
-
-#### Utilities
-```typescript
-import { createStripeInstance } from 'supabase-stripe-core/utils';
-```
-
-## Supabase Edge Functions Setup
-
-When using this library in Supabase Edge Functions (Deno environment), you need to configure import maps to resolve the Stripe dependency.
-
-### 1. Create `deno.json` in your project root:
-
-```json
-{
-  "imports": {
-    "stripe": "https://esm.sh/stripe@17.7.0",
-    "supabase-stripe-core": "./path/to/supabase-stripe-core/dist/index.esm.js"
-  }
-}
-```
-
-### 2. Use in your Edge Function:
-
-```typescript
-// supabase/functions/create-checkout/index.ts
-import { createCheckoutSession } from 'supabase-stripe-core';
-
-Deno.serve(async (req) => {
-  const { priceId, resultPagePath, customer } = await req.json();
-  
-  const result = await createCheckoutSession(
-    { priceId, resultPagePath, customer },
-    req,
-    { 
-      stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')!,
-      apiVersion: '2025-02-24.acacia'
-    }
-  );
-  
-  return result;
-});
-```
-
-### 3. Deploy with import map:
-
+**Peer Dependency**: You must also install Stripe:
 ```bash
-supabase functions deploy --import-map deno.json
+npm install stripe@^17.7.0
 ```
 
-## Alternative: Direct URL Import for Deno
-
-You can also import directly from a CDN:
-
-```typescript
-import { createCheckoutSession } from 'https://esm.sh/supabase-stripe-core@latest';
-```
-
-## Benefits of Modular Imports
-
-- **Smaller bundle size**: Only import what you need
-- **Better performance**: Especially important for Edge Functions
-- **Optimized tree shaking**: Bundlers can eliminate unused code more efficiently
-- **Faster loading**: Less JavaScript code to parse and execute
-
-## Edge Function Usage Example
-
-```typescript
-// Instead of importing the entire library:
-// import { createCheckoutSession } from 'supabase-stripe-core';
-
-// Use modular import:
-import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
-
-export default async function handler(req: Request) {
-  const result = await createCheckoutSession({
-    // ... parameters
-  });
-  
-  return new Response(JSON.stringify(result));
-}
-```
-
-## Export Structure
-
-Each module includes:
-- The main function
-- Related TypeScript types
-- Type documentation
-
-## Compatibility
-
-- ✅ Full import (maintains backward compatibility)
-- ✅ Individual modular imports
-- ✅ Automatic tree shaking
-- ✅ ESM and CommonJS support
-- ✅ TypeScript types included
-- ✅ Deno/Supabase Edge Functions support with import maps
-
-## Features
-
-- TypeScript support
-- Supabase integration
-- Stripe payments handling
-- Subscription management
-
-## Requirements
-
-- Node.js 16+
-- Stripe ^17.7.0
-
-## License
-
-MIT 
-
-
-
-# Supabase Stripe Core - Implementación
-
-## ✅ Librería TypeScript Independiente Completada
-
-Se ha creado exitosamente una librería TypeScript independiente que replica exactamente la funcionalidad de las edge functions de Supabase para Stripe. La librería expone únicamente las funciones necesarias sin dependencias adicionales.
-
-## 🏗️ Estructura del Proyecto
+## 🏗️ Project Structure
 
 ```
-projects/supabase-stripe-core/
+supabase-stripe-core/
 ├── src/
-│   ├── supabase/
-│   │   └── functions/    # Edge Functions
-│   │       ├── checkout-session.ts
-│   │       ├── create-subscription.ts
-│   │       ├── create-portal-session.ts
-│   │       ├── session-status.ts
-│   │       ├── utils.ts
-│   │       └── index.ts
-│   ├── types/            # Tipos TypeScript
-│   │   ├── database.types.ts
-│   │   └── index.ts
-│   └── index.ts          # Exportación principal
-├── dist/                 # Build output
-├── package.json
-├── tsconfig.json
-├── rollup.config.js
-└── README.md
+│   └── supabase/
+│       ├── functions/           # Core payment functions
+│       │   ├── checkout-session/
+│       │   ├── create-subscription/
+│       │   ├── create-portal-session/
+│       │   ├── session-status/
+│       │   └── utils.ts
+│       ├── shared/              # Shared utilities
+│       └── types/               # TypeScript definitions
+└── dist/                        # Compiled output
+    ├── checkout-session/        # Individual modules
+    ├── create-subscription/
+    ├── create-portal-session/
+    └── session-status/
 ```
 
-## 🎯 Funcionalidades Implementadas
+## 🎯 Available Functions
 
-### Edge Functions Replicadas
+### Payment Functions
+- **`createCheckoutSession`** - Create one-time payment sessions
+- **`createSubscription`** - Create subscription payment sessions  
+- **`createPortalSession`** - Create customer billing portal sessions
+- **`getSessionStatus`** - Retrieve payment session status
 
-✅ **`createCheckoutSession`** - Replica `checkout_session`
-- Crea sesiones de pago únicas
-- Soporte para clientes existentes o nuevos
-- Configuración flexible de métodos de pago
+### Utility Functions
+- **`createStripeInstance`** - Create configured Stripe instances
 
-✅ **`createSubscription`** - Replica `create_subscription`  
-- Crea sesiones de suscripción
-- Manejo automático de clientes
-- Configuración de períodos y precios
+## 📊 Bundle Size Optimization
 
-✅ **`createPortalSession`** - Replica `create_portal_session`
-- Crea portales de facturación
-- Gestión de suscripciones por parte del cliente
-- URLs de retorno personalizables
-
-✅ **`getSessionStatus`** - Replica `session_status`
-- Obtiene estado de sesiones de checkout
-- Información completa de pagos
-- Manejo de errores robusto
-
-### Arquitectura Modular
-
-✅ **Funciones Individuales**
-- Cada edge function en su propio archivo
-- Separación clara de responsabilidades
-- Reutilización de utilidades comunes
-
-✅ **Tipos TypeScript Robustos**
-- Interfaces completas para parámetros
-- Manejo consistente de respuestas
-- Configuración de Stripe tipada
-
-## 🔧 Configuración y Uso
-
-### Instalación
-```bash
-npm install supabase-stripe-core stripe
+### Traditional Import (Node.js)
+```typescript
+// Imports entire library (~280KB with Stripe bundled)
+import { createCheckoutSession } from 'supabase-stripe-core';
 ```
 
-### Uso Directo
+### Modular Import (Edge Functions - Recommended)
+```typescript
+// Imports only specific module (~5KB + external Stripe)
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+```
+
+## 🔧 Usage
+
+### Node.js Environment
+
 ```typescript
 import { createCheckoutSession } from 'supabase-stripe-core';
 
-const result = await createCheckoutSession(
+const response = await createCheckoutSession(
   {
     priceId: 'price_1234567890',
     resultPagePath: 'https://myapp.com/success',
     customer: { email: 'user@example.com' }
   },
+  request,
   {
-    stripeSecretKey: process.env.STRIPE_SECRET_KEY!
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY!,
+    apiVersion: '2025-02-24.acacia'
   }
 );
 ```
 
-## 📦 Build y Distribución
+### Supabase Edge Functions (Deno)
 
-### Build Process
-- ✅ Rollup para bundling
-- ✅ TypeScript compilación
-- ✅ Múltiples formatos (CJS, ESM)
-- ✅ Definiciones de tipos
+**1. Create `deno.json` in your Edge Function directory:**
 
-### Output
-```
-dist/
-├── index.js          # CommonJS
-├── index.esm.js      # ES Modules
-└── index.d.ts        # TypeScript definitions
+```json
+{
+  "imports": {
+    "supabase-stripe-core/checkout-session": "../../../supabase-stripe-core/dist/checkout-session/index.esm.js"
+  }
+}
 ```
 
-## 🎨 Características Técnicas
-
-### Dependencias
-- **Peer Dependencies**: Solo `stripe`
-- **Zero Framework Dependencies**: Completamente independiente
-- **TypeScript First**: Tipos robustos y autocompletado
-
-### Compatibilidad
-- ✅ Node.js (server-side)
-- ✅ Deno (edge functions)
-- ✅ Browsers (client-side)
-- ✅ React, Vue, Angular, Vanilla JS
-
-### Error Handling
-- ✅ Interfaz consistente `SupabaseStripeResponse<T>`
-- ✅ Manejo robusto de errores
-- ✅ Logging detallado
-
-## 🚀 Integración con Edge Functions
-
-Las funciones pueden ser consumidas directamente por las edge functions existentes:
+**2. Edge Function Implementation:**
 
 ```typescript
-// En una edge function de Supabase
-import { createCheckoutSession } from 'supabase-stripe-core';
+// supabase/functions/checkout_session/index.ts
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+import Stripe from 'npm:stripe@17.7.0';
 
-Deno.serve(async (req) => {
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
+  apiVersion: '2025-02-24.acacia',
+  httpClient: Stripe.createFetchHttpClient()
+});
+
+Deno.serve(async (req: Request) => {
   const { priceId, resultPagePath, customer } = await req.json();
-  
-  const result = await createCheckoutSession(
-    { priceId, resultPagePath, customer },
-    { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
+
+  const sessionOptions: Stripe.Checkout.SessionCreateParams = {
+    ui_mode: 'embedded',
+    line_items: [{ price: priceId, quantity: 1 }],
+    mode: 'payment',
+    payment_method_types: ['card', 'paypal', 'amazon_pay', 'alipay'],
+    return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`,
+  };
+
+  // Configure customer options
+  if (customer?.id) {
+    sessionOptions.customer = customer.id;
+  } else {
+    if (customer?.email) {
+      sessionOptions.customer_email = customer.email;
+    }
+    sessionOptions.customer_creation = 'always';
+  }
+
+  return await createCheckoutSession(
+    req,
+    { stripe, sessionOptions }
   );
-  
-  return Response.json(result.data);
 });
 ```
 
-## 📊 Beneficios
+## 📚 API Reference
 
-1. **Reutilización**: Misma lógica en diferentes contextos
-2. **Mantenimiento**: Un solo lugar para la lógica de negocio
-3. **Testing**: Funciones fácilmente testeable
-4. **Flexibilidad**: Sin dependencias de framework
-5. **TypeScript**: Tipos robustos y autocompletado
+### Function Signatures
 
-## 🔄 Scripts de Build
-
-Desde el proyecto principal:
-```bash
-npm run build:core  # Construye la librería TypeScript
-npm run build:lib   # Construye la librería Angular
+#### createCheckoutSession
+```typescript
+createCheckoutSession(
+  params: CheckoutSessionParams,
+  request: Request,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<Response>
 ```
 
-## ✨ Estado del Proyecto
+#### createSubscription
+```typescript
+createSubscription(
+  params: SubscriptionParams,
+  request: Request,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<Response>
+```
 
-**✅ COMPLETADO**: La librería TypeScript independiente está funcional y lista para uso en producción.
+#### createPortalSession
+```typescript
+createPortalSession(
+  params: PortalSessionParams,
+  request: Request,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<Response>
+```
 
-La implementación replica exactamente la funcionalidad de las edge functions originales, proporcionando una solución limpia y reutilizable para integrar Supabase con Stripe sin dependencias de Angular. 
+#### getSessionStatus
+```typescript
+getSessionStatus(
+  params: SessionStatusParams,
+  request: Request,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<Response>
+```
+
+### TypeScript Types
+
+```typescript
+interface CheckoutSessionParams {
+  priceId: string;
+  resultPagePath: string;
+  customer?: {
+    id?: string;
+    email?: string;
+  };
+}
+
+interface StripeEnvironmentConfig {
+  stripeSecretKey: string;
+  apiVersion?: string;
+}
+```
+
+## 🏷️ Modular Exports
+
+Each function is available as an individual export for optimal bundle size:
+
+```typescript
+// Individual imports
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+import { createSubscription } from 'supabase-stripe-core/create-subscription';
+import { createPortalSession } from 'supabase-stripe-core/create-portal-session';
+import { getSessionStatus } from 'supabase-stripe-core/session-status';
+import { createStripeInstance } from 'supabase-stripe-core/utils';
+```
+
+## 🎯 Best Practices
+
+### For Edge Functions
+1. **Use modular imports** for smaller bundle sizes
+2. **Import Stripe externally** using `npm:stripe@17.7.0`
+3. **Configure import maps** in `deno.json`
+4. **Handle Stripe instances** in your Edge Function
+
+### For Node.js Applications
+1. **Use full imports** for simplicity
+2. **Let the library manage** Stripe instances
+3. **Configure environment variables** properly
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our contributing guidelines and submit pull requests for any improvements.
+
+## 📞 Support
+
+For issues and questions:
+- Create an issue on GitHub
+- Check existing documentation
+- Review Stripe's official documentation for payment-related questions 
