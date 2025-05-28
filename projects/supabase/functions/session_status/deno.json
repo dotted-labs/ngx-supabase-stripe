@@ -1,5 +1,5 @@
 {
   "imports": {
-    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js"
+    "supabase-stripe-core/session-status": "../../../supabase-stripe-core/dist/session-status/index.esm.js"
   }
 } 

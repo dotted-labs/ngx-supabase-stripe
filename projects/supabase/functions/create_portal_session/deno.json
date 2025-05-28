@@ -1,5 +1,5 @@
 {
   "imports": {
-    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js"
+    "supabase-stripe-core/create-portal-session": "../../../supabase-stripe-core/dist/create-portal-session/index.esm.js"
   }
 } 
