@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 // Common response type for operations
 export interface SupabaseStripeResponse<T = any> {
   data: T | null;
-  error: Error | null;
+  error: unknown | null;
 }
 
 

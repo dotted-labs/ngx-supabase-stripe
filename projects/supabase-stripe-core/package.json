@@ -11,31 +11,6 @@
       "import": "./dist/index.esm.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./checkout-session": {
-      "import": "./dist/checkout-session/index.esm.js",
-      "require": "./dist/checkout-session/index.js",
-      "types": "./dist/checkout-session/index.d.ts"
-    },
-    "./create-subscription": {
-      "import": "./dist/create-subscription/index.esm.js",
-      "require": "./dist/create-subscription/index.js",
-      "types": "./dist/create-subscription/index.d.ts"
-    },
-    "./create-portal-session": {
-      "import": "./dist/create-portal-session/index.esm.js",
-      "require": "./dist/create-portal-session/index.js",
-      "types": "./dist/create-portal-session/index.d.ts"
-    },
-    "./session-status": {
-      "import": "./dist/session-status/index.esm.js",
-      "require": "./dist/session-status/index.js",
-      "types": "./dist/session-status/index.d.ts"
-    },
-    "./utils": {
-      "import": "./dist/utils/index.esm.js",
-      "require": "./dist/utils/index.js",
-      "types": "./dist/utils/index.d.ts"
     }
   },
   "scripts": {

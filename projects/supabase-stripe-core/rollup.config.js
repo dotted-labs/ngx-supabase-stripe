@@ -1,43 +1,40 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
+import dts from 'rollup-plugin-dts';
 import { readFileSync } from 'fs';
 
-// Modular builds for Edge Functions (Stripe as external dependency)
-const modules = [
-  'checkout-session',
-  'create-subscription', 
-  'create-portal-session',
-  'session-status'
-];
-
-const moduleConfigs = modules.map(moduleName => ({
-  input: `src/supabase/functions/${moduleName}/index.ts`,
-  output: [
-    {
-      file: `dist/${moduleName}/index.js`,
-      format: 'cjs',
-      sourcemap: true,
-    },
-    {
-      file: `dist/${moduleName}/index.esm.js`,
-      format: 'esm',
-      sourcemap: true,
-    },
-  ],
-  plugins: [
-    resolve({
-      browser: true,
-      preferBuiltins: false,
-    }),
-    commonjs(),
-    typescript({
-      tsconfig: './tsconfig.json',
-    }),
-  ],
-}));
-
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 export default [
-  ...moduleConfigs,
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: packageJson.main,
+        format: 'cjs',
+        sourcemap: true,
+      },
+      {
+        file: packageJson.module,
+        format: 'esm',
+        sourcemap: true,
+      },
+    ],
+    plugins: [
+      resolve({
+        browser: true,
+        preferBuiltins: false,
+      }),
+      commonjs(),
+      typescript({
+        tsconfig: './tsconfig.json',
+      }),
+    ],
+  },
+  {
+    input: 'dist/index.d.ts',
+    output: [{ file: 'dist/index.d.ts', format: 'esm' }],
+    plugins: [dts()],
+  },
 ]; 

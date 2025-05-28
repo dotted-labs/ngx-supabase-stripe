@@ -1,26 +1,16 @@
 import Stripe from 'stripe';
-import { StripeEnvironmentConfig, CheckoutSessionParams } from '../../types';
+import { StripeEnvironmentConfig, CheckoutSessionParams, SupabaseStripeResponse } from '../../types';
 import { createStripeInstance } from '../utils';
-import { corsHeaders } from '../../shared/cors';
 
-/**
- * Create a checkout session for one-time payments
- * Replicates the logic from checkout_session edge function
- */
+export type StripeCheckoutSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
+
 export async function createCheckoutSession(
   params: CheckoutSessionParams,
-  request: Request,
   stripeConfig: StripeEnvironmentConfig
-): Promise<Response> {
-  if (request.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
+): Promise<StripeCheckoutSession> {
   try {
-    const stripe = createStripeInstance(stripeConfig);
     const { priceId, resultPagePath, customer } = params;
-
-    console.log('🔌 [createCheckoutSession]: Creating checkout session', priceId, resultPagePath, customer);
+    const stripe = createStripeInstance(stripeConfig);
 
     const sessionOptions: Stripe.Checkout.SessionCreateParams = {
       ui_mode: 'embedded',
@@ -45,30 +35,15 @@ export async function createCheckoutSession(
       sessionOptions.customer_creation = 'always';
     }
 
-    console.log('🔌 [createCheckoutSession]: Session options', JSON.stringify(sessionOptions));
-
-    const session = await stripe.checkout.sessions.create(sessionOptions);
-
-    console.log('🔌 [createCheckoutSession]: Checkout session created', session);
-    
-    return new Response(JSON.stringify(session.client_secret), {
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json',
-      },
-      status: 200
-    });
-  } catch (error) {
+    return {
+      data: await stripe.checkout.sessions.create(sessionOptions),
+      error: null
+    };
+  } catch (error: unknown) {
     console.error('[❌ checkout_session error]: ', error);
-
-    return new Response(JSON.stringify({
-      error: 'An unknown error occurred'
-    }), {
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json',
-      },
-      status: 500
-    });
+    return {
+      data: null,
+      error: error
+    };
   }
 } 

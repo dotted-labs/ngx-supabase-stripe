@@ -1,18 +1,25 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-import { getSessionStatus } from 'supabase-stripe-core/session-status';
+import { getSessionStatus } from 'supabase-stripe-core';
+import { corsHeaders, APIResponse } from '../shared/api.ts';
+import type { StripeSessionStatus } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
     const { sessionId } = await req.json();
     
-    return await getSessionStatus(
+    const response: StripeSessionStatus = await getSessionStatus(
       { sessionId },
-      req,
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
     );
+
+    if (response.error) {
+      return APIResponse<StripeSessionStatus>(response, 500);
+    }
+
+    return APIResponse<StripeSessionStatus>(response, 200);
 
   } catch (error) {
     return error as Response;

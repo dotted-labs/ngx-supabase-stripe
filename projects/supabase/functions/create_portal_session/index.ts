@@ -1,19 +1,25 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-import { createPortalSession } from 'supabase-stripe-core/create-portal-session';
+import { createPortalSession } from 'supabase-stripe-core';
+import { corsHeaders, APIResponse } from '../shared/api.ts';
+import type { StripePortalSession } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
     const { customerId, returnUrl } = await req.json();
 
-    return await createPortalSession(
+    const response: StripePortalSession = await createPortalSession(
       { customerId, returnUrl },
-      req,
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
     );
 
+    if (response.error) {
+      return APIResponse<StripePortalSession>(response, 500);
+    }
+
+    return APIResponse<StripePortalSession>(response, 200);
   } catch (error) {
     return error as Response;
   }

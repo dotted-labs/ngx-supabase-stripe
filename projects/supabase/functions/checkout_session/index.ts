@@ -1,25 +1,29 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+import { createCheckoutSession } from 'supabase-stripe-core';
+import type { StripeCheckoutSession } from 'supabase-stripe-core/types';
+import { APIResponse, corsHeaders } from '../shared/api.ts';
 
 Deno.serve(async (req: Request) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
-
-    console.log('🔌 [checkout_session]: Creating checkout session');
-
     const { priceId, resultPagePath, customer } = await req.json();
 
-    console.log('🔌 [checkout_session]: Creating checkout session, params:', priceId, resultPagePath, customer);
-
-    return await createCheckoutSession(
+    const response: StripeCheckoutSession = await createCheckoutSession(
       { priceId, resultPagePath, customer },
-      req,
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
     );
 
+    console.log('[checkout_session] response:', response);
+
+    if (response.error) {
+      return APIResponse<StripeCheckoutSession>(response, 500);
+    }
+
+    return APIResponse<StripeCheckoutSession>(response, 200);
+
   } catch (error) {
-    return error as Response;
+    return APIResponse(error, 500);
   }
 });

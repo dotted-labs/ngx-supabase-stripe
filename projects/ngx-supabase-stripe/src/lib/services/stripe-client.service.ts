@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { STRIPE_CONFIG } from '../config/stripe.config';
-import { SupabaseClientService } from './supabase-client.service';
 import { StripeCustomerPublic } from '../store/customer.store';
+import { SupabaseClientService } from './supabase-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +49,10 @@ export class StripeClientService {
         throw error;
       }
 
-      return { clientSecret: data.clientSecret, error: null };
+      return { 
+        clientSecret: data?.client_secret ?? null, 
+        error: null 
+      };
     } catch (error) {
       return { clientSecret: null, error: error as Error };
     }

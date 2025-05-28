@@ -1,5 +1,5 @@
 {
   "imports": {
-    "supabase-stripe-core/create-subscription": "../../../supabase-stripe-core/dist/create-subscription/index.esm.js"
+    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js"
   }
 } 
