@@ -1,5 +1,5 @@
 import { createPortalSession } from 'supabase-stripe-core';
-import { corsHeaders, APIResponse } from '../shared/api.ts';
+import { corsHeaders, APIResponse } from '../_shared/api.ts';
 import type { StripePortalSession } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req) => {
@@ -10,16 +10,16 @@ Deno.serve(async (req) => {
   try {
     const { customerId, returnUrl } = await req.json();
 
-    const response: StripePortalSession = await createPortalSession(
+    const {data, error}: StripePortalSession = await createPortalSession(
       { customerId, returnUrl },
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
     );
 
-    if (response.error) {
-      return APIResponse<StripePortalSession>(response, 500);
+    if (error) {
+      return APIResponse<StripePortalSession['error']>(error, 500);
     }
 
-    return APIResponse<StripePortalSession>(response, 200);
+    return APIResponse<StripePortalSession['data']>(data, 200);
   } catch (error) {
     return error as Response;
   }

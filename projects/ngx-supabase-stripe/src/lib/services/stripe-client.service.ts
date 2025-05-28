@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
+import type { Stripe as StripeTypes } from 'stripe';
 import { STRIPE_CONFIG } from '../config/stripe.config';
 import { StripeCustomerPublic } from '../store/customer.store';
 import { SupabaseClientService } from './supabase-client.service';
@@ -37,7 +38,7 @@ export class StripeClientService {
   ): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('checkout_session', {
+        .functions.invoke<StripeTypes.Checkout.Session>('checkout_session', {
           body: {
             priceId,
             resultPagePath,

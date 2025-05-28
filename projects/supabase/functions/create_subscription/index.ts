@@ -1,5 +1,5 @@
 import { createSubscription } from 'supabase-stripe-core';
-import { corsHeaders, APIResponse } from '../shared/api.ts';
+import { corsHeaders, APIResponse } from '../_shared/api.ts';
 import type { StripeSubscriptionSession } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req: Request) => {
@@ -10,16 +10,16 @@ Deno.serve(async (req: Request) => {
   try {
     const { priceId, resultPagePath, customer } = await req.json();
 
-    const response: StripeSubscriptionSession = await createSubscription(
+    const { data, error }: StripeSubscriptionSession = await createSubscription(
       { priceId, resultPagePath, customer },
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! } 
     );
 
-    if (response.error) {  
-      return APIResponse<StripeSubscriptionSession>(response, 500);
+    if (error) {  
+      return APIResponse<StripeSubscriptionSession['error']>(error, 500);
     }
 
-    return APIResponse<StripeSubscriptionSession>(response, 200);
+    return APIResponse<StripeSubscriptionSession['data']>(data, 200);
 
   } catch (error) {
     return error as Response;
