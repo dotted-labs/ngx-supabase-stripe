@@ -2,7 +2,7 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
-import { createCheckoutSession } from 'supabase-stripe-core';
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
 
 Deno.serve(async (req: Request) => {
   try {

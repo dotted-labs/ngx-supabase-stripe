@@ -2,7 +2,7 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
-import { getSessionStatus } from 'supabase-stripe-core';
+import { getSessionStatus } from 'supabase-stripe-core/session-status';
 
 Deno.serve(async (req) => {
   try {

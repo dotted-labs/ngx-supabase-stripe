@@ -1,22 +1,26 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
 import { readFileSync } from 'fs';
 
-const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+// Modular builds for Edge Functions (Stripe as external dependency)
+const modules = [
+  'checkout-session',
+  'create-subscription', 
+  'create-portal-session',
+  'session-status'
+];
 
-// Main entry point - includes all dependencies for Node.js
-const mainConfig = {
-  input: 'src/index.ts',
+const moduleConfigs = modules.map(moduleName => ({
+  input: `src/supabase/functions/${moduleName}/index.ts`,
   output: [
     {
-      file: packageJson.main,
+      file: `dist/${moduleName}/index.js`,
       format: 'cjs',
       sourcemap: true,
     },
     {
-      file: packageJson.module,
+      file: `dist/${moduleName}/index.esm.js`,
       format: 'esm',
       sourcemap: true,
     },
@@ -31,16 +35,9 @@ const mainConfig = {
       tsconfig: './tsconfig.json',
     }),
   ],
-};
+}));
 
-// Type definition configs
-const mainDtsConfig = {
-  input: 'dist/index.d.ts',
-  output: [{ file: 'dist/index.d.ts', format: 'esm' }],
-  plugins: [dts()],
-};
 
 export default [
-  mainConfig,
-  mainDtsConfig
+  ...moduleConfigs,
 ]; 

@@ -1,5 +1,5 @@
 {
   "imports": {
-    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js"
+    "supabase-stripe-core/checkout-session": "../../../supabase-stripe-core/dist/checkout-session/index.esm.js"
   }
 } 

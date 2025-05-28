@@ -2,7 +2,7 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
-import { createSubscription } from 'supabase-stripe-core';
+import { createSubscription } from 'supabase-stripe-core/create-subscription';
 
 Deno.serve(async (req: Request) => {
   try {

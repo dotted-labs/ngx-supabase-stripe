@@ -2,7 +2,7 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
-import { createPortalSession } from 'supabase-stripe-core';
+import { createPortalSession } from 'supabase-stripe-core/create-portal-session';
 
 Deno.serve(async (req) => {
   try {
