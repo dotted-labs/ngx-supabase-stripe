@@ -1,6 +1,6 @@
 import { StripeEnvironmentConfig, SessionStatusParams } from '../../types';
-import { createStripeInstance } from './utils';
-import { corsHeaders } from '../cors';
+import { createStripeInstance } from '../utils';
+import { corsHeaders } from '../../shared/cors';
 
 /**
  * Get checkout session status

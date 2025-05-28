@@ -10,11 +10,138 @@ npm install supabase-stripe-core
 
 ## Usage
 
-```typescript
-import { /* your exports */ } from 'supabase-stripe-core';
+### Full Import (Traditional)
 
-// Your implementation here
+```typescript
+import { 
+  createCheckoutSession, 
+  createSubscription,
+  createPortalSession,
+  getSessionStatus,
+  createStripeInstance 
+} from 'supabase-stripe-core';
 ```
+
+### Modular Imports (Recommended for Edge Functions)
+
+To optimize bundle size and improve performance, you can import individual functions:
+
+#### Checkout Session
+```typescript
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+```
+
+#### Create Subscription
+```typescript
+import { createSubscription } from 'supabase-stripe-core/create-subscription';
+```
+
+#### Customer Portal
+```typescript
+import { createPortalSession } from 'supabase-stripe-core/create-portal-session';
+```
+
+#### Session Status
+```typescript
+import { getSessionStatus } from 'supabase-stripe-core/session-status';
+```
+
+#### Utilities
+```typescript
+import { createStripeInstance } from 'supabase-stripe-core/utils';
+```
+
+## Supabase Edge Functions Setup
+
+When using this library in Supabase Edge Functions (Deno environment), you need to configure import maps to resolve the Stripe dependency.
+
+### 1. Create `deno.json` in your project root:
+
+```json
+{
+  "imports": {
+    "stripe": "https://esm.sh/stripe@17.7.0",
+    "supabase-stripe-core": "./path/to/supabase-stripe-core/dist/index.esm.js"
+  }
+}
+```
+
+### 2. Use in your Edge Function:
+
+```typescript
+// supabase/functions/create-checkout/index.ts
+import { createCheckoutSession } from 'supabase-stripe-core';
+
+Deno.serve(async (req) => {
+  const { priceId, resultPagePath, customer } = await req.json();
+  
+  const result = await createCheckoutSession(
+    { priceId, resultPagePath, customer },
+    req,
+    { 
+      stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')!,
+      apiVersion: '2025-02-24.acacia'
+    }
+  );
+  
+  return result;
+});
+```
+
+### 3. Deploy with import map:
+
+```bash
+supabase functions deploy --import-map deno.json
+```
+
+## Alternative: Direct URL Import for Deno
+
+You can also import directly from a CDN:
+
+```typescript
+import { createCheckoutSession } from 'https://esm.sh/supabase-stripe-core@latest';
+```
+
+## Benefits of Modular Imports
+
+- **Smaller bundle size**: Only import what you need
+- **Better performance**: Especially important for Edge Functions
+- **Optimized tree shaking**: Bundlers can eliminate unused code more efficiently
+- **Faster loading**: Less JavaScript code to parse and execute
+
+## Edge Function Usage Example
+
+```typescript
+// Instead of importing the entire library:
+// import { createCheckoutSession } from 'supabase-stripe-core';
+
+// Use modular import:
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+
+export default async function handler(req: Request) {
+  const result = await createCheckoutSession({
+    // ... parameters
+  });
+  
+  return new Response(JSON.stringify(result));
+}
+```
+
+## Export Structure
+
+Each module includes:
+- The main function
+- Related TypeScript types
+- Type documentation
+
+## Compatibility
+
+- ✅ Full import (maintains backward compatibility)
+- ✅ Individual modular imports
+- ✅ Automatic tree shaking
+- ✅ ESM and CommonJS support
+- ✅ TypeScript types included
+- ✅ Deno/Supabase Edge Functions support with import maps
 
 ## Features
 

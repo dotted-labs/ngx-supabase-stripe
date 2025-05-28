@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { StripeEnvironmentConfig, CheckoutSessionParams } from '../../types';
-import { createStripeInstance } from './utils';
-import { corsHeaders } from '../cors';
+import { createStripeInstance } from '../utils';
+import { corsHeaders } from '../../shared/cors';
 
 /**
  * Create a checkout session for one-time payments

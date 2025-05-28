@@ -1,6 +1,6 @@
-import { SupabaseStripeResponse, StripeEnvironmentConfig, PortalSessionParams } from '../../types';
-import { createStripeInstance } from './utils';
-import { corsHeaders } from '../cors';
+import { StripeEnvironmentConfig, PortalSessionParams } from '../../types';
+import { createStripeInstance } from '../utils';
+import { corsHeaders } from '../../shared/cors';
 
 /**
  * Create a billing portal session

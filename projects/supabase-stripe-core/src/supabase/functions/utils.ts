@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { StripeEnvironmentConfig } from '../../types';
+import { StripeEnvironmentConfig } from '../types';
 
 /**
  * Create a Stripe instance for edge functions

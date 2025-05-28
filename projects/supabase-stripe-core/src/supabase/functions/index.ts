@@ -15,4 +15,4 @@ export type {
   PortalSessionParams,
   SessionStatusParams,
   SupabaseStripeResponse
-} from '../../types'; 
+} from '../types'; 

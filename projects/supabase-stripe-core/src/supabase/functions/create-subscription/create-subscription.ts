@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { StripeEnvironmentConfig, SubscriptionParams } from '../../types';
-import { createStripeInstance } from './utils';
-import { corsHeaders } from '../cors';
+import { createStripeInstance } from '../utils';
+import { corsHeaders } from '../../shared/cors';
 
 /**
  * Create a subscription checkout session
