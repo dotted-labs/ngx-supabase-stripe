@@ -43,6 +43,13 @@ export const ProductsStore = signalStore(
   })),
   withMethods((store, supabaseService = inject(SupabaseClientService)) => ({
     /**
+     * Get products by IDs from the current loaded products
+     */
+    getProductsByIds(ids: string[]): StripeProductPublic[] {
+      return store.products()?.filter(product => product.id && ids.includes(product.id)) || [];
+    },
+
+    /**
      * Load product by id
      */
     async loadProductById(id: string) {

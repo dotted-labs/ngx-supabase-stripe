@@ -15,7 +15,9 @@ export class ProductListComponent implements OnInit {
 
   productType = input<'one_time' | 'recurring'>('one_time');
 
-  public readonly products = computed(() => this.getProductsByType(this.productType()));
+  productIds = input<string[]>([]);
+
+  public readonly products = computed(() => this.getProducts(this.productType(), this.productIds()));
   
   public readonly productSelected = output<StripeProductPublic>();
   public readonly priceSelected = output<StripePricePublic>();
@@ -34,7 +36,11 @@ export class ProductListComponent implements OnInit {
     this.priceSelected.emit(price);
   }
 
-  public getProductsByType(type: 'one_time' | 'recurring'): StripeProductPublic[] {
+  public getProducts(type: 'one_time' | 'recurring', ids: string[]): StripeProductPublic[] {
+    if(ids.length > 0) {
+      return this.productsStore.getProductsByIds(ids);
+    }
+
     if(type === 'one_time') {
       return this.productsStore.oneTimeProducts();
     }
