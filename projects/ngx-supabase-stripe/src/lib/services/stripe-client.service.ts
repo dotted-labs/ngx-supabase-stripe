@@ -66,7 +66,7 @@ export class StripeClientService {
   public async createSubscription(priceId: string, returnPath: string, customer: StripeCustomerPublic | null): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('create_subscription', {
+        .functions.invoke<StripeTypes.Checkout.Session>('create_subscription', {
           body: {
             priceId,
             resultPagePath: returnPath,
@@ -78,7 +78,7 @@ export class StripeClientService {
         throw error;
       }
 
-      return { clientSecret: data.clientSecret, error: null };
+      return { clientSecret: data?.client_secret ?? null, error: null };
     } catch (error) {
       return { clientSecret: null, error: error as Error };
     }
@@ -92,10 +92,10 @@ export class StripeClientService {
   public async updateSubscription(
     subscriptionId: string, 
     params: any
-  ): Promise<{ subscription: any | null; error: Error | null }> {
+  ): Promise<{ subscription: StripeTypes.Subscription | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('update_subscription', {
+        .functions.invoke<StripeTypes.Subscription>('update_subscription', {
           body: {
             subscriptionId,
             params
@@ -118,10 +118,10 @@ export class StripeClientService {
    */
   public async getSubscription(
     subscriptionId: string
-  ): Promise<{ subscription: any | null; error: Error | null }> {
+  ): Promise<{ subscription: StripeTypes.Subscription | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('get_subscription', {
+        .functions.invoke<StripeTypes.Subscription>('get_subscription', {
           body: {
             subscriptionId
           }
@@ -140,10 +140,10 @@ export class StripeClientService {
   /**
    * List customer subscriptions
    */
-  public async listSubscriptions(): Promise<{ subscriptions: any[] | null; error: Error | null }> {
+  public async listSubscriptions(): Promise<{ subscriptions: StripeTypes.Subscription[] | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('list_subscriptions');
+        .functions.invoke<StripeTypes.Subscription[]>('list_subscriptions');
 
       if (error) {
         throw error;
@@ -161,10 +161,10 @@ export class StripeClientService {
    */
   public async cancelSubscription(
     subscriptionId: string
-  ): Promise<{ subscription: any | null; error: Error | null }> {
+  ): Promise<{ subscription: StripeTypes.Subscription | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('cancel_subscription', {
+        .functions.invoke<StripeTypes.Subscription>('cancel_subscription', {
           body: {
             subscriptionId
           }
@@ -188,10 +188,10 @@ export class StripeClientService {
   public async resumeSubscription(
     subscriptionId: string,
     params?: any
-  ): Promise<{ subscription: any | null; error: Error | null }> {
+  ): Promise<{ subscription: StripeTypes.Subscription | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('resume_subscription', {
+        .functions.invoke<StripeTypes.Subscription>('resume_subscription', {
           body: {
             subscriptionId,
             params
@@ -213,12 +213,12 @@ export class StripeClientService {
    * @param sessionId The session ID of the checkout session
    */
   public async getCheckoutSessionStatus(sessionId: string): Promise<{ 
-    sessionStatus: any | null; 
+    sessionStatus: StripeTypes.Checkout.Session | null; 
     error: Error | null 
   }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('session_status', {
+        .functions.invoke<StripeTypes.Checkout.Session>('session_status', {
           body: {
             sessionId
           }
@@ -243,7 +243,7 @@ export class StripeClientService {
   public async createPortalSession(customerId: string, returnUrl: string): Promise<{ url: string | null; error: Error | null }> {
     try {
       const { data, error } = await this.supabase.getClient()
-        .functions.invoke('create_portal_session', {
+        .functions.invoke<StripeTypes.BillingPortal.Session>('create_portal_session', {
           body: {
             customerId,
             returnUrl
@@ -254,7 +254,7 @@ export class StripeClientService {
         throw error;
       }
 
-      return { url: data.url, error: null };
+      return { url: data?.url ?? null, error: null };
     } catch (error) {
       return { url: null, error: error as Error };
     }
