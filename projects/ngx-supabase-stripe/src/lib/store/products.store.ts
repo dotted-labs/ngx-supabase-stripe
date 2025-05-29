@@ -26,7 +26,7 @@ const initialProductsState: ProductsState = {
   products: null,
   prices: null,
   status: 'idle',
-  error: null
+  error: null,
 };
 
 export const ProductsStore = signalStore(
@@ -46,6 +46,7 @@ export const ProductsStore = signalStore(
      * Get products by IDs from the current loaded products
      */
     getProductsByIds(ids: string[]): StripeProductPublic[] {
+      console.log('🎮 [ProductsStore] Loading products by ids: ', ids);
       return store.products()?.filter(product => product.id && ids.includes(product.id)) || [];
     },
 
@@ -59,7 +60,7 @@ export const ProductsStore = signalStore(
         const { data: product, error: productError } = await supabaseService.selectStripeProduct(id);
         
         if (productError) {
-          console.error('🚨 [ProductsStore]: Error loading product', productError);
+          console.error('🎮 [ProductsStore]: Error loading product', productError);
           patchState(store, { status: 'error', error: (productError as Error).message });
         }
 
@@ -87,7 +88,7 @@ export const ProductsStore = signalStore(
         const { data: stripeProducts, error: productsError } = await supabaseService.selectStripeProducts();
 
         if (productsError) {
-          console.error('🚨 [ProductsStore]: Error loading products', productsError);
+          console.error('🎮 [ProductsStore]: Error loading products', productsError);
           patchState(store, {
             status: 'error',
             error: (productsError as Error).message,
@@ -102,7 +103,7 @@ export const ProductsStore = signalStore(
               products.push(parseProduct(product, store.prices() as StripePrice[]));
             });
 
-            console.log('🔍 [ProductsStore] products: ', products);
+            console.log('🎮 [ProductsStore] products: ', products);
 
             patchState(store, {
               status: 'success',
@@ -128,14 +129,24 @@ export const ProductsStore = signalStore(
   })),
   withHooks((store, supabaseService = inject(SupabaseClientService)) => ({
     async onInit() {
+      console.log('🎮 [ProductsStore] onInit');
+
       const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
 
       if (pricesError) {
-        console.error('🚨 [ProductsStore]: Error loading prices', pricesError);
+        console.error('🎮 [ProductsStore]: Error loading prices', pricesError);
         patchState(store, { status: 'error', error: (pricesError as Error).message });
       }
 
       patchState(store, { prices });
+
+      const products = store.products();
+      console.log('🎮 [ProductsStore] products: ', products);
+
+      if (!products) {
+        console.log('🎮 [ProductsStore] loading products...');
+        await store.loadProducts();
+      }
     }
   }))
 )

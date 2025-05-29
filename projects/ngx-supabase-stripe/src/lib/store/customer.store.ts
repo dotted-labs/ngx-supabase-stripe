@@ -149,15 +149,14 @@ export const CustomerStore = signalStore(
     },
   })),
   withHooks(() => {
-    const productsStore = inject(ProductsStore);
-
-    if (!productsStore.hasProducts()) {
-      console.log('🔍 [CustomerStore] loading products...');
-      productsStore.loadProducts();
-    }
-
     return {
       onInit() {
+        const productsStore = inject(ProductsStore);
+
+        if (!productsStore.hasProducts()) {
+          console.log('🔍 [CustomerStore] loading products...');
+          productsStore.loadProducts();
+        }
         console.log('🔍 [CustomerStore] initialized');
       },
       onDestroy() {
@@ -168,8 +167,6 @@ export const CustomerStore = signalStore(
 );
 
 export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePaymentIntentsPublic {
-  console.log('🔍 [CustomerStore] parsePaymentIntent: ', paymentIntent);
-
   const paymentIntentAttrs = paymentIntent.attrs as any;
   return {
     ...paymentIntent,

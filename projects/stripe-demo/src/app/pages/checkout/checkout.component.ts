@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { EmbeddedCheckoutComponent, ProductListComponent, StripePricePublic, StripeProductPublic } from '@ngx-supabase-stripe';
+import { EmbeddedCheckoutComponent, ProductListComponent, ProductsStore, StripePricePublic, StripeProductPublic } from '@ngx-supabase-stripe';
 
 @Component({
   selector: 'app-checkout',
@@ -18,9 +18,13 @@ import { EmbeddedCheckoutComponent, ProductListComponent, StripePricePublic, Str
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckoutComponent {
+  public readonly productsStore = inject(ProductsStore);
+
   public readonly selectedPrice = signal<string | null>(null);
   public readonly selectedProduct = signal<StripeProductPublic | null>(null);
   public readonly useStripeProducts = signal(false);
+
+  public readonly products = computed(() => this.productsStore.oneTimeProducts());
 
   public customerEmail = signal<string | null>(null);
 
