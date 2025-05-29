@@ -100,26 +100,62 @@ getSessionStatus(
 ): Promise<Response>
 ```
 
+## 📦 How to use this functions in supabase edge functions
+
+When the package will be published, you can install it from npm.
+
+1. Install the dependencies
+```bash
+npm install supabase-stripe-core
+```
+
+Or if you want to use the local version, you can do it by:
+
+1. Generate the build
+```bash
+npm run build:supabase-stripe-core
+```
+
+2. Import the index.esm.js file in your edge function (checkout_session example)
+```bash
+import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
+```
+
+3. Import the types in your deno.json file
+```typescript
+{
+  "imports": {
+    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js",
+    "supabase-stripe-core/types": "../../../supabase-stripe-core/dist/types/index.d.ts"
+  }
+}
+```
+
+4. Use the function in your edge function
+```typescript
+const { data, error } = await createCheckoutSession(params, request, stripeConfig);
+```
+
+
 ## 🏷️ IMPORTANT: Edge Functions Types
+
+The following types are used to ensure type safety in the Edge Functions. The are exported from the `types` folder of this project and can be used in your project. As an example how to implement them, see the `supabase` project how the checkout session import the types by deno.json.
 
 ```typescript
 type StripeCheckoutSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
 type StripeSubscriptionSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
 type StripePortalSession = SupabaseStripeResponse<Stripe.BillingPortal.Session>;
 type StripeSessionStatus = SupabaseStripeResponse<Stripe.Checkout.Session>;
-```
 
-## 🏷️ Modular Exports
+// In the deno.json file of your edge function, apart of the index.esm.js file, add the following imports:
 
-Each function is available as an individual export for optimal bundle size:
+{
+  "imports": {
+    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js",
+    "supabase-stripe-core/types": "../../../supabase-stripe-core/dist/types/index.d.ts"
+  }
+} 
 
-```typescript
-// Individual imports
-import { createCheckoutSession } from 'supabase-stripe-core/checkout-session';
-import { createSubscription } from 'supabase-stripe-core/create-subscription';
-import { createPortalSession } from 'supabase-stripe-core/create-portal-session';
-import { getSessionStatus } from 'supabase-stripe-core/session-status';
-import { createStripeInstance } from 'supabase-stripe-core/utils';
 ```
 
 ## 📄 License
