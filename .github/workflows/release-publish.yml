@@ -69,6 +69,6 @@ jobs:
         run: |
           cp README.md dist/ngx-supabase-stripe/
           cp LICENSE dist/ngx-supabase-stripe/
-          cd dist/ngx-supabase-stripe && npm publish
+          cd dist/ngx-supabase-stripe && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
