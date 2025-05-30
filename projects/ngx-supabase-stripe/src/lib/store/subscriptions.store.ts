@@ -101,7 +101,7 @@ export const SubscriptionsStore = signalStore(
               clientSecret: clientSecret as string
             });
             
-            embeddedCheckout?.mount('#embedded-checkout');
+            //embeddedCheckout?.mount('#embedded-checkout');
 
             patchState(store, {
               status: 'success',

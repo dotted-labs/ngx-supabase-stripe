@@ -1,4 +1,4 @@
-import { EnvironmentProviders, InjectionToken, Provider } from '@angular/core';
+import { EnvironmentProviders, Provider } from '@angular/core';
 import { STRIPE_CONFIG, StripeConfig } from './stripe.config';
 import { SUPABASE_CONFIG, SupabaseConfig } from './supabase.config';
 

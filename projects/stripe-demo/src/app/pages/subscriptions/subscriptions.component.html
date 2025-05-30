@@ -46,12 +46,21 @@
         <div class="card-body">
           <h2 class="text-2xl font-bold mb-4">Subscribe to our plan</h2>
           <p class="mb-6">Select the plan you want to subscribe to and start enjoying all the benefits.</p>
-          <lib-product-list
-          [productType]="'recurring'"
-          (productSelected)="selectProduct($event)"
-          (priceSelected)="selectPrice($event)"
-          >
-        </lib-product-list>
+          <stripe-product-list
+            [products]="products()"
+            (productSelected)="selectProduct($event)"
+            (priceSelected)="selectPrice($event)"
+            >
+          </stripe-product-list>
+        </div>
+        <div class="card-body">
+          <p class="mb-6">Load products by ids: To test when a group of products belongs or depends on an other entity</p>
+          <stripe-product-list
+            [products]="communityProducts()"
+            (productSelected)="selectProduct($event)"
+            (priceSelected)="selectPrice($event)"
+            >
+          </stripe-product-list>
         </div>
       </div>
     }

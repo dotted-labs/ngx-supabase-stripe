@@ -78,10 +78,10 @@ import { ProductListComponent } from '@dotted-labs/ngx-supabase-stripe';
 @Component({
   imports: [ProductListComponent],
   template: `
-    <lib-product-list 
+    <stripe-product-list 
       [productType]="'recurring'" 
       (priceSelected)="onPriceSelected($event)">
-    </lib-product-list>
+    </stripe-product-list>
   `
 })
 export class ProductsPageComponent {
