@@ -1,12 +1,12 @@
 {
   "name": "ngx-supabase-stripe",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "ng": "ng",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:ngx-supabase-stripe": "ng build ngx-supabase-stripe --project ngx-supabase-stripe",
+    "build:lib": "ng build ngx-supabase-stripe --project ngx-supabase-stripe",
     "build:supabase-edge-functions": "cd projects/supabase-stripe-core && npm run build",
     "start:stripe-demo": "ng serve stripe-demo"
   },
