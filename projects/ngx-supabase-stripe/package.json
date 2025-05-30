@@ -1,6 +1,6 @@
 {
   "name": "@dotted-labs/ngx-supabase-stripe",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "An Angular library for integrating Supabase and Stripe into your applications, providing ready-to-use components that simplify the implementation of payments and subscriptions",
   "keywords": [
     "angular",
@@ -25,7 +25,9 @@
   "peerDependencies": {
     "@angular/common": "^19.2.0",
     "@angular/core": "^19.2.0",
-    "@stripe/stripe-js": "^2.0.0"
+    "@stripe/stripe-js": "^2.0.0",
+    "@supabase/supabase-js": "^2.39.7",
+    "zone.js": "~0.15.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
