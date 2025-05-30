@@ -10,11 +10,11 @@
   </div>
 
   @if (!selectedPrice()) {
-    <lib-product-list
+    <stripe-product-list
       [products]="products()"
       (priceSelected)="selectPrice($event)"
       (productSelected)="selectProduct($event)">
-    </lib-product-list>
+    </stripe-product-list>
   } @else {
     <div class="w-full">
       <div class="card bg-base-100 shadow-xl">

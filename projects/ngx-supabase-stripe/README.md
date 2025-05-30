@@ -506,11 +506,11 @@ import { ProductListComponent, StripeProductPublic, StripePricePublic } from 'ng
   standalone: true,
   imports: [ProductListComponent],
   template: `
-    <lib-product-list 
+    <stripe-product-list 
       [productType]="'recurring'"
       (productSelected)="onProductSelect($event)"
       (priceSelected)="onPriceSelect($event)">
-    </lib-product-list>
+    </stripe-product-list>
   `
 })
 export class ProductsComponent {

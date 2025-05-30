@@ -5,7 +5,7 @@ import { ProductItemSkeletonComponent } from './product-item-skeleton/product-it
 import { ProductItemComponent } from './product-item/product-item.component';
 
 @Component({
-  selector: 'lib-product-list',
+  selector: 'stripe-product-list',
   standalone: true,
   imports: [CommonModule, ProductItemComponent, ProductItemSkeletonComponent],
   templateUrl: './product-list.component.html'
