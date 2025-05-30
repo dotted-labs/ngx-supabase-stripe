@@ -1,6 +1,6 @@
 {
   "name": "ngx-supabase-stripe",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An Angular library for integrating Supabase and Stripe into your applications, providing ready-to-use components that simplify the implementation of payments and subscriptions",
   "keywords": [
     "angular",
@@ -12,7 +12,7 @@
     "ngx",
     "typescript"
   ],
-  "author": "Your Name <your.email@example.com>",
+  "author": "Sergio Rodriguez Gundin",
   "license": "MIT",
   "homepage": "https://github.com/yourusername/ngx-supabase-stripe#readme",
   "repository": {
