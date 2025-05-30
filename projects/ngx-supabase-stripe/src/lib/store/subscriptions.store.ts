@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import { StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
@@ -36,7 +35,6 @@ export type SubscriptionStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export interface SubscriptionState {
   subscriptions: StripeSubscriptionPublic[] | null;
-  embeddedSubscription: StripeEmbeddedCheckout | null;
   currentSubscription: StripeSubscriptionPublic | null;
   status: SubscriptionStatus;
   error: string | null;
@@ -45,7 +43,6 @@ export interface SubscriptionState {
 
 const initialSubscriptionState: SubscriptionState = {
   subscriptions: null,
-  embeddedSubscription: null,
   currentSubscription: null,
   status: 'idle',
   error: null,
@@ -97,15 +94,11 @@ export const SubscriptionsStore = signalStore(
               error: 'No Stripe instance returned',
             });
           } else {
-            const embeddedCheckout = await stripe.initEmbeddedCheckout({ 
-              clientSecret: clientSecret as string
-            });
-            
-            //embeddedCheckout?.mount('#embedded-checkout');
+            await stripeService.initEmbeddedCheckout(clientSecret as string);
+            stripeService.mountEmbeddedCheckout();
 
             patchState(store, {
               status: 'success',
-              embeddedSubscription: embeddedCheckout
             });
           }
         }
@@ -228,9 +221,7 @@ export const SubscriptionsStore = signalStore(
      * Destroy the embedded subscription
      */
     destroyEmbeddedSubscription() {
-      console.log('🧹 [SubscriptionsStore] destroying embedded subscription', store.embeddedSubscription());
-      store.embeddedSubscription()?.destroy();
-      console.log('🧹 [SubscriptionsStore] destroyed embedded subscription', store.embeddedSubscription());
+      stripeService.destroyEmbeddedCheckout();
     },
 
     /**

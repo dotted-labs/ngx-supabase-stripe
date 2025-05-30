@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import type { Stripe as StripeTypes } from 'stripe';
 import { STRIPE_CONFIG } from '../config/stripe.config';
 import { StripeCustomerPublic } from '../store/customer.store';
@@ -11,7 +11,8 @@ import { SupabaseClientService } from './supabase-client.service';
 export class StripeClientService {
   private readonly config = inject(STRIPE_CONFIG);
   private readonly supabase = inject(SupabaseClientService);
-  private stripe: Promise<Stripe | null>;
+  stripe: Promise<Stripe | null>;
+  embeddedCheckout: StripeEmbeddedCheckout | null = null;
 
   constructor() {
     this.stripe = loadStripe(this.config.publishableKey);
@@ -23,6 +24,35 @@ export class StripeClientService {
    */
   public async getStripe(): Promise<Stripe | null> {
     return this.stripe;
+  }
+
+  /**
+   * Initialize the embedded checkout
+   * @param clientSecret The client secret for the checkout session
+   */
+  public async initEmbeddedCheckout(clientSecret: string) {
+    const stripe = await this.getStripe();
+    this.embeddedCheckout = await stripe?.initEmbeddedCheckout({ 
+      clientSecret
+    }) ?? null;
+  }
+
+  /**
+   * Mount the embedded checkout
+   * @param elementId The ID of the element to mount the checkout on
+   */
+  public mountEmbeddedCheckout(elementId: string = '#embedded-checkout') {
+    this.embeddedCheckout?.mount(elementId);
+  }
+
+  /**
+   * Destroy the embedded checkout
+   */
+  public destroyEmbeddedCheckout() {
+    console.log('🧹 [StripeClientService] destroying embedded checkout');
+    this.embeddedCheckout?.destroy();
+    this.embeddedCheckout = null;
+    console.log('🧹 [StripeClientService] destroyed embedded checkout');
   }
 
   /**

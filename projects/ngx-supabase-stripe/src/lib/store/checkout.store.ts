@@ -1,13 +1,11 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { StripeEmbeddedCheckout } from '@stripe/stripe-js';
 import { StripeClientService } from '../services/stripe-client.service';
 import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
 export type CheckoutStatus = 'idle' | 'loading' | 'success' | 'error';
 
 type CheckoutState = {
-  embeddedCheckout: StripeEmbeddedCheckout | null;
   status: CheckoutStatus;
   sessionId: string | null;
   returnPagePath: string;
@@ -16,7 +14,6 @@ type CheckoutState = {
 }
 
 const initialCheckoutState: CheckoutState = {
-  embeddedCheckout: null,
   status: 'idle',
   sessionId: null,
   returnPagePath: '/return',
@@ -68,15 +65,11 @@ export const CheckoutStore = signalStore(
               error: 'No Stripe instance returned',
             });
           } else {
-            const embeddedCheckout = await stripe.initEmbeddedCheckout({ 
-              clientSecret: clientSecret as string
-            });
-            
-            embeddedCheckout?.mount('#embedded-checkout');
+            await stripeService.initEmbeddedCheckout(clientSecret as string);
+            stripeService.mountEmbeddedCheckout();
 
             patchState(store, {
               status: 'success',
-              embeddedCheckout
             });
           }
         }
@@ -115,9 +108,7 @@ export const CheckoutStore = signalStore(
      * Destroy the embedded checkout
      */
     destroyEmbeddedCheckout() {
-      console.log('🧹 [CheckoutStore] destroying embedded checkout', store.embeddedCheckout());
-      store.embeddedCheckout()?.destroy();
-      console.log('🧹 [CheckoutStore] destroyed embedded checkout', store.embeddedCheckout());
+      stripeService.destroyEmbeddedCheckout();
     },
     
     /**
@@ -131,8 +122,7 @@ export const CheckoutStore = signalStore(
     onInit() {
       console.log('🔍 [CheckoutStore] initialized');
     },
-    onDestroy(store) {
-      store.embeddedCheckout()?.destroy();
+    onDestroy() {
       console.log('🧹 [CheckoutStore] destroyed');
     }
   })

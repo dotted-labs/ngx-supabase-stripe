@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, OnInit, effect } from '@angular/core';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
 import { CustomerStore } from '../../store/customer.store';
 import { SubscriptionsStore } from '../../store/subscriptions.store';
 import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleton.component';
@@ -18,17 +18,6 @@ export class EmbeddedSubscriptionComponent implements OnInit {
   public readonly returnPagePath = input<string>('/subscription-return');
   
   public readonly customer = computed(() => this.customerStore.customer().data);
-
-  constructor() {
-    effect(() => {
-      const embeddedSubscription = this.subscriptionsStore.embeddedSubscription();
-      
-      if (embeddedSubscription) {
-        console.log('🎯 [EmbeddedSubscriptionComponent] Mounting embedded subscription');
-        embeddedSubscription.mount('#embedded-checkout');
-      }
-    }, { allowSignalWrites: false });
-  }
 
   async ngOnInit() {
     this.createSubscription();
