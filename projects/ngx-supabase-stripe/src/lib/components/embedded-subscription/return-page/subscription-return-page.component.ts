@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, input } from '@angular/core';
+import { Component, OnInit, computed, inject, input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CheckoutStore } from '../../../store/checkout.store';
 import { SubscriptionsStore } from '../../../store/subscriptions.store';
@@ -13,9 +13,11 @@ import { SubscriptionsStore } from '../../../store/subscriptions.store';
 export class SubscriptionReturnPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly checkoutStore = inject(CheckoutStore);
 
+  private readonly checkoutStore = inject(CheckoutStore);
   public readonly subscriptionsStore = inject(SubscriptionsStore);
+
+  public readonly sessionStatus = computed(() => this.checkoutStore.sessionStatus());
   
   public readonly returnUrl = input<string>('/');
   

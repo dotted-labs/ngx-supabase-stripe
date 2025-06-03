@@ -1,128 +1,105 @@
-<div class="h-full bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10">
-  <!-- Hero Section -->
-  <div class="hero h-full">
-    <div class="hero-content text-center max-w-md">
-      <div class="card w-full bg-base-100 shadow-2xl">
-        <div class="card-body items-center text-center">
-          <!-- Success Icon -->
-          <div class="mb-6">
-            <div class="avatar">
-              <div class="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+  <div class="max-w-md mx-auto">
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h1 class="text-xl font-semibold text-gray-800"></h1>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card bg-base-100 shadow-xl mb-6">
+      <div class="card-body">
+        <!-- Payment Amount -->
+        <div class="text-center mb-4">
+          <p class="text-sm text-gray-500 mb-1">Product name</p>
+          <h2 class="text-4xl font-bold text-gray-800">{{sessionStatus()?.amount_total | currency:sessionStatus()?.currency ?? 'USD'}}</h2>
+        </div>
+
+        <!-- Product Card -->
+        <div class="card bg-gradient-to-r from-blue-600 to-purple-600 text-white mb-6">
+          <div class="card-body p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-white/20 rounded-full"></div>
+                <div class="w-6 h-6 bg-white/20 rounded-full"></div>
+                <div class="w-6 h-6 bg-white/20 rounded-full"></div>
               </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
             </div>
           </div>
-          
-          <!-- Title and Description -->
-          <h2 class="card-title text-3xl font-bold text-base-content mb-2">
-            ¡Suscripción Exitosa!
-          </h2>
-          <p class="text-base-content/70 mb-6">
-            Tu suscripción ha sido procesada correctamente. Bienvenido a bordo.
-          </p>
-          
-          <!-- Status Content -->
-          <!--@if (subscriptionsStore.isStatusLoading()) {
-            <div class="flex flex-col items-center gap-4 mb-6">
-              <span class="loading loading-spinner loading-lg text-primary"></span>
-              <div class="alert alert-info">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span>Cargando detalles de la suscripción...</span>
-              </div>
-            </div>
-          } @else if (subscriptionsStore.isStatusError()) {
-            <div class="alert alert-error mb-6">
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>{{ subscriptionsStore.error() }}</span>
-            </div>
-          } @else if (subscriptionsStore.hasSubscriptions()) {
-            <div class="alert alert-success mb-6">
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span class="font-medium">Tu suscripción está activa y lista para usar.</span>
-            </div>
+        </div>
 
-            <div class="bg-base-200 rounded-lg p-4 mb-6 w-full">
-              <h3 class="font-semibold text-sm text-base-content/80 mb-3">Beneficios incluidos:</h3>
-              <ul class="space-y-2">
-                <li class="flex items-center text-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Acceso completo a todas las funciones
-                </li>
-                <li class="flex items-center text-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Soporte prioritario 24/7
-                </li>
-                <li class="flex items-center text-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Actualizaciones automáticas
-                </li>
-              </ul>
-            </div>
-          }-->
+        <!-- Summary Section -->
+        <div class="space-y-4">
+          <h3 class="font-semibold text-gray-800">Summary</h3>
+          
+          <!-- Items Subtotal -->
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Items Subtotal:</span>
+            <span class="font-medium">{{sessionStatus()?.amount_total | currency:sessionStatus()?.currency ?? 'USD'}}</span>
+          </div>
+          
+          <!-- Item Count -->
+          <div class="text-xs text-gray-500">
+            {{sessionStatus()?.line_items?.data?.length}} Item
+          </div>
+        </div>
 
-          <div class="alert alert-success mb-6">
+        <!-- Status Content -->
+        @if (subscriptionsStore.isStatusLoading()) {
+          <div class="flex flex-col items-center gap-4 mt-6">
+            <span class="loading loading-spinner loading-lg text-primary"></span>
+            <div class="alert alert-info">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Procesando pago...</span>
+            </div>
+          </div>
+        } @else if (subscriptionsStore.isStatusError()) {
+          <div class="alert alert-error mt-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ subscriptionsStore.error() }}</span>
+          </div>
+        } @else if (subscriptionsStore.isStatusSuccess() && sessionStatus()) {
+          <div class="alert alert-success mt-6">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="font-medium">Tu suscripción está activa y lista para usar.</span>
+            <div>
+              <span class="font-medium">¡Pago Procesado Exitosamente!</span>
+              <div class="text-sm mt-1">
+                <span>{{sessionStatus()?.collected_information?.shipping_details?.name || 'Cliente'}}</span>
+                <span class="ml-2">{{sessionStatus()?.amount_total | currency:sessionStatus()?.currency ?? 'USD'}}</span>
+              </div>
+            </div>
           </div>
-          
-          <!-- Subscription Benefits -->
-          <div class="bg-base-200 rounded-lg p-4 mb-6 w-full">
-            <h3 class="font-semibold text-sm text-base-content/80 mb-3">Beneficios incluidos:</h3>
-            <ul class="space-y-2">
-              <li class="flex items-center text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Acceso completo a todas las funciones
-              </li>
-              <li class="flex items-center text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Soporte prioritario 24/7
-              </li>
-              <li class="flex items-center text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Actualizaciones automáticas
-              </li>
-            </ul>
-          </div>
-          
-          <!-- Action Buttons -->
-          <div class="card-actions justify-center w-full">
-            <button class="btn btn-primary btn-wide" (click)="navigate()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-              Ir al Panel Principal
-            </button>
-          </div>
-          
-          <!-- Additional Help -->
-          <div class="text-center mt-4">
-            <p class="text-xs text-base-content/50">
-              ¿Necesitas ayuda? 
-              <a href="#" class="link link-primary">Contacta soporte</a>
-            </p>
-          </div>
+        }
+
+        <!-- Action Button -->
+        <div class="card-actions justify-center mt-6">
+          <button class="btn btn-primary btn-wide" (click)="navigate()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Go to Dashboard
+          </button>
+        </div>
+
+        <!-- Help Link -->
+        <div class="text-center mt-4">
+          <p class="text-xs text-gray-500">
+            ¿Necesitas ayuda? 
+            <a href="#" class="link link-primary">Contacta soporte</a>
+          </p>
         </div>
       </div>
     </div>

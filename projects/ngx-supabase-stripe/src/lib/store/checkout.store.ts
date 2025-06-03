@@ -2,6 +2,9 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripeClientService } from '../services/stripe-client.service';
 import { CustomerStore, StripeCustomerPublic } from './customer.store';
+import type { Stripe as StripeTypes } from 'stripe';
+
+export type ICheckoutSessionStatus = StripeTypes.Checkout.Session;
 
 export type CheckoutStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -10,7 +13,7 @@ type CheckoutState = {
   sessionId: string | null;
   returnPagePath: string;
   error: string | null;
-  sessionStatus: any | null;
+  sessionStatus: ICheckoutSessionStatus | null;
 }
 
 const initialCheckoutState: CheckoutState = {

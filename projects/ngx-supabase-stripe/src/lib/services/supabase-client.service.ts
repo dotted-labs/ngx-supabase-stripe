@@ -50,7 +50,7 @@ export class SupabaseClientService {
    * Select checkout sessions
    * @param sessionId The checkout session ID
    */
-    public async selectCheckoutSessions(
+    public async selectCheckoutSession(
       sessionId: string
     ): Promise<{ data: StripeCheckoutSession | null; error: Error | null }> {
       return this.client
