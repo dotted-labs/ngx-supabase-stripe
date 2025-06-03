@@ -56,6 +56,7 @@ supabase-stripe-core/
 - **`createSubscription`** - Create subscription payment sessions  
 - **`createPortalSession`** - Create customer billing portal sessions
 - **`getSessionStatus`** - Retrieve payment session status
+- **`createCustomer`** - Create a customer
 
 ### Utility Functions
 - **`createStripeInstance`** - Create configured Stripe instances
@@ -96,6 +97,14 @@ createPortalSession(
 getSessionStatus(
   params: SessionStatusParams,
   request: Request,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<Response>
+```
+
+#### createCustomer
+```typescript
+createCustomer(
+  customerEmail: string,
   stripeConfig: StripeEnvironmentConfig
 ): Promise<Response>
 ```
@@ -146,6 +155,7 @@ type StripeCheckoutSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
 type StripeSubscriptionSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
 type StripePortalSession = SupabaseStripeResponse<Stripe.BillingPortal.Session>;
 type StripeSessionStatus = SupabaseStripeResponse<Stripe.Checkout.Session>;
+type StripeCustomer = SupabaseStripeResponse<Stripe.Customer>;
 
 // In the deno.json file of your edge function, apart of the index.esm.js file, add the following imports:
 

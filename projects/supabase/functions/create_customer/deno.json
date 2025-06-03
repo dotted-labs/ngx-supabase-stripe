@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "supabase-stripe-core": "../../../supabase-stripe-core/dist/index.esm.js",
+    "supabase-stripe-core/types": "../../../supabase-stripe-core/dist/types/index.d.ts"
+  }
+} 

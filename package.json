@@ -7,7 +7,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:lib": "ng build ngx-supabase-stripe --project ngx-supabase-stripe",
-    "build:supabase-edge-functions": "cd projects/supabase-stripe-core && npm run build",
+    "build:supabase-stripe-core": "cd projects/supabase-stripe-core && npm run build",
     "start:stripe-demo": "ng serve stripe-demo"
   },
   "private": true,

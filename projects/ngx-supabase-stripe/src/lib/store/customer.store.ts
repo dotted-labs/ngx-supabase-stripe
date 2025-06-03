@@ -1,9 +1,10 @@
-import { withState, signalStore, withComputed, patchState, withMethods, withHooks } from '@ngrx/signals';
 import { computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripeCustomer, StripePaymentIntent } from '../models/database.model';
-import { parseSubscription, StripeSubscriptionPublic } from './subscriptions.store';
+import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
 import { ProductsStore } from './products.store';
+import { parseSubscription, StripeSubscriptionPublic } from './subscriptions.store';
 
 export type CustomerStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -71,7 +72,7 @@ export const CustomerStore = signalStore(
     restSubscriptions: computed(() => state.subscriptions.data()?.slice(1)),
     isError: computed(() => state.paymentIntents.error()),
   })),
-  withMethods((state, supabaseService = inject(SupabaseClientService), productsStore = inject(ProductsStore)) => ({
+  withMethods((state, supabaseService = inject(SupabaseClientService), stripeService = inject(StripeClientService), productsStore = inject(ProductsStore)) => ({
     /**
      * Load customer
      * @param customerEmail The customer email
@@ -92,9 +93,20 @@ export const CustomerStore = signalStore(
 
           patchState(state, { customer: { data: customer, status: 'success', error: null } });
         } else {
-          patchState(state, { customer: { data: null, status: 'error', error: 'no customer found' } });
+          this.createCustomer(customerEmail);
         }
 
+      }
+    },
+
+
+    async createCustomer(customerEmail: string) {
+      const { customer, error } = await stripeService.createCustomer(customerEmail);
+
+      if (error) {
+        patchState(state, { customer: { error: error.message, status: 'error', data: null } });
+      } else {
+        patchState(state, { customer: { data: customer as StripeCustomerPublic, status: 'success', error: null } });
       }
     },
 
