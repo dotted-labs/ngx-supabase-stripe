@@ -1,6 +1,6 @@
 {
   "name": "@dotted-labs/ngx-supabase-stripe",
-  "version": "0.1.9",
+  "version": "0.1.8",
   "description": "An Angular library for integrating Supabase and Stripe into your applications, providing ready-to-use components that simplify the implementation of payments and subscriptions",
   "keywords": [
     "angular",
