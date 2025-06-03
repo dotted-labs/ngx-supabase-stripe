@@ -14,7 +14,7 @@ export class SubscriptionReturnPageComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private readonly checkoutStore = inject(CheckoutStore);
+  public readonly checkoutStore = inject(CheckoutStore);
   public readonly subscriptionsStore = inject(SubscriptionsStore);
 
   public readonly sessionStatus = computed(() => this.checkoutStore.sessionStatus());
