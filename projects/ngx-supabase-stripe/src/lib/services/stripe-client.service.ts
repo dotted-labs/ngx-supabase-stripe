@@ -289,4 +289,27 @@ export class StripeClientService {
       return { url: null, error: error as Error };
     }
   }
+
+  /**
+   * Create a customer
+   * @param customerEmail The email of the customer
+   */
+  public async createCustomer(customerEmail: string): Promise<{ customer: StripeTypes.Customer | null; error: Error | null }> {
+    try {
+      const { data, error } = await this.supabase.getClient()
+        .functions.invoke<StripeTypes.Customer>('create_customer', {
+          body: {
+            customerEmail
+          }
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      return { customer: data, error: null };
+    } catch (error) {
+      return { customer: null, error: error as Error };
+    }
+  }
 }
