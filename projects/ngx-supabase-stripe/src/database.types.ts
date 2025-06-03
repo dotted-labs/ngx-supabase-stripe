@@ -15,6 +15,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_stripe_checkout_session: {
+        Args: { session_id: string }
+        Returns: {
+          id: string
+          customer: string
+          payment_intent: string
+          subscription: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_community_products: {
+        Args: { p_community_id: string }
+        Returns: {
+          id: string
+          name: string
+          description: string
+          price: number
+          image_url: string
+          video: string
+          payment_provider_product_id: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
       get_stripe_customer: {
         Args: { customer_email: string }
         Returns: {
@@ -106,15 +130,42 @@ export type Database = {
         }[]
       }
     }
-    Enums: {
-      [_ in never]: never
-    }
     CompositeTypes: {
       [_ in never]: never
     }
   }
   stripe: {
     Tables: {
+      accounts: {
+        Row: {
+          attrs: Json | null
+          business_type: string | null
+          country: string | null
+          created: string | null
+          email: string | null
+          id: string | null
+          type: string | null
+        }
+        Insert: {
+          attrs?: Json | null
+          business_type?: string | null
+          country?: string | null
+          created?: string | null
+          email?: string | null
+          id?: string | null
+          type?: string | null
+        }
+        Update: {
+          attrs?: Json | null
+          business_type?: string | null
+          country?: string | null
+          created?: string | null
+          email?: string | null
+          id?: string | null
+          type?: string | null
+        }
+        Relationships: []
+      }
       checkout_sessions: {
         Row: {
           attrs: Json | null
@@ -380,21 +431,6 @@ export type TablesUpdate<
       : never
     : never
 
-export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
@@ -409,12 +445,3 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-export const Constants = {
-  public: {
-    Enums: {},
-  },
-  stripe: {
-    Enums: {},
-  },
-} as const

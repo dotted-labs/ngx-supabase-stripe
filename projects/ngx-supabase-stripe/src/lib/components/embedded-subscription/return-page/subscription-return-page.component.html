@@ -1,30 +1,107 @@
-<div class="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
-  <div class="text-center mb-6">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-    <h2 class="text-2xl font-bold text-gray-800">¡Gracias por suscribirte!</h2>
-    <p class="text-gray-600 mt-2">Tu suscripción ha sido procesada correctamente.</p>
-  </div>
-  
-  @if (subscriptionsStore.isStatusLoading()) {
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <p>Cargando detalles de la suscripción...</p>
+<div class="flex justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+  <div class="hero-content text-center max-w-md">
+    <div class="card w-full bg-base-100 shadow-2xl">
+      <div class="card-body items-center text-center">
+        <!-- Success Icon -->
+        <div class="mb-6">
+          <div class="avatar">
+            <div class="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-full w-full text-success"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Content -->
+        @if (checkoutStore.isStatusLoading()) {
+          <div class="flex flex-col items-center gap-4 mb-6">
+            <span class="loading loading-spinner loading-lg text-primary"></span>
+            <div class="alert alert-info">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Cargando detalles de la suscripción...</span>
+            </div>
+          </div>
+        } @else if (checkoutStore.isStatusError()) {
+          <div class="alert alert-error mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ subscriptionsStore.error() }}</span>
+          </div>
+        } @else if (checkoutStore.isPaymentComplete()) {
+
+          <!-- Title and Description -->
+          <h2 class="card-title text-3xl font-bold text-base-content mb-2">{{ sessionStatus()?.amount_total }}</h2>
+
+          <div class="alert alert-success mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="font-medium">Tu suscripción está activa y lista para usar.</span>
+          </div>
+
+          <div class="bg-base-200 rounded-lg p-4 mb-6 w-full">
+            <h3 class="font-semibold text-sm text-base-content/80 mb-3">Beneficios incluidos:</h3>
+            <ul class="space-y-2">
+              <li class="flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Acceso completo a todas las funciones
+              </li>
+              <li class="flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Soporte prioritario 24/7
+              </li>
+              <li class="flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Actualizaciones automáticas
+              </li>
+            </ul>
+          </div>
+        }
+
+        <!-- Action Buttons -->
+        <div class="card-actions justify-center w-full">
+          <button class="btn btn-primary btn-wide">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
+            </svg>
+            Ir al Panel Principal
+          </button>
+        </div>
+
+        <!-- Additional Help -->
+        <div class="text-center mt-4">
+          <p class="text-xs text-base-content/50">
+            ¿Necesitas ayuda?
+            <a href="#" class="link link-primary">Contacta soporte</a>
+          </p>
+        </div>
+      </div>
     </div>
-  } @else if (subscriptionsStore.isStatusError()) {
-    <div class="error-container">
-      <p class="text-red-500">{{ subscriptionsStore.error() }}</p>
-    </div>
-  } @else if (subscriptionsStore.hasSubscriptions()) {
-    <div class="success-container">
-      <p class="text-green-600 font-medium">Tu suscripción está activa.</p>
-    </div>
-  }
-  
-  <div class="mt-6 text-center">
-    <button class="btn btn-primary" (click)="navigate()">
-      Volver al inicio
-    </button>
   </div>
 </div>
