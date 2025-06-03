@@ -99,7 +99,10 @@ export const CustomerStore = signalStore(
       }
     },
 
-
+    /**
+     * Create a customer
+     * @param customerEmail The customer email
+     */
     async createCustomer(customerEmail: string) {
       const { customer, error } = await stripeService.createCustomer(customerEmail);
 
