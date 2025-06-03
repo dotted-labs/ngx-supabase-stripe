@@ -28,21 +28,6 @@ export class SupabaseClientService {
   }
 
   /**
-   * Select checkout sessions
-   * @param query Optional query parameters
-   */
-  public async selectCheckoutSessions(
-    query?: {
-      columns?: string;
-      eq?: Partial<Record<keyof StripeCheckoutSession, unknown>>;
-      order?: { column: keyof StripeCheckoutSession | string; ascending?: boolean };
-      limit?: number;
-    }
-  ): Promise<{ data: StripeCheckoutSession[] | null; error: Error | null }> {
-    return this.select<StripeCheckoutSession>('checkout_sessions', query);
-  }
-
-  /**
    * Select payment intents
    * @param query Optional query parameters
    */
@@ -56,6 +41,24 @@ export class SupabaseClientService {
   ): Promise<{ data: StripePaymentIntent[] | null; error: Error | null }> {
     return this.select<StripePaymentIntent>('payment_intents', query);
   }
+
+    /**
+   * STRIPE CHECKOUT SESSIONS
+   */
+
+  /**
+   * Select checkout sessions
+   * @param sessionId The checkout session ID
+   */
+    public async selectCheckoutSession(
+      sessionId: string
+    ): Promise<{ data: StripeCheckoutSession | null; error: Error | null }> {
+      return this.client
+        .schema('public')
+        .rpc('get_stripe_checkout_session', { session_id: sessionId })
+        .select('*')
+        .single();
+    }
 
   /**
    * STRIPE SUBSCRIPTIONS
