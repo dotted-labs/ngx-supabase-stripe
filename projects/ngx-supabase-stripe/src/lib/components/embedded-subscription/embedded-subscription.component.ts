@@ -26,7 +26,7 @@ export class EmbeddedSubscriptionComponent implements OnInit {
   private createSubscription() {
     const baseUrl = window.location.origin;
     const returnPath = `${baseUrl}${this.returnPagePath()}`;
-    this.subscriptionsStore.createSubscription(this.priceId(), returnPath, this.customer()?.email ?? '');
+    this.subscriptionsStore.createSubscription(this.priceId(), returnPath, this.customer());
   }
 
   ngOnDestroy() {
