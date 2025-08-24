@@ -13,6 +13,11 @@ export interface SupabaseConfig {
    * Supabase API key
    */
   supabaseKey: string;
+
+  /**
+   * Supabase schema
+   */
+  supabaseSchema: 'public' | 'stripe';
 }
 
 export const SUPABASE_CONFIG = new InjectionToken<SupabaseConfig>('SUPABASE_CONFIG');
