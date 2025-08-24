@@ -54,7 +54,7 @@ export class SupabaseClientService {
       sessionId: string
     ): Promise<{ data: StripeCheckoutSession | null; error: Error | null }> {
       return this.client
-        .schema('public')
+        .schema(this.config.supabaseSchema)
         .rpc('get_stripe_checkout_session', { session_id: sessionId })
         .select('*')
         .single();
@@ -69,7 +69,7 @@ export class SupabaseClientService {
    */
   public getStripeSubscriptions() {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_subscriptions')
       .select('*');
   }
@@ -80,7 +80,7 @@ export class SupabaseClientService {
    */
   public selectStripeSubscription(subscriptionId: string) {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_subscription', { subscription_id: subscriptionId })
       .select('*');
   }
@@ -95,7 +95,7 @@ export class SupabaseClientService {
    */
   public async selectStripePrices() {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_prices')
       .select('*');
   }
@@ -110,7 +110,7 @@ export class SupabaseClientService {
    */
   public async selectStripeProducts() {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_products')
       .select('*');
   }
@@ -121,7 +121,7 @@ export class SupabaseClientService {
    */
   public async selectStripeProduct(productId: string) {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_product', { product_id: productId })
       .select('*');
   }
@@ -161,7 +161,7 @@ export class SupabaseClientService {
    * @param email The customer email
    */
   public async getCustomerByEmail(email: string) {
-    return this.client.schema('public').rpc('get_stripe_customer', { customer_email: email });
+    return this.client.schema(this.config.supabaseSchema).rpc('get_stripe_customer', { customer_email: email });
   }
 
   /**
@@ -170,7 +170,7 @@ export class SupabaseClientService {
    */
   public async getCustomerPaymentIntents(customerId: string) {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_customer_payment_intents', { customer_id: customerId })
       .select('*');
   }
@@ -181,7 +181,7 @@ export class SupabaseClientService {
    */
   public async getCustomerSubscriptions(customerId: string) {
     return this.client
-      .schema('public')
+      .schema(this.config.supabaseSchema)
       .rpc('get_stripe_customer_subscriptions', { customer_id: customerId })
       .select('*');
   }

@@ -345,7 +345,120 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_stripe_checkout_session: {
+        Args: { session_id: string }
+        Returns: {
+          id: string
+          customer: string
+          payment_intent: string
+          subscription: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_community_products: {
+        Args: { p_community_id: string }
+        Returns: {
+          id: string
+          name: string
+          description: string
+          price: number
+          image_url: string
+          video: string
+          payment_provider_product_id: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
+      get_stripe_customer: {
+        Args: { customer_email: string }
+        Returns: {
+          id: string
+          email: string
+          name: string
+          description: string
+          created: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_customer_payment_intents: {
+        Args: { customer_id: string }
+        Returns: {
+          id: string
+          customer: string
+          amount: number
+          currency: string
+          payment_method: string
+          created: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_customer_subscriptions: {
+        Args: { customer_id: string }
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_prices: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          active: boolean
+          currency: string
+          product: string
+          unit_amount: number
+          type: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_product: {
+        Args: { product_id: string }
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_products: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_subscription: {
+        Args: { subscription_id: string }
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_subscriptions: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
@@ -356,7 +469,7 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public" | "stripe">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
