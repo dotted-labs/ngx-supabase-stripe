@@ -1,6 +1,6 @@
 {
   "name": "@dotted-labs/ngx-supabase-stripe",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "scripts": {
     "ng": "ng",
     "build": "ng build",
