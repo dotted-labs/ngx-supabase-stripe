@@ -13,7 +13,8 @@ export const appConfig: ApplicationConfig = {
       {
         supabaseConfig: {
           supabaseUrl: environment.supabase.url,
-          supabaseKey: environment.supabase.key
+          supabaseKey: environment.supabase.key,
+          supabaseSchema: 'public'
         },
         stripeConfig: {
           publishableKey: environment.stripe.publicKey,
