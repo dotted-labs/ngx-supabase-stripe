@@ -24,15 +24,15 @@
                (click)="onSelect(price.details)">
             <div class="flex flex-col gap-1">
               @if (price.recurringInterval !== 'no-recurring') {
-                <div class="text-xs font-medium">Pay {{ price.recurringInterval === 'month' ? 'Monthly' : 'Yearly' }}</div>
+                <div class="text-xs font-medium text-primary-content">Pay {{ price.recurringInterval === 'month' ? 'Monthly' : 'Yearly' }}</div>
               } @else {
-                <div class="text-[11px] font-medium">One time payment</div>
+                <div class="text-[11px] font-medium text-primary-content">One time payment</div>
               }
               <div class="flex flex-col items-baseline">
-                <span class="text-2xl font-bold">{{ utils.formatAmount(price.details.unit_amount ?? 0, price.details.currency ?? 'USD') }}</span>
+                <span class="text-2xl font-bold text-primary-content">{{ utils.formatAmount(price.details.unit_amount ?? 0, price.details.currency ?? 'USD') }}</span>
               </div>
               @if (price.recurringInterval === 'year') {
-                <div class="badge badge-sm badge-neutral">Save 15%</div>
+                <div class="badge badge-sm badge-neutral text-primary-content">Save 15%</div>
               }
             </div>
           </div>
