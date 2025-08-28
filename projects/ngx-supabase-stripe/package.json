@@ -12,15 +12,18 @@
     "ngx",
     "typescript"
   ],
-  "author": "Sergio Rodriguez Gundin",
+  "author": {
+    "name": "Dotted Labs",
+    "url": "https://github.com/dotted-labs"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/yourusername/ngx-supabase-stripe#readme",
+  "homepage": "https://github.com/dotted-labs/ngx-supabase-stripe#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/ngx-supabase-stripe.git"
+    "url": "https://github.com/dotted-labs/ngx-supabase-stripe.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/ngx-supabase-stripe/issues"
+    "url": "https://github.com/dotted-labs/ngx-supabase-stripe/issues"
   },
   "peerDependencies": {
     "@angular/common": "^19.2.0",
