@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { StripeEnvironmentConfig, SupabaseStripeResponse } from '../../../../types';
 import { createStripeInstance } from '../../../utils';
 
-export type StripeCustomerPaymentMethods = SupabaseStripeResponse<Stripe.ApiList<Stripe.PaymentMethod>>;
+export type StripeCustomerPaymentMethods = SupabaseStripeResponse<Stripe.PaymentMethod[]>;
 
 export interface CustomerPaymentMethodsParams {
   customerId: string;
@@ -22,10 +22,10 @@ export async function getCustomerPaymentMethods(
       ...(params.limit && { limit: params.limit }),
     };
     
-    const paymentMethods = await stripe.paymentMethods.list(listParams);
-    console.log('🔌 [getCustomerPaymentMethods]: Payment methods retrieved', paymentMethods);
+    const response: Stripe.ApiList<Stripe.PaymentMethod> = await stripe.paymentMethods.list(listParams);
+    console.log('🔌 [getCustomerPaymentMethods]: Payment methods retrieved', response);
     
-    return { data: paymentMethods, error: null };
+    return { data: response.data, error: null };
   } catch (error) {
     console.error('[❌ getCustomerPaymentMethods error]: ', error);
     return { data: null, error: error as Error };

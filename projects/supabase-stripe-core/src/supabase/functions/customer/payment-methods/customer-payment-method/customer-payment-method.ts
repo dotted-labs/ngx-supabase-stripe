@@ -15,7 +15,7 @@ export async function getCustomerPaymentMethod(
 ): Promise<StripeCustomerPaymentMethod> {
   try {
     const stripe = createStripeInstance(stripeConfig);
-    const paymentMethod = await stripe.customers.retrievePaymentMethod(
+    const paymentMethod: Stripe.PaymentMethod = await stripe.customers.retrievePaymentMethod(
       params.customerId,
       params.paymentMethodId
     );
