@@ -182,6 +182,8 @@ export const CustomerStore = signalStore(
 );
 
 export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePaymentIntentsPublic {
+  console.log('🔍 [CustomerStore] paymentIntent: ', paymentIntent);
+
   const paymentIntentAttrs = paymentIntent.attrs as any;
   return {
     ...paymentIntent,

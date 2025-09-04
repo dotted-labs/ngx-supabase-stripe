@@ -34,7 +34,6 @@ export async function createCheckoutSession(
       }
       sessionOptions.customer_creation = 'always';
     }
-
     return {
       data: await stripe.checkout.sessions.create(sessionOptions),
       error: null
