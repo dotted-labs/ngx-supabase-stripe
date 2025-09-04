@@ -17,55 +17,6 @@ export class PaymentMethodComponent {
   public readonly paymentMethod = input.required<StripeTypes.PaymentMethod>();
   public readonly mode = input<PaymentMethodDisplayMode>('detailed');
 
-  public get brandIcon(): string {
-    const brand = this.paymentMethod().card?.brand;
-    const brandIcons: Record<string, string> = {
-      'visa': '💳',
-      'mastercard': '💳', 
-      'amex': '💳',
-      'discover': '💳',
-      'diners': '💳',
-      'jcb': '💳',
-      'unionpay': '💳',
-      'unknown': '💳'
-    };
-    return brandIcons[brand || 'unknown'] || '💳';
-  }
-
-  public get brandName(): string {
-    const brand = this.paymentMethod().card?.brand;
-    const brandNames: Record<string, string> = {
-      'visa': 'Visa',
-      'mastercard': 'Mastercard',
-      'amex': 'American Express',
-      'discover': 'Discover',
-      'diners': 'Diners Club',
-      'jcb': 'JCB',
-      'unionpay': 'UnionPay',
-      'unknown': 'Tarjeta'
-    };
-    return brandNames[brand || 'unknown'] || 'Tarjeta';
-  }
-
-  public get paymentMethodType(): string {
-    const typeNames: Record<string, string> = {
-      'card': 'Tarjeta',
-      'paypal': 'PayPal',
-      'klarna': 'Klarna',
-      'afterpay_clearpay': 'Afterpay',
-      'alipay': 'Alipay',
-      'bancontact': 'Bancontact',
-      'eps': 'EPS',
-      'giropay': 'Giropay',
-      'ideal': 'iDEAL',
-      'p24': 'Przelewy24',
-      'sepa_debit': 'SEPA Direct Debit',
-      'sofort': 'Sofort',
-      'wechat_pay': 'WeChat Pay'
-    };
-    return typeNames[this.paymentMethod().type] || 'Método de pago';
-  }
-
   public get last4(): string {
     return this.paymentMethod().card?.last4 || '****';
   }

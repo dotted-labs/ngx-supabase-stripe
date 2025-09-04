@@ -1,68 +1,144 @@
-<div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-200 card-hover">
+<div class="card bg-base-100 shadow-sm hover:shadow-md transition-all duration-200 border border-base-200">
   <div class="card-body p-4">
-    <div class="flex justify-between">
-      <div>
-        <h3 class="card-title text-lg">
-          Customer: {{ paymentIntent().customer }}
-        </h3>
-      </div>
-      
-      <div class="flex gap-2">
-        <button class="btn btn-sm btn-ghost" (click)="toggleExpand()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-          {{ isExpanded() ? 'Ocultar' : 'Detalles' }}
-        </button>
-      </div>
-    </div>
-
-    <div class="payment-intent-details mt-2">
-      <div class="flex justify-start items-center gap-4 text-sm">
-        <div>
-          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-base-content">{{ utils.formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
-        </div>
-        <div>
-          @if (paymentIntent().paymentMethod) {
-            <ngx-payment-method 
-              [paymentMethod]="paymentIntent().paymentMethod!" 
-              mode="compact">
-            </ngx-payment-method>
-          } @else {
-            <span class="badge badge-outline">
-              {{ paymentIntent().paymentMethodId }}
-            </span>
+    
+    <!-- Header Section -->
+    <div class="flex justify-between items-start mb-3">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <div class="text-2xl font-bold text-primary">
+            {{ utils.formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}
+          </div>
+          <div class="badge {{ utils.getStatusBadgeClass(paymentIntent().status) }} badge-sm">
+            {{ paymentIntent().status }}
+          </div>
+          @if (!paymentIntent().liveMode) {
+            <div class="badge badge-warning badge-sm">TEST</div>
           }
         </div>
+        
+        <div class="text-sm text-base-content/70">
+          Transacción reciente
+        </div>
+      </div>
+      
+      <button 
+        class="btn btn-sm btn-ghost btn-circle" 
+        (click)="toggleExpand()"
+        [class.rotate-180]="isExpanded()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Main Info Section -->
+    <div class="space-y-2">
+      <!-- Payment Method -->
+      @if (paymentIntent().paymentMethod) {
+        <ngx-payment-method 
+          [paymentMethod]="paymentIntent().paymentMethod!" 
+          mode="compact">
+        </ngx-payment-method>
+      } @else {
+        <div class="flex items-center gap-2 p-2 bg-base-200 rounded-lg">
+          <div class="w-8 h-8 bg-base-300 rounded-full flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </div>
+          <div>
+            <div class="font-medium text-sm">Método de pago</div>
+            <div class="text-xs text-base-content/70">•••• {{ paymentIntent().paymentMethodId.slice(-4) }}</div>
+          </div>
+        </div>
+      }
+
+      <!-- Confirmation Method -->
+      <div class="flex items-center gap-2 text-sm">
+        <div class="w-2 h-2 bg-success rounded-full"></div>
+        <span class="text-base-content/70">Confirmación:</span>
+        <span class="capitalize font-medium">{{ paymentIntent().confirmationMethod.replace('_', ' ') }}</span>
       </div>
     </div>
 
     <!-- Expanded Details -->
     @if (isExpanded()) {
-      <div class="payment-expanded mt-4 border-t pt-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h4 class="text-md font-semibold mb-2">Detalles del Pago</h4>
-            <ul class="space-y-1 text-sm">
-              <li><span class="font-medium">ID Completo:</span> {{ paymentIntent().id }}</li>
-              <li><span class="font-medium">Método de pago:</span> {{ paymentIntent().paymentMethodId }}</li>
-              <li><span class="font-medium">Método de confirmación:</span> {{ paymentIntent().confirmationMethod }}</li>
-              @if (paymentIntent().invoiceId) {
-                <li><span class="font-medium">ID de factura:</span> {{ paymentIntent().invoiceId }}</li>
-              }
-            </ul>
-          </div>
+      <div class="divider my-4"></div>
+      
+      <div class="space-y-4">
+        <!-- Transaction Details -->
+        <div>
+          <h4 class="text-sm font-semibold text-base-content/80 mb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Detalles de la Transacción
+          </h4>
           
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="stat bg-base-200 rounded-lg p-3">
+              <div class="stat-title text-xs">Estado</div>
+              <div class="stat-value text-sm capitalize">{{ paymentIntent().status }}</div>
+              <div class="stat-desc">{{ paymentIntent().liveMode ? 'Producción' : 'Pruebas' }}</div>
+            </div>
+            
+            <div class="stat bg-base-200 rounded-lg p-3">
+              <div class="stat-title text-xs">Monto</div>
+              <div class="stat-value text-sm">{{ utils.formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</div>
+              <div class="stat-desc">{{ (paymentIntent().currency ?? 'EUR').toUpperCase() }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        @if (paymentIntent().paymentMethod) {
           <div>
-            <ul class="space-y-1 text-sm">
-              <li>
-                <span class="font-medium">Estado: </span> 
-                <span class="badge {{ utils.getStatusBadgeClass(paymentIntent().status) }} status-badge">
-                  {{ paymentIntent().status }}
-                </span>
-              </li>
-              <li><span class="font-medium">Modo: </span> {{ paymentIntent().liveMode ? 'Producción' : 'Pruebas' }}</li>
-            </ul>
+            <h4 class="text-sm font-semibold text-base-content/80 mb-3 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              Información del Pago
+            </h4>
+            
+            <ngx-payment-method 
+              [paymentMethod]="paymentIntent().paymentMethod!" 
+              mode="detailed">
+            </ngx-payment-method>
+          </div>
+        }
+
+        <!-- Additional Information -->
+        <div>
+          <h4 class="text-sm font-semibold text-base-content/80 mb-3 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Información Adicional
+          </h4>
+          
+          <div class="space-y-2">
+            @if (paymentIntent().invoiceId) {
+              <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                <span class="text-sm text-base-content/70">Factura</span>
+                <span class="text-sm font-mono">{{ paymentIntent().invoiceId.slice(-8) }}</span>
+              </div>
+            }
+            
+            <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+              <span class="text-sm text-base-content/70">Entorno</span>
+              <span class="text-sm">
+                @if (paymentIntent().liveMode) {
+                  <span class="text-success">Producción</span>
+                } @else {
+                  <span class="text-warning">Pruebas</span>
+                }
+              </span>
+            </div>
+            
+            <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+              <span class="text-sm text-base-content/70">Referencia</span>
+              <span class="text-sm font-mono">•••{{ paymentIntent().id?.slice(-6) || 'N/A' }}</span>
+            </div>
           </div>
         </div>
       </div>
