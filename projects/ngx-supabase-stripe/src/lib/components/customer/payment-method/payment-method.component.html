@@ -3,10 +3,10 @@
   <div class="card bg-base-100 shadow-md border border-base-300 transition-all duration-200 hover:shadow-lg">
     <div class="card-body gap-0">
       <div class="flex items-center gap-3 mb-4">
-        <span class="text-2xl filter drop-shadow-sm">{{ brandIcon }}</span>
+        <span class="text-2xl filter drop-shadow-sm" [ngxBrandIcon]="paymentMethod()"></span>
         <div>
-          <h3 class="card-title text-lg">{{ brandName }}</h3>
-          <p class="text-sm text-base-content/70">{{ paymentMethodType }}</p>
+          <h3 class="card-title text-lg" [ngxBrandName]="paymentMethod()"></h3>
+          <p class="text-sm text-base-content/70" [ngxPaymentMethodType]="paymentMethod()"></p>
         </div>
         @if (isExpired) {
           <div class="badge badge-error ml-auto animate-pulse">Expirada</div>
@@ -112,11 +112,11 @@
 <!-- Compact Version -->
 @if (mode() === 'compact') {
   <div class="flex items-center gap-2">
-    <span class="text-xl filter drop-shadow-sm">{{ brandIcon }}</span>
+    <span class="text-xl filter drop-shadow-sm" [ngxBrandIcon]="paymentMethod()"></span>
     
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-2">
-        <span class="font-medium">{{ brandName }}</span>
+        <span class="font-medium" [ngxBrandName]="paymentMethod()"></span>
         <span class="text-base-content/70">•••• {{ last4 }}</span>
         @if (paymentMethod().type === 'card' && expirationDate) {
           <span class="text-base-content/70 text-sm">{{ expirationDate }}</span>

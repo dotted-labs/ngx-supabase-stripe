@@ -1,13 +1,16 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import type { Stripe as StripeTypes } from 'stripe';
+import { BrandIconDirective } from '../../../directives/brand-icon.directive';
+import { BrandNameDirective } from '../../../directives/brand-name.directive';
+import { PaymentMethodTypeDirective } from '../../../directives/payment-method-type.directive';
 
 export type PaymentMethodDisplayMode = 'detailed' | 'compact';
 
 @Component({
   selector: 'ngx-payment-method',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BrandIconDirective, BrandNameDirective, PaymentMethodTypeDirective],
   templateUrl: './payment-method.component.html'
 })
 export class PaymentMethodComponent {
