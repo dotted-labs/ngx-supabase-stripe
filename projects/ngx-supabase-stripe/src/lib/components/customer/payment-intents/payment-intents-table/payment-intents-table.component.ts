@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, output } from '@angular/core';
 import { UtilsService } from '../../../../services/utils.service';
 import { StripePaymentIntentsPublic } from '../../../../store/customer.store';
-import { PaymentMethodComponent } from '../../../customer/payment-method/payment-method.component';
+import { PaymentMethodComponent } from '../../payment-method/payment-method.component';
+import { PaymentIntentsDialogComponent } from '../payment-intents-dialog/payment-intents-dialog.component';
 
 @Component({
   selector: 'lib-payment-intents-table',
@@ -10,7 +11,8 @@ import { PaymentMethodComponent } from '../../../customer/payment-method/payment
   standalone: true,
   imports: [
     CommonModule,
-    PaymentMethodComponent
+    PaymentMethodComponent,
+    PaymentIntentsDialogComponent
   ]
 })
 export class PaymentIntentsTableComponent {
