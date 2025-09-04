@@ -312,4 +312,38 @@ export class StripeClientService {
       return { customer: null, error: error as Error };
     }
   }
+
+  public async getCustomerPaymentMethods(customerId: string): Promise<{ paymentMethods: StripeTypes.PaymentMethod[] | null; error: Error | null }> {
+    try {
+      const { data, error } = await this.supabase.getClient()
+        .functions.invoke<StripeTypes.PaymentMethod[]>('customer_payment_methods', {
+          body: { customerId }
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      return { paymentMethods: data, error: null };
+    } catch (error) {
+      return { paymentMethods: null, error: error as Error };
+    }
+  }
+
+  public async getCustomerPaymentMethod(customerId: string, paymentMethodId: string): Promise<{ paymentMethod: StripeTypes.PaymentMethod | null; error: Error | null }> {
+    try {
+      const { data, error } = await this.supabase.getClient()
+        .functions.invoke<StripeTypes.PaymentMethod>('customer_payment_method', {
+          body: { customerId, paymentMethodId }
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      return { paymentMethod: data, error: null };
+    } catch (error) {
+      return { paymentMethod: null, error: error as Error };
+    }
+  }
 }

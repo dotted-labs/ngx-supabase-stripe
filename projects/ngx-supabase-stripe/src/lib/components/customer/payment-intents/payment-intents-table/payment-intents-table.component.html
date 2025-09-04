@@ -60,9 +60,16 @@
               </th>
               <td>{{ utils.formatAmount(paymentIntent.amount ?? 0, paymentIntent.currency ?? 'EUR') }}</td>
               <td>
-                <span class="badge badge-outline">
-                  {{ paymentIntent.paymentMethodId }}
-                </span>
+                @if (paymentIntent.paymentMethod) {
+                  <ngx-payment-method 
+                    [paymentMethod]="paymentIntent.paymentMethod!" 
+                    mode="compact">
+                  </ngx-payment-method>
+                } @else {
+                  <span class="badge badge-outline">
+                    {{ paymentIntent.paymentMethodId }}
+                  </span>
+                }
               </td>
               <td>
                 <span class="badge badge-soft {{ utils.getStatusBadgeClass(paymentIntent.status) }}">
@@ -74,42 +81,10 @@
                 <button class="btn btn-xs btn-ghost" (click)="showDetails(paymentIntent.id ?? '')">
                   Details
                 </button>
-                <dialog id="modal-{{ paymentIntent.id }}" class="modal">
-                  <div class="modal-box">
-                    <h3 class="font-bold text-lg">Payment Intent Details</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      <div>
-                        <h4 class="text-md font-semibold mb-2">Payment Details</h4>
-                        <ul class="space-y-1 text-sm">
-                          <li><span class="font-medium">Full ID:</span> {{ paymentIntent.id }}</li>
-                          <li><span class="font-medium">Payment Method:</span> {{ paymentIntent.paymentMethodId }}</li>
-                          <li><span class="font-medium">Confirmation Method:</span> {{ paymentIntent.confirmationMethod }}</li>
-                          @if (paymentIntent.invoiceId) {
-                            <li><span class="font-medium">Invoice ID:</span> {{ paymentIntent.invoiceId }}</li>
-                          }
-                        </ul>
-                      </div>
-                      <div>
-                        <h4 class="text-md font-semibold mb-2">Status Information</h4>
-                        <ul class="space-y-1 text-sm">
-                          <li>
-                            <span class="font-medium">Status: </span> 
-                            <span class="badge badge-soft {{ utils.getStatusBadgeClass(paymentIntent.status) }}">
-                              {{ paymentIntent.status }}
-                            </span>
-                          </li>
-                          <li><span class="font-medium">Mode: </span> {{ paymentIntent.liveMode ? 'Production' : 'Test' }}</li>
-                          <li><span class="font-medium">Amount: </span> {{ utils.formatAmount(paymentIntent.amount ?? 0, paymentIntent.currency ?? 'EUR') }}</li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="modal-action">
-                      <form method="dialog">
-                        <button class="btn">Close</button>
-                      </form>
-                    </div>
-                  </div>
-                </dialog>
+                <lib-payment-intents-dialog 
+                  [paymentIntent]="paymentIntent" 
+                  [dialogId]="'modal-' + paymentIntent.id">
+                </lib-payment-intents-dialog>
               </td>
             </tr>
           }

@@ -57,6 +57,8 @@ supabase-stripe-core/
 - **`createPortalSession`** - Create customer billing portal sessions
 - **`getSessionStatus`** - Retrieve payment session status
 - **`createCustomer`** - Create a customer
+- **`getCustomerPaymentMethod`** - Retrieve a specific payment method for a customer
+- **`getCustomerPaymentMethods`** - Retrieve all payment methods for a customer
 
 ### Utility Functions
 - **`createStripeInstance`** - Create configured Stripe instances
@@ -109,6 +111,22 @@ createCustomer(
 ): Promise<Response>
 ```
 
+#### getCustomerPaymentMethod
+```typescript
+getCustomerPaymentMethod(
+  params: CustomerPaymentMethodParams,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<StripeCustomerPaymentMethod>
+```
+
+#### getCustomerPaymentMethods
+```typescript
+getCustomerPaymentMethods(
+  params: CustomerPaymentMethodsParams,
+  stripeConfig: StripeEnvironmentConfig
+): Promise<StripeCustomerPaymentMethods>
+```
+
 ## 📦 How to use this functions in supabase edge functions
 
 When the package will be published, you can install it from npm.
@@ -156,6 +174,8 @@ type StripeSubscriptionSession = SupabaseStripeResponse<Stripe.Checkout.Session>
 type StripePortalSession = SupabaseStripeResponse<Stripe.BillingPortal.Session>;
 type StripeSessionStatus = SupabaseStripeResponse<Stripe.Checkout.Session>;
 type StripeCustomer = SupabaseStripeResponse<Stripe.Customer>;
+type StripeCustomerPaymentMethod = SupabaseStripeResponse<Stripe.PaymentMethod>;
+type StripeCustomerPaymentMethods = SupabaseStripeResponse<Stripe.ApiList<Stripe.PaymentMethod>>;
 
 // In the deno.json file of your edge function, apart of the index.esm.js file, add the following imports:
 

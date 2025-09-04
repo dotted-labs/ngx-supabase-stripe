@@ -1,5 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
+import { addEntity, removeEntity, setAllEntities, setEntity, updateEntity, upsertEntity, withEntities } from '@ngrx/signals/entities';
+import type { Stripe as StripeTypes } from 'stripe';
 import { StripeCustomer, StripePaymentIntent } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
@@ -14,10 +16,12 @@ export type StripePaymentIntentsPublic = Omit<StripePaymentIntent, 'attrs'> & {
   liveMode: boolean;
   confirmationMethod: string;
   paymentMethodId: string;
+  paymentMethod?: PaymentMethodEntity;
 };
 
-export type StripeCustomerPublic = Omit<StripeCustomer, 'attrs'>
+export type StripeCustomerPublic = Omit<StripeCustomer, 'attrs'>;
 
+export type PaymentMethodEntity = StripeTypes.PaymentMethod;
 
 export interface CustomerState {
   customer: {
@@ -35,6 +39,8 @@ export interface CustomerState {
     status: CustomerStatus;
     error: string | null;
   };
+  paymentMethodsStatus: CustomerStatus;
+  paymentMethodsError: string | null;
 }
 
 const initialCustomerState: CustomerState = {
@@ -53,12 +59,15 @@ const initialCustomerState: CustomerState = {
     status: 'idle',
     error: null,
   },
+  paymentMethodsStatus: 'idle',
+  paymentMethodsError: null,
 };
 
 
 export const CustomerStore = signalStore(
   { providedIn: 'root' },
   withState(initialCustomerState),
+  withEntities<PaymentMethodEntity>(),
   withComputed((state) => ({
     isPaymentIntentsStatusLoading: computed(() => state.paymentIntents.status() === 'loading'),
     isPaymentIntentsStatusSuccess: computed(() => state.paymentIntents.status() === 'success'),
@@ -71,6 +80,11 @@ export const CustomerStore = signalStore(
     firstSubscription: computed(() => state.subscriptions.data()?.[0]),
     restSubscriptions: computed(() => state.subscriptions.data()?.slice(1)),
     isError: computed(() => state.paymentIntents.error()),
+    isPaymentMethodsStatusLoading: computed(() => state.paymentMethodsStatus() === 'loading'),
+    isPaymentMethodsStatusSuccess: computed(() => state.paymentMethodsStatus() === 'success'),
+    isPaymentMethodsStatusError: computed(() => state.paymentMethodsStatus() === 'error'),
+    hasPaymentMethods: computed(() => state.entities().length > 0),
+    paymentMethods: computed(() => state.entities()),
   })),
   withMethods((state, supabaseService = inject(SupabaseClientService), stripeService = inject(StripeClientService), productsStore = inject(ProductsStore)) => ({
     /**
@@ -90,6 +104,7 @@ export const CustomerStore = signalStore(
         if (customer) {
           this.loadPaymentIntents(customer.id as string);
           this.loadSubscriptions(customer.id as string);
+          this.loadPaymentMethods(customer.id as string);
 
           patchState(state, { customer: { data: customer, status: 'success', error: null } });
         } else {
@@ -121,7 +136,7 @@ export const CustomerStore = signalStore(
       patchState(state, { paymentIntents: { status: 'loading', data: [], error: null } });
 
       const { data, error } = await supabaseService.getCustomerPaymentIntents(customerId);
-      const paymentIntents = data?.map((paymentIntent) => parsePaymentIntent(paymentIntent));
+      const paymentIntents = data?.map((paymentIntent) => parsePaymentIntent(paymentIntent, state.entityMap()));
 
       if (error) {
         patchState(state, { paymentIntents: { error: error.message, status: 'error', data: [] } });
@@ -162,6 +177,71 @@ export const CustomerStore = signalStore(
         patchState(state, { subscriptions: { data: subscriptions ?? [], status: 'success', error: null } });
       }
     },
+
+    /**
+     * Load payment methods for a customer
+     * @param customerId The customer ID
+     */
+    async loadPaymentMethods(customerId: string) {
+      patchState(state, { 
+        paymentMethodsStatus: 'loading', 
+        paymentMethodsError: null 
+      });
+
+      const { paymentMethods, error } = await stripeService.getCustomerPaymentMethods(customerId);
+
+      if (error) {
+        patchState(state, { 
+          paymentMethodsStatus: 'error', 
+          paymentMethodsError: error.message 
+        });
+      } else {
+        patchState(state, 
+          setAllEntities(paymentMethods ?? []),
+          { 
+            paymentMethodsStatus: 'success', 
+            paymentMethodsError: null 
+          }
+        );
+      }
+    },
+
+    /**
+     * Load a single payment method and add/update it in the entity collection
+     * @param customerId The customer ID
+     * @param paymentMethodId The payment method ID
+     */
+    async loadPaymentMethod(customerId: string, paymentMethodId: string) {
+      patchState(state, { 
+        paymentMethodsStatus: 'loading', 
+        paymentMethodsError: null 
+      });
+
+      const { paymentMethod, error } = await stripeService.getCustomerPaymentMethod(customerId, paymentMethodId);
+
+      if (error) {
+        patchState(state, { 
+          paymentMethodsStatus: 'error', 
+          paymentMethodsError: error.message 
+        });
+      } else if (paymentMethod) {
+      }
+
+      if (paymentMethod) {
+        patchState(state, 
+        upsertEntity(paymentMethod),
+        { 
+            paymentMethodsStatus: 'success', 
+            paymentMethodsError: null 
+          }
+        );
+      } else {
+        patchState(state, { 
+          paymentMethodsStatus: 'error', 
+          paymentMethodsError: 'Payment method not found' 
+        });
+      }
+    },
   })),
   withHooks(() => {
     return {
@@ -181,14 +261,22 @@ export const CustomerStore = signalStore(
   })
 );
 
-export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePaymentIntentsPublic {
+export function parsePaymentIntent(
+  paymentIntent: StripePaymentIntent, 
+  paymentMethodsMap: Record<string, PaymentMethodEntity> = {}
+): StripePaymentIntentsPublic {
+  console.log('🔍 [CustomerStore] paymentIntent: ', paymentIntent);
+
   const paymentIntentAttrs = paymentIntent.attrs as any;
+  const paymentMethodId = paymentIntentAttrs.payment_method;
+  
   return {
     ...paymentIntent,
     status: paymentIntentAttrs.status,
     invoiceId: paymentIntentAttrs.invoice as string,
     liveMode: paymentIntentAttrs.livemode as boolean,
     confirmationMethod: paymentIntentAttrs.confirmation_method,
-    paymentMethodId: paymentIntentAttrs.payment_method,
+    paymentMethodId,
+    paymentMethod: paymentMethodId ? paymentMethodsMap[paymentMethodId] : undefined,
   };
 }

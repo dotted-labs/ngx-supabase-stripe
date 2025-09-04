@@ -36,4 +36,17 @@ export interface SubscriptionParams {
 // Session status parameters
 export interface SessionStatusParams {
   sessionId: string;
+}
+
+// Customer payment method parameters
+export interface CustomerPaymentMethodParams {
+  customerId: string;
+  paymentMethodId: string;
+}
+
+// Customer payment methods parameters
+export interface CustomerPaymentMethodsParams {
+  customerId: string;
+  type?: import('stripe').Stripe.PaymentMethodListParams.Type;
+  limit?: number;
 } 

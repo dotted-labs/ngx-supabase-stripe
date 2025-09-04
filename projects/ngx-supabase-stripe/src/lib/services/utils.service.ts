@@ -7,8 +7,6 @@ export class UtilsService {
 
   public formatAmount(amount: number, currency = 'EUR'): string {
     if (!amount) return 'N/A';
-    
-    console.log('[🛠️ UtilsService - formatAmount] currency: ', currency.toLocaleUpperCase());
 
     const formatter = new Intl.NumberFormat(currency.toLocaleUpperCase() === 'EUR' ? 'es-ES' : 'en-US', {
       style: 'currency',
