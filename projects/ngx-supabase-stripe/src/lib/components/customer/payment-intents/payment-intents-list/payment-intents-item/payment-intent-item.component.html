@@ -23,9 +23,16 @@
           <span class="font-medium">Precio: </span><span class="text-xl font-bold text-base-content">{{ utils.formatAmount(paymentIntent().amount ?? 0, paymentIntent().currency ?? 'EUR') }}</span>
         </div>
         <div>
-          <span class="badge badge-outline">
-            {{ paymentIntent().paymentMethodId }}
-          </span>
+          @if (paymentIntent().paymentMethod) {
+            <ngx-payment-method 
+              [paymentMethod]="paymentIntent().paymentMethod!" 
+              mode="compact">
+            </ngx-payment-method>
+          } @else {
+            <span class="badge badge-outline">
+              {{ paymentIntent().paymentMethodId }}
+            </span>
+          }
         </div>
       </div>
     </div>

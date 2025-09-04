@@ -1,0 +1,133 @@
+<!-- Detailed Version -->
+@if (mode() === 'detailed') {
+  <div class="card bg-base-100 shadow-md border border-base-300 transition-all duration-200 hover:shadow-lg">
+    <div class="card-body gap-0">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-2xl filter drop-shadow-sm">{{ brandIcon }}</span>
+        <div>
+          <h3 class="card-title text-lg">{{ brandName }}</h3>
+          <p class="text-sm text-base-content/70">{{ paymentMethodType }}</p>
+        </div>
+        @if (isExpired) {
+          <div class="badge badge-error ml-auto animate-pulse">Expirada</div>
+        }
+      </div>
+
+      <div class="space-y-3">
+        <!-- Card Information -->
+        @if (paymentMethod().type === 'card') {
+          <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+            <span class="text-base-content/70">Número de tarjeta:</span>
+            <span class="font-mono sm:font-medium">**** **** **** {{ last4 }}</span>
+          </div>
+
+          <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+            <span class="text-base-content/70">Fecha de expiración:</span>
+            <span class="font-mono sm:font-medium">{{ expirationDate }}</span>
+          </div>
+
+          <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+            <span class="text-base-content/70">Titular:</span>
+            <span class="sm:font-medium">{{ holderName }}</span>
+          </div>
+
+          @if (cardFunding) {
+            <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-base-content/70">Tipo de tarjeta:</span>
+              <span class="capitalize sm:font-medium">{{ cardFunding }}</span>
+            </div>
+          }
+
+          @if (cardCountry) {
+            <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-base-content/70">País:</span>
+              <span class="uppercase sm:font-medium">{{ cardCountry }}</span>
+            </div>
+          }
+        }
+
+        <!-- Billing Details -->
+        @if (billingEmail) {
+          <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+            <span class="text-base-content/70">Email:</span>
+            <span class="sm:font-medium">{{ billingEmail }}</span>
+          </div>
+        }
+
+        @if (billingPhone) {
+          <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+            <span class="text-base-content/70">Teléfono:</span>
+            <span class="sm:font-medium">{{ billingPhone }}</span>
+          </div>
+        }
+
+        <!-- Address -->
+        @if (billingAddress) {
+          <div class="divider divider-start text-xs">Dirección de facturación</div>
+          
+          @if (billingAddress.line1) {
+            <div class="flex justify-between items-start sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-base-content/70">Dirección:</span>
+              <div class="text-right sm:text-left">
+                <div class="sm:font-medium">{{ billingAddress.line1 }}</div>
+                @if (billingAddress.line2) {
+                  <div class="sm:font-medium">{{ billingAddress.line2 }}</div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (billingAddress.city) {
+            <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-base-content/70">Ciudad:</span>
+              <span class="sm:font-medium">{{ billingAddress.city }}</span>
+            </div>
+          }
+
+          @if (billingAddress.postal_code) {
+            <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-base-content/70">Código postal:</span>
+              <span class="sm:font-medium">{{ billingAddress.postal_code }}</span>
+            </div>
+          }
+
+          @if (billingAddress.country) {
+            <div class="flex justify-between items-center sm:flex-col sm:items-start sm:gap-1">
+              <span class="text-base-content/70">País:</span>
+              <span class="uppercase sm:font-medium">{{ billingAddress.country }}</span>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Created Date -->
+      <div class="flex justify-between items-center mt-4 pt-4 border-t border-base-300 sm:p-4">
+        <span class="text-base-content/70 text-sm">Agregado:</span>
+        <span class="text-sm">{{ paymentMethod().created * 1000 | date:'short' }}</span>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Compact Version -->
+@if (mode() === 'compact') {
+  <div class="flex items-center gap-2">
+    <span class="text-xl filter drop-shadow-sm">{{ brandIcon }}</span>
+    
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2">
+        <span class="font-medium">{{ brandName }}</span>
+        <span class="text-base-content/70">•••• {{ last4 }}</span>
+        @if (paymentMethod().type === 'card' && expirationDate) {
+          <span class="text-base-content/70 text-sm">{{ expirationDate }}</span>
+        }
+      </div>
+    </div>
+
+    @if (isExpired) {
+      <div class="badge badge-error badge-sm animate-pulse">Expirada</div>
+    } @else {
+      <div class="badge badge-success badge-sm">Activa</div>
+    }
+  </div>
+}

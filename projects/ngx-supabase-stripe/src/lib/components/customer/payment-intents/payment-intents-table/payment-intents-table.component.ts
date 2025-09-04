@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, output } from '@angular/core';
-import { StripePaymentIntentsPublic } from '../../../../store/customer.store';
 import { UtilsService } from '../../../../services/utils.service';
+import { StripePaymentIntentsPublic } from '../../../../store/customer.store';
+import { PaymentMethodComponent } from '../../../customer/payment-method/payment-method.component';
 
 @Component({
   selector: 'lib-payment-intents-table',
   templateUrl: './payment-intents-table.component.html',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    PaymentMethodComponent
   ]
 })
 export class PaymentIntentsTableComponent {

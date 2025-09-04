@@ -60,9 +60,16 @@
               </th>
               <td>{{ utils.formatAmount(paymentIntent.amount ?? 0, paymentIntent.currency ?? 'EUR') }}</td>
               <td>
-                <span class="badge badge-outline">
-                  {{ paymentIntent.paymentMethodId }}
-                </span>
+                @if (paymentIntent.paymentMethod) {
+                  <ngx-payment-method 
+                    [paymentMethod]="paymentIntent.paymentMethod!" 
+                    mode="compact">
+                  </ngx-payment-method>
+                } @else {
+                  <span class="badge badge-outline">
+                    {{ paymentIntent.paymentMethodId }}
+                  </span>
+                }
               </td>
               <td>
                 <span class="badge badge-soft {{ utils.getStatusBadgeClass(paymentIntent.status) }}">

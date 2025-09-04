@@ -16,6 +16,7 @@ export type StripePaymentIntentsPublic = Omit<StripePaymentIntent, 'attrs'> & {
   liveMode: boolean;
   confirmationMethod: string;
   paymentMethodId: string;
+  paymentMethod?: PaymentMethodEntity;
 };
 
 export type StripeCustomerPublic = Omit<StripeCustomer, 'attrs'>;
@@ -135,7 +136,7 @@ export const CustomerStore = signalStore(
       patchState(state, { paymentIntents: { status: 'loading', data: [], error: null } });
 
       const { data, error } = await supabaseService.getCustomerPaymentIntents(customerId);
-      const paymentIntents = data?.map((paymentIntent) => parsePaymentIntent(paymentIntent));
+      const paymentIntents = data?.map((paymentIntent) => parsePaymentIntent(paymentIntent, state.entityMap()));
 
       if (error) {
         patchState(state, { paymentIntents: { error: error.message, status: 'error', data: [] } });
@@ -260,16 +261,22 @@ export const CustomerStore = signalStore(
   })
 );
 
-export function parsePaymentIntent(paymentIntent: StripePaymentIntent): StripePaymentIntentsPublic {
+export function parsePaymentIntent(
+  paymentIntent: StripePaymentIntent, 
+  paymentMethodsMap: Record<string, PaymentMethodEntity> = {}
+): StripePaymentIntentsPublic {
   console.log('🔍 [CustomerStore] paymentIntent: ', paymentIntent);
 
   const paymentIntentAttrs = paymentIntent.attrs as any;
+  const paymentMethodId = paymentIntentAttrs.payment_method;
+  
   return {
     ...paymentIntent,
     status: paymentIntentAttrs.status,
     invoiceId: paymentIntentAttrs.invoice as string,
     liveMode: paymentIntentAttrs.livemode as boolean,
     confirmationMethod: paymentIntentAttrs.confirmation_method,
-    paymentMethodId: paymentIntentAttrs.payment_method,
+    paymentMethodId,
+    paymentMethod: paymentMethodId ? paymentMethodsMap[paymentMethodId] : undefined,
   };
 }
