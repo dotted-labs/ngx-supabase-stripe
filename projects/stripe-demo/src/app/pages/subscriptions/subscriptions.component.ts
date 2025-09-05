@@ -8,9 +8,9 @@ import {
   StripePricePublic,
   StripeProductPublic,
   SubscriptionsListComponent,
-  SubscriptionsStore
+  SubscriptionsStore,
+  PortalAccountStore
 } from '@ngx-supabase-stripe';
-import { PortalAccountStore } from '../../../../../../dist/ngx-supabase-stripe/lib/store/portal-account.store';
 
 @Component({
   selector: 'app-subscriptions',

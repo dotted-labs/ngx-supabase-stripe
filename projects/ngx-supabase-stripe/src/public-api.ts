@@ -12,6 +12,7 @@ export * from './lib/store/checkout.store';
 export * from './lib/store/products.store';
 export * from './lib/store/subscriptions.store';
 export * from './lib/store/customer.store';
+export * from './lib/store/portal-account.store';
 
 // Export services
 export * from './lib/services/stripe-client.service';
