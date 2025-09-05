@@ -10,6 +10,7 @@ import {
   SubscriptionsListComponent,
   SubscriptionsStore
 } from '@ngx-supabase-stripe';
+import { PortalAccountStore } from '../../../../../../dist/ngx-supabase-stripe/lib/store/portal-account.store';
 
 @Component({
   selector: 'app-subscriptions',
@@ -27,6 +28,7 @@ import {
 export class SubscriptionsComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
   public readonly productsStore = inject(ProductsStore);
+  public readonly portalAccountStore = inject(PortalAccountStore);
 
   public readonly activeTab = signal<'list' | 'new'>('list');
   public readonly selectedPrice = signal<string | null>(null);
@@ -39,6 +41,10 @@ export class SubscriptionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscriptionsStore.loadSubscriptions();
+  }
+
+  public manageSubscription(customerId: string): void {
+    this.portalAccountStore.createPortalSession(customerId, window.location.origin + '/subscriptions');
   }
 
   public resetSelection(): void {

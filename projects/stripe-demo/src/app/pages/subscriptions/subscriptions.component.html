@@ -24,7 +24,9 @@
       <lib-subscriptions-list 
         [subscriptions]="subscriptionsStore.subscriptions() ?? []" 
         [loading]="subscriptionsStore.isStatusLoading()" 
-        [error]="subscriptionsStore.error()">
+        [error]="subscriptionsStore.error()"
+        (onManageSubscription)="manageSubscription($event)"
+        >
       </lib-subscriptions-list>
     </div>
   } @else if (activeTab() === 'new') {

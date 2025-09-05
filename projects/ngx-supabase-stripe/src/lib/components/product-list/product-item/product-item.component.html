@@ -1,10 +1,10 @@
 <div class="card bg-base-100 shadow-xl max-w-sm mx-auto rounded-3xl overflow-hidden">
   <!-- Header with image and favorite icon -->
   <div class="relative">
-    @if (product().images && product().images.length) {
+    @if (sanitizedImage()) {
       <figure class="bg-gradient-to-br from-base-200 to-base-300">
         <img 
-          src="{{ product().images[0] }}" 
+          [src]="sanitizedImage()" 
           alt="{{ product().name }}" 
           class="h-64 w-full object-cover p-8 rounded-t-3xl" />
       </figure>
