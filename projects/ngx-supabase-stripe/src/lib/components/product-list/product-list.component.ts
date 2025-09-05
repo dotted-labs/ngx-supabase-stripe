@@ -3,6 +3,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { ProductsStore, StripePricePublic, StripeProductPublic } from '../../store/products.store';
 import { ProductItemSkeletonComponent } from './product-item-skeleton/product-item-skeleton.component';
 import { ProductItemComponent } from './product-item/product-item.component';
+import { Currency } from '../../models/currency.model';
 
 @Component({
   selector: 'stripe-product-list',
@@ -14,7 +15,8 @@ export class ProductListComponent {
   public readonly productsStore = inject(ProductsStore);
 
   public readonly products = input<StripeProductPublic[]>([]);
-  
+  public readonly currency = input<Currency>(Currency.EUR);
+
   public readonly productSelected = output<StripeProductPublic>();
   public readonly priceSelected = output<StripePricePublic>();
 

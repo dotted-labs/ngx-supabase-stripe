@@ -8,7 +8,8 @@ import {
   StripePricePublic,
   StripeProductPublic,
   SubscriptionsListComponent,
-  SubscriptionsStore
+  SubscriptionsStore,
+  PortalAccountStore
 } from '@ngx-supabase-stripe';
 
 @Component({
@@ -27,18 +28,23 @@ import {
 export class SubscriptionsComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
   public readonly productsStore = inject(ProductsStore);
+  public readonly portalAccountStore = inject(PortalAccountStore);
 
   public readonly activeTab = signal<'list' | 'new'>('list');
   public readonly selectedPrice = signal<string | null>(null);
   public readonly selectedProduct = signal<StripeProductPublic | null>(null);
 
-  public readonly products = computed(() => this.productsStore.recurringProducts());
+  public readonly products = computed(() => this.productsStore.recurringProductsByCurrency());
   public readonly communityProducts = computed(() => this.productsStore.getProductsByIds(['prod_S3tbbZzfLyJUQv', 'prod_S6ebpZ1C1ndUFD']));
 
   public customerEmail = signal<string | null>(null);
 
   ngOnInit(): void {
     this.subscriptionsStore.loadSubscriptions();
+  }
+
+  public manageSubscription(customerId: string): void {
+    this.portalAccountStore.createPortalSession(customerId, window.location.origin + '/subscriptions');
   }
 
   public resetSelection(): void {

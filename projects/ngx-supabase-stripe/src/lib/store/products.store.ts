@@ -2,6 +2,7 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripePrice, StripeProduct } from '../models/database.model';
 import { SupabaseClientService } from '../services/supabase-client.service';
+import { Currency } from '../models/currency.model';
 
 export type StripeProductPublic = Omit<StripeProduct, 'attrs'> & {
   images: string[];
@@ -16,17 +17,19 @@ export type StripePricePublic = Omit<StripePrice, 'attrs'>;
 export type ProductsStatus = 'idle' | 'loading' | 'success' | 'error';
 
 type ProductsState = {
-  products: StripeProductPublic[] | null;
-  prices: StripePricePublic[] | null;
+  products: StripeProductPublic[];
+  prices: StripePricePublic[];
   status: ProductsStatus;
   error: string | null;
+  currency: Currency;
 }
 
 const initialProductsState: ProductsState = {
-  products: null,
-  prices: null,
+  products: [],
+  prices: [],
   status: 'idle',
   error: null,
+  currency: Currency.EUR,
 };
 
 export const ProductsStore = signalStore(
@@ -36,9 +39,16 @@ export const ProductsStore = signalStore(
     isStatusLoading: computed(() => state.status() === 'loading'),
     isStatusSuccess: computed(() => state.status() === 'success'),
     isStatusError: computed(() => state.status() === 'error'),
-    recurringProducts: computed(() => state.products()?.filter(product => product.prices?.some(price => price.details.type === 'recurring')) || []),
-    oneTimeProducts: computed(() => state.products()?.filter(product => product.prices?.some(price => price.details.type === 'one_time')) || []),
-    hasProducts: computed(() => state.products() !== null && state.products()!.length > 0),
+    oneTimeproductsByCurrency: computed(() => state.products().filter(product => 
+      product.prices.some(price => (price.details.type === 'one_time' && price.details.currency === state.currency()))
+    ) || []),
+    recurringProductsByCurrency: computed(() => state.products().filter(product => 
+      product.prices.some(price => (price.details.type === 'recurring' && price.details.currency === state.currency()))
+    ) || []),
+    productsByCurrency: computed(() => state.products().filter(product => 
+      product.prices.some(price => (price.details.currency === state.currency()))
+    ) || []),
+    hasProducts: computed(() => state.products().length > 0),
     isError: computed(() => state.error())
   })),
   withMethods((store, supabaseService = inject(SupabaseClientService)) => ({
@@ -48,6 +58,13 @@ export const ProductsStore = signalStore(
     getProductsByIds(ids: string[]): StripeProductPublic[] {
       console.log('🎮 [ProductsStore] Loading products by ids: ', ids);
       return store.products()?.filter(product => product.id && ids.includes(product.id)) || [];
+    },
+
+    /**
+     * Set the currency filter for products
+     */
+    setCurrency(currency: Currency): void {
+      patchState(store, { currency });
     },
 
     /**
@@ -85,6 +102,15 @@ export const ProductsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
+        const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
+
+        if (pricesError) {
+          console.error('🎮 [ProductsStore]: Error loading prices', pricesError);
+          patchState(store, { status: 'error', error: (pricesError as Error).message });
+        }
+        
+        patchState(store, { prices: prices || [] });
+
         const { data: stripeProducts, error: productsError } = await supabaseService.selectStripeProducts();
 
         if (productsError) {
@@ -127,18 +153,9 @@ export const ProductsStore = signalStore(
       patchState(store, initialProductsState);
     }
   })),
-  withHooks((store, supabaseService = inject(SupabaseClientService)) => ({
+  withHooks((store) => ({
     async onInit() {
       console.log('🎮 [ProductsStore] onInit');
-
-      const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
-
-      if (pricesError) {
-        console.error('🎮 [ProductsStore]: Error loading prices', pricesError);
-        patchState(store, { status: 'error', error: (pricesError as Error).message });
-      }
-
-      patchState(store, { prices });
 
       const products = store.products();
       console.log('🎮 [ProductsStore] products: ', products);

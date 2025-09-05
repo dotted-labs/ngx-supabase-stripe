@@ -12,6 +12,7 @@ export * from './lib/store/checkout.store';
 export * from './lib/store/products.store';
 export * from './lib/store/subscriptions.store';
 export * from './lib/store/customer.store';
+export * from './lib/store/portal-account.store';
 
 // Export services
 export * from './lib/services/stripe-client.service';
@@ -29,6 +30,9 @@ export * from './lib/components/customer/subscriptions/subscription-card/subscri
 export * from './lib/components/customer/subscriptions/subscriptions-list/subscriptions-list.component';
 export * from './lib/components/customer/payment-intents/payment-intents-list/payment-intents-list.component';
 export * from './lib/pages/customer/customer.component';
+
+// Export models
+export * from './lib/models/currency.model';
 
 // Export types
 export * from './database.types';

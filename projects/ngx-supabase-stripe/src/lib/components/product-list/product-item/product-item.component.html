@@ -1,43 +1,55 @@
-<div class="card bg-base-100 shadow-xl">
-  @if (product().images && product().images.length) {
-    <figure>
-      <img src="{{ product().images[0] }}" alt="{{ product().name }}" class="h-48 w-full object-cover" />
-    </figure>
-  }
-  <div class="card-body">
-    @if (product().active) {
-      <div class="badge badge-soft badge-success">Active</div>
+<div class="card bg-base-100 shadow-xl max-w-sm mx-auto rounded-3xl overflow-hidden">
+  <!-- Header with image and favorite icon -->
+  <div class="relative">
+    @if (sanitizedImage()) {
+      <figure class="bg-gradient-to-br from-base-200 to-base-300">
+        <img 
+          [src]="sanitizedImage()" 
+          alt="{{ product().name }}" 
+          class="h-64 w-full object-cover p-8 rounded-t-3xl" />
+      </figure>
     } @else {
-      <div class="badge badge-soft badge-warning">Inactive</div>
-    }
-
-    <h2 class="card-title">{{ product().name }}</h2>
-    @if (product().description) {
-      <p>{{ product().description }}</p>
-    }
-  
-    @if (product().prices) {
-      <div class="grid grid-cols-2 gap-4">
-        @for (price of product().prices; track price.details.id) {
-          <div class="card bg-primary hover:brightness-90 cursor-pointer transition-colors p-6 rounded-2xl" 
-               [class.bg-secondary]="price.recurringInterval === 'year'"
-               (click)="onSelect(price.details)">
-            <div class="flex flex-col gap-1">
-              @if (price.recurringInterval !== 'no-recurring') {
-                <div class="text-xs font-medium text-primary-content">Pay {{ price.recurringInterval === 'month' ? 'Monthly' : 'Yearly' }}</div>
-              } @else {
-                <div class="text-[11px] font-medium text-primary-content">One time payment</div>
-              }
-              <div class="flex flex-col items-baseline">
-                <span class="text-2xl font-bold text-primary-content">{{ utils.formatAmount(price.details.unit_amount ?? 0, price.details.currency ?? 'USD') }}</span>
-              </div>
-              @if (price.recurringInterval === 'year') {
-                <div class="badge badge-sm badge-neutral text-primary-content">Save 15%</div>
-              }
-            </div>
-          </div>
-        }
+      <div class="h-64 bg-gradient-to-br from-base-200 to-base-300 flex items-center justify-center">
+        <div class="text-base-content/50 text-6xl">📦</div>
       </div>
     }
+  </div>
+
+  <div class="card-body p-6 flex flex-col h-full">
+    <!-- Product title -->
+    <h2 class="card-title text-xl font-bold text-base-content">
+      {{ product().name }}
+    </h2>
+
+    <!-- Description (moved under title) -->
+    @if (product().description) {
+      <p class="text-base-content/70 text-sm mb-4 line-clamp-3">
+        {{ product().description }}
+      </p>
+    }
+
+         <!-- Price options as text -->
+    <div class="flex justify-between gap-2">
+      <span class="text-xl font-bold text-base-content">
+        @if (price()?.details?.type === 'recurring') {
+          {{ utils.formatAmount(price()?.details?.unit_amount ?? 0, price()?.details?.currency ?? 'EUR') }}/{{ price()?.recurringInterval === 'month' ? 'mo' : 'yr' }}
+        } @else {
+          {{ utils.formatAmount(price()?.details?.unit_amount ?? 0, price()?.details?.currency ?? 'EUR') }}
+        }
+      </span>
+
+      <!-- Status badge (only show if inactive) -->
+      @if (!product().active) {
+        <div class="mt-4">
+          <div class="badge badge-warning badge-sm">Inactive</div>
+        </div>
+      } @else {
+        <button 
+          class="btn btn-primary"
+          (click)="onSelect()">
+          Buy now
+        </button>
+      }
+    </div>
   </div>
 </div> 

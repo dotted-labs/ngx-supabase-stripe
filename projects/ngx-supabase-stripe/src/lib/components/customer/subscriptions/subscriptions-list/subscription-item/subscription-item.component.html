@@ -1,81 +1,72 @@
-<div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow duration-200">
-  <div class="card-body p-4">
-    <div class="flex justify-between">
-      <div>
-        <h3 class="card-title text-lg">
-          customer: {{ subscription().customer }}
-          
-          <span class="badge badge-soft {{ utils.getStatusBadgeClass(subscription().status) }} status-badge">
-            {{ subscription().status }}
-          </span>
-
-          @if (subscription().cancel.cancel_at_period_end) {
-            <span class="badge badge-soft badge-warning ml-2">Cancelada al final del periodo</span>
-          }
-        </h3>
-        <p class="text-gray-600 text-sm">
-          ID: {{ subscription().id }}
-        </p>
+<div class="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow-lg hover:shadow-xl transition-all duration-300 border border-base-300">
+  <div class="card-body p-6">
+    <!-- Header con título y precio -->
+    <div class="flex justify-between items-start mb-4">
+      <div class="flex items-center gap-3">
+        <!-- Imagen de la suscripción -->
+        <div class="avatar">
+          <div class="w-24 rounded">
+            <img [src]="sanitizeImageUrl(productImage())" 
+              [alt]="subscription().product?.name || 'Subscription product'"
+              class="w-full h-full object-cover rounded-lg" />
+          </div>
+        </div>  
+        
+        <div>
+          <h3 class="text-2xl font-bold text-base-content">
+            {{ subscription().product?.name || 'Subscription Plan' }}
+          </h3>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="badge {{ utils.getStatusBadgeClass(subscription().status) }} badge-lg">
+              {{ subscription().status }}
+            </span>
+            @if (subscription().cancel.cancel_at_period_end) {
+              <span class="badge badge-warning badge-lg">Cancelada</span>
+            }
+          </div>
+        </div>
       </div>
       
-      <div class="flex gap-2">
-        <button class="btn btn-sm btn-ghost" (click)="toggleExpand()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      <!-- Precio principal -->
+      <div class="text-right">
+        <div class="text-4xl font-bold text-primary">
+          {{ utils.formatAmount(subscription().plan.amount, subscription().currency ?? 'EUR') }}
+        </div>
+        <div class="text-base-content/70 text-lg capitalize">
+          {{ subscription().plan.interval }}ly
+        </div>
+      </div>
+    </div>
+
+    <!-- Fechas de período -->
+    <div class="flex justify-between items-center py-4 border-t border-base-300">
+      <div class="text-left">
+        <div class="text-base-content/70 text-sm font-medium">Start:</div>
+        <div class="text-base-content font-semibold">
+          {{ utils.formatDate(subscription().current_period_start ?? '') }}
+        </div>
+      </div>
+      
+      <div class="text-right">
+        <div class="text-base-content/70 text-sm font-medium">End:</div>
+        <div class="text-base-content font-semibold">
+          {{ utils.formatDate(subscription().current_period_end ?? '') }}
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end w-full">
+      <button class="btn btn-primary" [disabled]="isStatusLoading()" (click)="manageSubscription()">
+        @if (isStatusLoading()) {
+          <span class="loading loading-spinner loading-sm"></span>
+          Cargando...
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          {{ isExpanded ? 'Ocultar' : 'Detalles' }}
-        </button>
-      </div>
+          Gestionar Suscripción
+        }
+      </button>
     </div>
-
-    <div class="subscription-details mt-2">
-      <div class="flex justify-between text-sm">
-        <div>
-          <span class="font-medium">Precio: </span><span class="text-xl font-bold text-secondary-content">{{ utils.formatAmount(subscription().plan.amount, subscription().currency ?? 'EUR') }}</span>
-        </div>
-        <div>
-          <span class="font-medium">Período: </span><span class="text-md font-bold">{{ subscription().plan.interval }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Expanded Details -->
-    @if (isExpanded) {
-      <div class="subscription-expanded mt-4 border-t pt-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h4 class="text-md font-semibold mb-2">Detalles del Plan</h4>
-            <ul class="space-y-1 text-sm">
-              <li><span class="font-medium">Inicio:</span> {{ utils.formatDate(subscription().current_period_start ?? '') }}</li>
-              <li><span class="font-medium">Renovación:</span> {{ utils.formatDate(subscription().current_period_end ?? '') }}</li>
-            </ul>
-          </div>
-          
-          @if (subscription().cancel.cancel_at_period_end) {
-            <div>
-              <h4 class="text-md font-semibold mb-2">Detalles de la Cancelación</h4>
-              <ul class="space-y-1 text-sm">
-                <li><span class="font-medium">Cancelado el: </span> {{ subscription().cancel.canceled_at * 1000 | date:'dd/MM/yyyy' }}</li>
-                <li><span class="font-medium">No se renovará el: </span> {{ subscription().cancel.cancel_at * 1000 | date:'dd/MM/yyyy' }}</li>
-                <li><span class="font-medium">Feedback: </span> {{ subscription().cancel.cancellation_details.feedback }}</li>
-                <li><span class="font-medium">Comentario: </span> {{ subscription().cancel.cancellation_details.comment }}</li>
-              </ul>
-            </div>
-          }
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="card-actions mt-4 justify-end">
-          <button class="btn btn-sm btn-secondary" [disabled]="isStatusLoading()" (click)="manageSubscription()">
-            @if (isStatusLoading()) {
-              <span class="loading loading-spinner"></span>
-              loading account
-            } @else {
-              Manage subscription
-            }
-          </button>
-        </div>
-      </div>
-    }
   </div>
 </div> 
