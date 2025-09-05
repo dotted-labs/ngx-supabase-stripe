@@ -17,16 +17,16 @@ export type StripePricePublic = Omit<StripePrice, 'attrs'>;
 export type ProductsStatus = 'idle' | 'loading' | 'success' | 'error';
 
 type ProductsState = {
-  products: StripeProductPublic[];
-  prices: StripePricePublic[];
+  products: StripeProductPublic[] | null;
+  prices: StripePricePublic[] | null;
   status: ProductsStatus;
   error: string | null;
   currency: Currency;
 }
 
 const initialProductsState: ProductsState = {
-  products: [],
-  prices: [],
+  products: null,
+  prices: null,
   status: 'idle',
   error: null,
   currency: Currency.EUR,
@@ -39,16 +39,16 @@ export const ProductsStore = signalStore(
     isStatusLoading: computed(() => state.status() === 'loading'),
     isStatusSuccess: computed(() => state.status() === 'success'),
     isStatusError: computed(() => state.status() === 'error'),
-    oneTimeproductsByCurrency: computed(() => state.products().filter(product => 
+    oneTimeproductsByCurrency: computed(() => state.products()?.filter(product => 
       product.prices.some(price => (price.details.type === 'one_time' && price.details.currency === state.currency()))
     ) || []),
-    recurringProductsByCurrency: computed(() => state.products().filter(product => 
+    recurringProductsByCurrency: computed(() => state.products()?.filter(product => 
       product.prices.some(price => (price.details.type === 'recurring' && price.details.currency === state.currency()))
     ) || []),
-    productsByCurrency: computed(() => state.products().filter(product => 
+    productsByCurrency: computed(() => state.products()?.filter(product => 
       product.prices.some(price => (price.details.currency === state.currency()))
     ) || []),
-    hasProducts: computed(() => state.products().length > 0),
+    hasProducts: computed(() => state.products() !== null && state.products()!.length > 0),
     isError: computed(() => state.error())
   })),
   withMethods((store, supabaseService = inject(SupabaseClientService)) => ({
