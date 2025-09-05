@@ -12,7 +12,7 @@
   </div>
 }
 
-@if (!productsStore.hasProducts()) {
+@if (!productsStore.hasProducts() && !productsStore.isStatusLoading()) {
   <div class="alert alert-info">
     <span>No products available</span>
   </div>
