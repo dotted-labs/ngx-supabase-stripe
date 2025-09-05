@@ -32,7 +32,7 @@ export class SubscriptionsComponent implements OnInit {
   public readonly selectedPrice = signal<string | null>(null);
   public readonly selectedProduct = signal<StripeProductPublic | null>(null);
 
-  public readonly products = computed(() => this.productsStore.recurringProducts());
+  public readonly products = computed(() => this.productsStore.recurringProductsByCurrency());
   public readonly communityProducts = computed(() => this.productsStore.getProductsByIds(['prod_S3tbbZzfLyJUQv', 'prod_S6ebpZ1C1ndUFD']));
 
   public customerEmail = signal<string | null>(null);

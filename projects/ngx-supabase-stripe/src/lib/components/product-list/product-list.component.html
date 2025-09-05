@@ -4,19 +4,26 @@
       <lib-product-item-skeleton></lib-product-item-skeleton>
     }
   </div>
-} @else if (productsStore.isStatusError()) {
+}
+
+@if (productsStore.isStatusError() && !productsStore.isStatusLoading()) {
   <div class="alert alert-error">
     <span>{{ productsStore.error() }}</span>
   </div>
-} @else if (!productsStore.hasProducts()) {
+}
+
+@if (!productsStore.hasProducts()) {
   <div class="alert alert-info">
     <span>No products available</span>
   </div>
-} @else {
+}
+
+@if (productsStore.hasProducts()) {
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @for (product of products(); track product.id) {
       <lib-product-item
         [product]="product"
+        [currency]="currency()"
         (productSelected)="onProductSelect($event)"
         (priceSelected)="onPriceSelect($event)">
       </lib-product-item>

@@ -12,6 +12,7 @@
   @if (!selectedPrice()) {
     <stripe-product-list
       [products]="products()"
+      [currency]="currency()"	
       (priceSelected)="selectPrice($event)"
       (productSelected)="selectProduct($event)">
     </stripe-product-list>

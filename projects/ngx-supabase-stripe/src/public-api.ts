@@ -30,5 +30,8 @@ export * from './lib/components/customer/subscriptions/subscriptions-list/subscr
 export * from './lib/components/customer/payment-intents/payment-intents-list/payment-intents-list.component';
 export * from './lib/pages/customer/customer.component';
 
+// Export models
+export * from './lib/models/currency.model';
+
 // Export types
 export * from './database.types';
