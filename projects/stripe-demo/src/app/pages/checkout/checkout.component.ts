@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { EmbeddedCheckoutComponent, ProductListComponent, ProductsStore, StripePricePublic, StripeProductPublic, Currency } from '@ngx-supabase-stripe';
+import { EmbeddedCheckoutComponent, ProductListComponent, ProductItemButtonComponent, ProductsStore, StripePricePublic, StripeProductPublic, Currency } from '@ngx-supabase-stripe';
 
 @Component({
   selector: 'app-checkout',
@@ -12,7 +12,8 @@ import { EmbeddedCheckoutComponent, ProductListComponent, ProductsStore, StripeP
     FormsModule,
     RouterLink,
     EmbeddedCheckoutComponent, 
-    ProductListComponent
+    ProductListComponent,
+    ProductItemButtonComponent
   ],
   templateUrl: './checkout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

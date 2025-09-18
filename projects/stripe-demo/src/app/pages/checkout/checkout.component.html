@@ -10,12 +10,72 @@
   </div>
 
   @if (!selectedPrice()) {
-    <stripe-product-list
-      [products]="products()"
-      [currency]="currency()"	
-      (priceSelected)="selectPrice($event)"
-      (productSelected)="selectProduct($event)">
-    </stripe-product-list>
+    <!-- Product List Component -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Product Cards</h2>
+      <p class="text-base-content/70 mb-6">Choose from our complete product cards with images and descriptions</p>
+      <stripe-product-list
+        [products]="products()"
+        [currency]="currency()"	
+        (priceSelected)="selectPrice($event)"
+        (productSelected)="selectProduct($event)">
+      </stripe-product-list>
+    </div>
+
+    <!-- Product Item Button Demo -->
+    <div class="divider">OR</div>
+    
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold mb-4">Product Item Buttons</h2>
+      <p class="text-base-content/70 mb-6">Test the new product-item-button component with different styles</p>
+      
+      @if (products().length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (product of products(); track product.id) {
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h3 class="card-title text-lg">{{ product.name }}</h3>
+                @if (product.description) {
+                  <p class="text-sm text-base-content/70 mb-4 line-clamp-2">{{ product.description }}</p>
+                }
+                
+                <!-- Different button variations -->
+                <div class="flex flex-col gap-4">
+                  <!-- Default button with price -->
+                  <lib-product-item-button
+                    [product]="product"
+                    [currency]="currency()"
+                    (productSelected)="selectProduct($event)"
+                    (priceSelected)="selectPrice($event)">
+                  </lib-product-item-button>
+                  
+                  <!-- Secondary style button without price -->
+                  <lib-product-item-button
+                    [product]="product"
+                    [currency]="currency()"
+                    [buttonText]="'Add to Cart'"
+                    [buttonClass]="'btn btn-secondary btn-sm w-full'"
+                    [showPrice]="false"
+                    (productSelected)="selectProduct($event)"
+                    (priceSelected)="selectPrice($event)">
+                  </lib-product-item-button>
+                  
+                  <!-- Outline style button -->
+                  <lib-product-item-button
+                    [product]="product"
+                    [currency]="currency()"
+                    [buttonText]="'Quick Buy'"
+                    [buttonClass]="'btn btn-outline btn-primary btn-xs w-full'"
+                    (productSelected)="selectProduct($event)"
+                    (priceSelected)="selectPrice($event)">
+                  </lib-product-item-button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
   } @else {
     <div class="w-full">
       <div class="card bg-base-100 shadow-xl">
