@@ -22,6 +22,7 @@ export * from './lib/services/supabase-client.service';
 export * from './lib/components/embedded-checkout/embedded-checkout.component';
 export * from './lib/components/embedded-checkout/return-page/return-page.component';
 export * from './lib/components/product-list/product-list.component';
+export * from './lib/components/product-item-button/product-item-button.component';
 export * from './lib/components/embedded-subscription/embedded-subscription.component';
 export * from './lib/components/embedded-subscription/return-page/subscription-return-page.component';
 export * from './lib/components/customer/payment-intents/payment-intents-table/payment-intents-table.component';

@@ -1,0 +1,51 @@
+---
+description: PR description template for ngx-supabase-stripe project
+globs: 
+alwaysApply: false
+---
+
+# PR Description Template
+
+When creating PR descriptions for the ngx-supabase-stripe project, use the following format with minimal icons and clear, concise English text.
+
+## Required Sections
+
+### Overview
+- Brief summary of what the PR accomplishes
+- Context about why the changes were needed
+- High-level description of the solution
+
+### What's Added
+- List of new components, services, or features
+- Key functionality and capabilities
+- Technical implementation details
+- Configuration changes
+- File locations and exports
+
+## Writing Guidelines
+
+1. **Language**: Write all descriptions in English
+2. **Icons**: Use minimal icons, prefer text over visual elements
+3. **Clarity**: Be concise but comprehensive
+4. **Technical Details**: Include relevant technical information
+5. **Structure**: Use bullet points and clear headings
+6. **File References**: Include file paths when relevant
+
+## Example Format
+
+```markdown
+## Overview
+Brief description of the changes and their purpose.
+
+## What's Added
+- **Component Name**: Description of functionality
+  - Location: `path/to/component`
+  - Features: List of key features
+  - Exports: Configuration details
+```
+
+## Notes
+- Focus on what was implemented rather than how to use it
+- Include technical specifications where relevant
+- Mention integration points and dependencies
+- Keep descriptions factual and professional
