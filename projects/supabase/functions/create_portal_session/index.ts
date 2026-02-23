@@ -1,6 +1,6 @@
 import { createPortalSession } from 'supabase-stripe-core';
 import { corsHeaders, APIResponse } from '../_shared/api.ts';
-import type { StripePortalSession } from 'supabase-stripe-core/types';
+import type { StripePortalSession } from 'supabase-stripe-core';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
