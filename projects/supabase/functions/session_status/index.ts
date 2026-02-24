@@ -1,6 +1,5 @@
-import { getSessionStatus } from 'supabase-stripe-core';
+import { getSessionStatus, type StripeSessionStatus } from '../_shared/stripe-core/session-status.ts';
 import { corsHeaders, APIResponse } from '../_shared/api.ts';
-import type { StripeSessionStatus } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {

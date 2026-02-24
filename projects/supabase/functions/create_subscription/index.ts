@@ -1,6 +1,5 @@
-import { createSubscription } from 'supabase-stripe-core';
+import { createSubscription, type StripeSubscriptionSession } from '../_shared/stripe-core/create-subscription.ts';
 import { corsHeaders, APIResponse } from '../_shared/api.ts';
-import type { StripeSubscriptionSession } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {

@@ -1,6 +1,5 @@
-import { getCustomerPaymentMethods } from 'supabase-stripe-core';
+import { getCustomerPaymentMethods, type StripeCustomerPaymentMethods } from '../_shared/stripe-core/customer-payment-methods.ts';
 import { corsHeaders, APIResponse } from '../_shared/api.ts';
-import type { StripeCustomerPaymentMethods } from 'supabase-stripe-core/types';
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {

@@ -1,27 +1,30 @@
 import Stripe from 'stripe';
-import { StripeEnvironmentConfig, CheckoutSessionParams, SupabaseStripeResponse } from '../../types';
-import { createStripeInstance } from '../utils';
+import { StripeEnvironmentConfig, SubscriptionParams, SupabaseStripeResponse } from './types.ts';
+import { createStripeInstance } from './utils.ts';
 
-export type StripeCheckoutSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
+export type StripeSubscriptionSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
 
-export async function createCheckoutSession(
-  params: CheckoutSessionParams,
+export async function createSubscription(
+  params: SubscriptionParams, 
   stripeConfig: StripeEnvironmentConfig
-): Promise<StripeCheckoutSession> {
+): Promise<StripeSubscriptionSession> {
+
   try {
-    const { priceId, resultPagePath, customer } = params;
     const stripe = createStripeInstance(stripeConfig);
+    const { priceId, resultPagePath, customer } = params;
+
+    console.log('🔌 [createSubscription]: Creating subscription', priceId, resultPagePath, customer);
 
     const sessionOptions: Stripe.Checkout.SessionCreateParams = {
       ui_mode: 'embedded',
       line_items: [
         {
           price: priceId,
-          quantity: 1
+          quantity: 1 
         }
       ],
-      mode: 'payment',
-      payment_method_types: ['card', 'paypal', 'amazon_pay', 'alipay'],
+      mode: 'subscription',
+      payment_method_types: ['card', 'paypal', 'amazon_pay'],
       return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`,
     };
 
@@ -32,17 +35,18 @@ export async function createCheckoutSession(
       if (customer && customer.email) {
         sessionOptions.customer_email = customer.email;
       }
-      sessionOptions.customer_creation = 'always';
     }
+    
     return {
       data: await stripe.checkout.sessions.create(sessionOptions),
       error: null
     };
-  } catch (error: unknown) {
-    console.error('[❌ checkout_session error]: ', error);
+  } catch (error) {
+    console.error('[❌ createSubscription error]: ', error);
+    
     return {
       data: null,
       error: error
     };
   }
-} 
+}

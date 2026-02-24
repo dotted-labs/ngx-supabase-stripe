@@ -1,5 +1,4 @@
-import { createCheckoutSession } from 'supabase-stripe-core';
-import type { StripeCheckoutSession } from 'supabase-stripe-core/types';
+import { createCheckoutSession, type StripeCheckoutSession } from '../_shared/stripe-core/checkout-session.ts';
 import { APIResponse, corsHeaders } from '../_shared/api.ts';
 
 Deno.serve(async (req: Request) => {

@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
-import { StripeEnvironmentConfig, SessionStatusParams, SupabaseStripeResponse } from '../../types';
-import { createStripeInstance } from '../utils';
+import { StripeEnvironmentConfig, SessionStatusParams, SupabaseStripeResponse } from './types.ts';
+import { createStripeInstance } from './utils.ts';
 
 export type StripeSessionStatus = SupabaseStripeResponse<Stripe.Checkout.Session>;
 
@@ -25,4 +25,4 @@ export async function getSessionStatus(
       error: error
     };
   }
-} 
+}

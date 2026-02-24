@@ -1,6 +1,5 @@
 import { corsHeaders, APIResponse } from '../_shared/api.ts';
-import { createCustomer } from 'supabase-stripe-core';
-import type { StripeCustomer } from 'supabase-stripe-core/types';
+import { createCustomer, type StripeCustomer } from '../_shared/stripe-core/create-customer.ts';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {

@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
-import { StripeEnvironmentConfig, SupabaseStripeResponse } from '../../types';
-import { createStripeInstance } from '../utils';
+import { StripeEnvironmentConfig, SupabaseStripeResponse } from './types.ts';
+import { createStripeInstance } from './utils.ts';
 
 export type StripeCustomer = SupabaseStripeResponse<Stripe.Customer>;
 

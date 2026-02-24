@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
-import { StripeEnvironmentConfig, PortalSessionParams, SupabaseStripeResponse } from '../../types';
-import { createStripeInstance } from '../utils';
+import { StripeEnvironmentConfig, PortalSessionParams, SupabaseStripeResponse } from './types.ts';
+import { createStripeInstance } from './utils.ts';
 
 export type StripePortalSession = SupabaseStripeResponse<Stripe.BillingPortal.Session>;
 
@@ -27,4 +27,4 @@ export async function createPortalSession(
       error: error
     };
   }
-} 
+}
