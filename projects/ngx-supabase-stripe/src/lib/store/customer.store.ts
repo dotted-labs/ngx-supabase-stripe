@@ -1,6 +1,6 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { addEntity, removeEntity, setAllEntities, setEntity, updateEntity, upsertEntity, withEntities } from '@ngrx/signals/entities';
+import { setAllEntities, upsertEntity, withEntities } from '@ngrx/signals/entities';
 import type { Stripe as StripeTypes } from 'stripe';
 import { StripeCustomer, StripePaymentIntent } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
@@ -224,7 +224,6 @@ export const CustomerStore = signalStore(
           paymentMethodsStatus: 'error', 
           paymentMethodsError: error.message 
         });
-      } else if (paymentMethod) {
       }
 
       if (paymentMethod) {
