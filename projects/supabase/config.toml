@@ -310,7 +310,7 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 [functions.checkout_session]
 enabled = true
 verify_jwt = true
-import_map = "./functions/checkout_session/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/checkout_session/index.ts"
@@ -321,7 +321,7 @@ entrypoint = "./functions/checkout_session/index.ts"
 [functions.session_status]
 enabled = true
 verify_jwt = true
-import_map = "./functions/session_status/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/session_status/index.ts"
@@ -332,7 +332,7 @@ entrypoint = "./functions/session_status/index.ts"
 [functions.create_subscription]
 enabled = true
 verify_jwt = true
-import_map = "./functions/create_subscription/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/create_subscription/index.ts"
@@ -343,7 +343,7 @@ entrypoint = "./functions/create_subscription/index.ts"
 [functions.cancel_subscription]
 enabled = true
 verify_jwt = true
-import_map = "./functions/cancel_subscription/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/cancel_subscription/index.ts"
@@ -354,7 +354,7 @@ entrypoint = "./functions/cancel_subscription/index.ts"
 [functions.get_subscription]
 enabled = true
 verify_jwt = true
-import_map = "./functions/get_subscription/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/get_subscription/index.ts"
@@ -365,7 +365,7 @@ entrypoint = "./functions/get_subscription/index.ts"
 [functions.list_subscriptions]
 enabled = true
 verify_jwt = true
-import_map = "./functions/list_subscriptions/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/list_subscriptions/index.ts"
@@ -376,7 +376,7 @@ entrypoint = "./functions/list_subscriptions/index.ts"
 [functions.resume_subscription]
 enabled = true
 verify_jwt = true
-import_map = "./functions/resume_subscription/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/resume_subscription/index.ts"
@@ -387,7 +387,7 @@ entrypoint = "./functions/resume_subscription/index.ts"
 [functions.update_subscription]
 enabled = true
 verify_jwt = true
-import_map = "./functions/update_subscription/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/update_subscription/index.ts"
@@ -398,7 +398,7 @@ entrypoint = "./functions/update_subscription/index.ts"
 [functions.create_portal_session]
 enabled = true
 verify_jwt = true
-import_map = "./functions/create_portal_session/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/create_portal_session/index.ts"
@@ -409,7 +409,7 @@ entrypoint = "./functions/create_portal_session/index.ts"
 [functions.create_customer]
 enabled = true
 verify_jwt = true
-import_map = "./functions/create_customer/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/create_customer/index.ts"
@@ -420,7 +420,7 @@ entrypoint = "./functions/create_customer/index.ts"
 [functions.customer-method]
 enabled = true
 verify_jwt = true
-import_map = "./functions/customer-method/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/customer-method/index.ts"
@@ -431,7 +431,7 @@ entrypoint = "./functions/customer-method/index.ts"
 [functions.customer-methods]
 enabled = true
 verify_jwt = true
-import_map = "./functions/customer-methods/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/customer-methods/index.ts"
@@ -442,7 +442,7 @@ entrypoint = "./functions/customer-methods/index.ts"
 [functions.customer-payment-methods]
 enabled = true
 verify_jwt = true
-import_map = "./functions/customer-payment-methods/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/customer-payment-methods/index.ts"
@@ -453,7 +453,7 @@ entrypoint = "./functions/customer-payment-methods/index.ts"
 [functions.customer-payment-method]
 enabled = true
 verify_jwt = true
-import_map = "./functions/customer-payment-method/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/customer-payment-method/index.ts"
@@ -464,7 +464,7 @@ entrypoint = "./functions/customer-payment-method/index.ts"
 [functions.customer_payment_method]
 enabled = true
 verify_jwt = true
-import_map = "./functions/customer_payment_method/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/customer_payment_method/index.ts"
@@ -475,7 +475,7 @@ entrypoint = "./functions/customer_payment_method/index.ts"
 [functions.customer_payment_methods]
 enabled = true
 verify_jwt = true
-import_map = "./functions/customer_payment_methods/deno.json"
+import_map = "./functions/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/customer_payment_methods/index.ts"
