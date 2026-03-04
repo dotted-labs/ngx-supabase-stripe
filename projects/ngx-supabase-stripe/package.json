@@ -28,7 +28,7 @@
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "@stripe/stripe-js": "^2.0.0",
+  "@stripe/stripe-js": "^8.8.0",
     "@supabase/supabase-js": "^2.39.7"
   },
   "dependencies": {

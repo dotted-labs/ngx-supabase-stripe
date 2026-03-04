@@ -29,6 +29,7 @@ export class StripeClientService {
   /**
    * Initialize the embedded checkout
    * @param clientSecret The client secret for the checkout session
+   * @see https://docs.stripe.com/js/embedded_checkout/init - v8 supports optional appearance, defaultValues, etc.
    */
   public async initEmbeddedCheckout(clientSecret: string) {
     const stripe = await this.getStripe();
@@ -47,12 +48,17 @@ export class StripeClientService {
 
   /**
    * Destroy the embedded checkout
+   * Wrapped in try/catch to handle multiple destroy() calls (stripe-js throws IntegrationError when instance already destroyed)
    */
   public destroyEmbeddedCheckout() {
-    console.log('🧹 [StripeClientService] destroying embedded checkout');
-    this.embeddedCheckout?.destroy();
-    this.embeddedCheckout = null;
-    console.log('🧹 [StripeClientService] destroyed embedded checkout');
+    if (!this.embeddedCheckout) return;
+    try {
+      this.embeddedCheckout.destroy();
+    } catch {
+      // Already destroyed or error - ignore silently
+    } finally {
+      this.embeddedCheckout = null;
+    }
   }
 
   /**
