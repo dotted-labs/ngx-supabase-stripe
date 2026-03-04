@@ -26,8 +26,8 @@
     "url": "https://github.com/dotted-labs/ngx-supabase-stripe/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0",
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
     "@stripe/stripe-js": "^2.0.0",
     "@supabase/supabase-js": "^2.39.7"
   },
