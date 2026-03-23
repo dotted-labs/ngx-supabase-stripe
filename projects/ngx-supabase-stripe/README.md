@@ -300,23 +300,29 @@ Deno.serve(async (req: Request) => {
 });
 ```
 
-The `functions/deno.json` import map resolves the `stripe` bare specifier for all functions and shared modules:
+The `functions/deno.json` import map resolves the `stripe` and `@supabase/supabase-js` specifiers for all functions and shared modules:
 
 ```json
 {
   "imports": {
-    "stripe": "npm:stripe@^18.1.1"
+    "stripe": "npm:stripe@^18.1.1",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.98.0"
   }
 }
 ```
+
+Edge functions validate the caller with `functions/_shared/auth-middleware.ts` (`supabase.auth.getClaims`); set `verify_jwt = false` on each function in `config.toml` so the gateway does not double-check (recommended with [JWT Signing Keys](https://supabase.com/docs/guides/auth/signing-keys)).
 
 Each function entry in `supabase/config.toml` points to this shared import map:
 
 ```toml
 [functions.checkout_session]
+verify_jwt = false
 import_map = "./functions/deno.json"
 entrypoint = "./functions/checkout_session/index.ts"
 ```
+
+Edge functions require a **Supabase Auth** session: the library sends `Authorization: Bearer <access_token>` on every `functions.invoke`. Sign the user in first (`signInWithPassword`, OAuth, magic link, etc.). If there is no session, you get a clear client error instead of `{ "msg": "Invalid JWT" }` from the server.
 
 ## Available Components
 
@@ -344,6 +350,8 @@ export class PaymentComponent {}
 **Inputs:**
 - `priceId` (required): Stripe price ID to charge
 - `returnPagePath` (optional): Path to redirect after payment (default: `'/return'`)
+
+**Stripe config:** set `embeddedCheckoutBaseUrl` (e.g. `https://your-app.com`) when the app does not run on `http(s)` (Electron `file://`, etc.). Stripe requires an absolute `https` return URL; the component builds `embeddedCheckoutBaseUrl + returnPagePath` for the edge function.
 
 ### Embedded Subscription (EmbeddedSubscriptionComponent)
 

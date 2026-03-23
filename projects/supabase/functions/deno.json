@@ -1,5 +1,6 @@
 {
   "imports": {
-    "stripe": "npm:stripe@^18.1.1"
+    "stripe": "npm:stripe@^18.2.0",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.98.0"
   }
 }

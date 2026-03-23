@@ -1,4 +1,5 @@
 import { StripeEnvironmentConfig, CheckoutSessionParams, SupabaseStripeResponse } from './types.ts';
+import { buildEmbeddedCheckoutReturnUrl } from './return-url.ts';
 import { createStripeInstance } from './utils.ts';
 import Stripe from 'stripe';
 
@@ -20,9 +21,9 @@ export async function createCheckoutSession(
           quantity: 1
         }
       ],
-      mode: 'payment',
-      payment_method_types: ['card', 'paypal', 'amazon_pay', 'alipay'],
-      return_url: `${resultPagePath}?session_id={CHECKOUT_SESSION_ID}`,
+      mode: 'subscription',
+      payment_method_types: ['card', 'paypal', 'amazon_pay'],
+      return_url: buildEmbeddedCheckoutReturnUrl(resultPagePath),
     };
 
     // Configure customer options

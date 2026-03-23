@@ -1,11 +1,8 @@
 import { createSubscription, type StripeSubscriptionSession } from '../_shared/stripe-core/create-subscription.ts';
-import { corsHeaders, APIResponse } from '../_shared/api.ts';
+import { APIResponse } from '../_shared/api.ts';
+import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(async (req: Request) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
+Deno.serve(serveWithAuth(async (req: Request) => {
   try {
     const { priceId, resultPagePath, customer } = await req.json();
 
@@ -21,6 +18,6 @@ Deno.serve(async (req: Request) => {
     return APIResponse<StripeSubscriptionSession['data']>(data, 200);
 
   } catch (error) {
-    return error as Response;
+    return APIResponse(error, 500);
   }
-});
+}));

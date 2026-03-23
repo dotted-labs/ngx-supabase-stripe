@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { STRIPE_CONFIG } from '../../config/stripe.config';
 import { CustomerStore } from '../../store/customer.store';
 import { SubscriptionsStore } from '../../store/subscriptions.store';
 import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleton.component';
@@ -13,6 +14,7 @@ import { EmbeddedSkeletonComponent } from '../embedded-skeleton/embedded-skeleto
 export class EmbeddedSubscriptionComponent implements OnInit {
   public readonly subscriptionsStore = inject(SubscriptionsStore);
   public readonly customerStore = inject(CustomerStore);
+  private readonly stripeConfig = inject(STRIPE_CONFIG);
 
   public readonly priceId = input.required<string>();
   public readonly returnPagePath = input<string>('/subscription-return');
@@ -24,8 +26,12 @@ export class EmbeddedSubscriptionComponent implements OnInit {
   }
 
   private createSubscription() {
-    const baseUrl = window.location.origin;
-    const returnPath = `${baseUrl}${this.returnPagePath()}`;
+    const base = (
+      this.stripeConfig.embeddedCheckoutBaseUrl?.trim() ||
+      (typeof window !== 'undefined' ? window.location.origin : '')
+    ).replace(/\/$/, '');
+    const path = this.returnPagePath();
+    const returnPath = path.startsWith('/') ? `${base}${path}` : `${base}/${path}`;
     this.subscriptionsStore.createSubscription(this.priceId(), returnPath, this.customer());
   }
 
