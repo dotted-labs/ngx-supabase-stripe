@@ -45,6 +45,10 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
+If you use [@dotted-labs/ngx-supabase-auth](https://github.com/dotted-labs/ngx-supabase-auth) (or any second `createClient` call), provide the **same** `SupabaseClient` instance with `SUPABASE_BROWSER_CLIENT` so `SupabaseClientService` does not create a duplicate client:
+
+`{ provide: SUPABASE_BROWSER_CLIENT, useValue: yourSharedClient }`
+
 ### Step 3: Supabase Foreign Tables and Public Functions Setup
 
 To properly integrate Stripe with Supabase, you need to set up foreign tables through the Stripe wrapper extension and create several public functions in Supabase's SQL editor.

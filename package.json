@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@dotted-labs/ngx-supabase-auth": "0.3.1",
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",

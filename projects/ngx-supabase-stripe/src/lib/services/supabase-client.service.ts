@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '../../database.types';
-import { SUPABASE_CONFIG } from '../config/supabase.config';
+import { SUPABASE_BROWSER_CLIENT, SUPABASE_CONFIG } from '../config/supabase.config';
 import { StripeCheckoutSession, StripePaymentIntent, StripeProduct, StripeTables, StripeUpdateType } from '../models/database.model';
 
 @Injectable({
@@ -9,13 +9,13 @@ import { StripeCheckoutSession, StripePaymentIntent, StripeProduct, StripeTables
 })
 export class SupabaseClientService {
   private readonly config = inject(SUPABASE_CONFIG);
+  private readonly browserClient = inject(SUPABASE_BROWSER_CLIENT, { optional: true });
   private readonly client: SupabaseClient<Database>;
 
   constructor() {
-    this.client = createClient<Database>(
-      this.config.supabaseUrl,
-      this.config.supabaseKey,
-    );
+    this.client =
+      this.browserClient ??
+      createClient<Database>(this.config.supabaseUrl, this.config.supabaseKey);
 
     console.log('🚀 [SupabaseClientService]: this.client', this.client);
   } 
