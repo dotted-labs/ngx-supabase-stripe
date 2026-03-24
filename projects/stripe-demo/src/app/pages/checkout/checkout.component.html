@@ -78,11 +78,11 @@
     </div>
   } @else {
     <div class="w-full">
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body">
+      <div class="card p-0">
+        <div class="card-body p-0">
           <div class="flex justify-between items-center mb-4">
-            <h2 class="card-title">Stripe Checkout</h2>
-            <button class="btn btn-sm" (click)="resetSelection()">Cambiar selección</button>
+            <h2 class="card-title">{{ selectedProduct()?.name }}</h2>
+            <button class="btn btn-sm" (click)="resetSelection()">Change selection</button>
           </div>
           <lib-embedded-checkout [priceId]="selectedPrice()!" [returnPagePath]="'/checkout/result'"></lib-embedded-checkout>
         </div>
