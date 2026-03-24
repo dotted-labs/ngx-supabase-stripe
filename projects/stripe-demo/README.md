@@ -61,9 +61,14 @@ Before running this demo, you need to:
 
 1. Create a Stripe account and obtain your API keys
 2. Set up a Supabase project
-3. Install the Stripe extension in your Supabase project
-4. Create the necessary Edge Functions in your Supabase project (as described in the main README)
-5. Create test products and prices in your Stripe dashboard
+3. **Enable auth providers** in Supabase (Authentication → Providers): **Email** for `/login` and `/signup`, and **Google** for the social buttons (enable the provider in Supabase, set Web client ID/secret from [Google Cloud Console](https://console.cloud.google.com/), and in Google add the redirect URI `https://<your-project-ref>.supabase.co/auth/v1/callback` as in the [Supabase Google guide](https://supabase.com/docs/guides/auth/social-login/auth-google); set **Site URL** / **Redirect URLs** in Supabase Auth settings to include `http://localhost:4200` for local dev)
+4. Install the Stripe extension in your Supabase project
+5. Deploy the Edge Functions from this repo; they expect a valid **Supabase Auth JWT** (`checkout` and `subscriptions` routes use `authGuard` — sign in first or calls will fail with 401)
+6. Create test products and prices in your Stripe dashboard
+
+### Auth and shared Supabase client
+
+The demo uses [@dotted-labs/ngx-supabase-auth](https://github.com/dotted-labs/ngx-supabase-auth) together with `ngx-supabase-stripe`. A **single** `SupabaseClient` is created in [`src/app/supabase-browser-client.ts`](src/app/supabase-browser-client.ts), passed to `provideSupabaseAuth`, and provided as `SUPABASE_BROWSER_CLIENT` so `SupabaseClientService` uses the same instance (session matches `functions.invoke`).
 
 ## Usage Examples
 

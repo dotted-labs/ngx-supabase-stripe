@@ -1,11 +1,8 @@
-import { corsHeaders, APIResponse } from '../_shared/api.ts';
+import { APIResponse } from '../_shared/api.ts';
+import { serveWithAuth } from '../_shared/auth-middleware.ts';
 import { createCustomer, type StripeCustomer } from '../_shared/stripe-core/create-customer.ts';
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
+Deno.serve(serveWithAuth(async (req) => {
   try {
     const { customerEmail } = await req.json();
 
@@ -18,6 +15,6 @@ Deno.serve(async (req) => {
     }
     return APIResponse<StripeCustomer['data']>(data, 200);
   } catch (error) {
-    return error as Response
+    return APIResponse(error, 500);
   }
-})
+}));

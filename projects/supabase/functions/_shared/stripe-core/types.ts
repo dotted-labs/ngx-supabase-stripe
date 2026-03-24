@@ -7,7 +7,7 @@ export interface SupabaseStripeResponse<T = any> {
 
 export interface StripeEnvironmentConfig {
   stripeSecretKey: string;
-  apiVersion?: '2025-04-30.basil';
+  apiVersion?: '2025-08-27.basil';
 }
 
 export interface CheckoutSessionParams {

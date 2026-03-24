@@ -1,6 +1,6 @@
 {
   "name": "@dotted-labs/ngx-supabase-stripe",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "scripts": {
     "ng": "ng",
     "build": "ng build",
@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@dotted-labs/ngx-supabase-auth": "0.3.1",
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",
     "@angular/core": "^21.2.0",

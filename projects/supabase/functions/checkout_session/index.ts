@@ -1,11 +1,8 @@
 import { createCheckoutSession, type StripeCheckoutSession } from '../_shared/stripe-core/checkout-session.ts';
-import { APIResponse, corsHeaders } from '../_shared/api.ts';
+import { APIResponse } from '../_shared/api.ts';
+import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(async (req: Request) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
+Deno.serve(serveWithAuth(async (req: Request) => {
   try {
     const { priceId, resultPagePath, customer } = await req.json();
 
@@ -23,4 +20,4 @@ Deno.serve(async (req: Request) => {
   } catch (error) {
     return APIResponse(error, 500);
   }
-});
+}));

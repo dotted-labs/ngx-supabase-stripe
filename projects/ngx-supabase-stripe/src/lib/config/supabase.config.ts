@@ -1,4 +1,14 @@
 import { InjectionToken, Provider } from '@angular/core';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../../database.types';
+
+/**
+ * Optional shared browser `SupabaseClient` (e.g. the same instance passed to ngx-supabase-auth).
+ * When provided, {@link SupabaseClientService} uses it instead of creating a new client.
+ */
+export const SUPABASE_BROWSER_CLIENT = new InjectionToken<SupabaseClient<Database>>(
+  'SUPABASE_BROWSER_CLIENT',
+);
 
 /**
  * Supabase configuration interface

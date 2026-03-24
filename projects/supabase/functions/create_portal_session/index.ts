@@ -1,11 +1,8 @@
 import { createPortalSession, type StripePortalSession } from '../_shared/stripe-core/create-portal-session.ts';
-import { corsHeaders, APIResponse } from '../_shared/api.ts';
+import { APIResponse } from '../_shared/api.ts';
+import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
+Deno.serve(serveWithAuth(async (req) => {
   try {
     const { customerId, returnUrl } = await req.json();
 
@@ -20,6 +17,6 @@ Deno.serve(async (req) => {
 
     return APIResponse<StripePortalSession['data']>(data, 200);
   } catch (error) {
-    return error as Response;
+    return APIResponse(error, 500);
   }
-});
+}));
