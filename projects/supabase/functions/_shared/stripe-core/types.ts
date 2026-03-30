@@ -13,6 +13,7 @@ export interface StripeEnvironmentConfig {
 export interface CheckoutSessionParams {
   priceId: string;
   resultPagePath: string;
+  supabaseUserId: string;
   customer?: Stripe.Customer | null;
 }
 
@@ -24,6 +25,7 @@ export interface PortalSessionParams {
 export interface SubscriptionParams {
   priceId: string;
   resultPagePath: string;
+  supabaseUserId: string;
   customer?: Stripe.Customer | null;
 }
 

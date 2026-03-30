@@ -2,12 +2,12 @@ import { createSubscription, type StripeSubscriptionSession } from '../_shared/s
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(serveWithAuth(async (req: Request) => {
+Deno.serve(serveWithAuth(async (req: Request, ctx) => {
   try {
     const { priceId, resultPagePath, customer } = await req.json();
 
     const { data, error }: StripeSubscriptionSession = await createSubscription(
-      { priceId, resultPagePath, customer },
+      { priceId, resultPagePath, customer, supabaseUserId: ctx.userId },
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! } 
     );
 

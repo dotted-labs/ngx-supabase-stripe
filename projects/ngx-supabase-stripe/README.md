@@ -279,18 +279,15 @@ All edge functions follow the same pattern: they delegate to the corresponding m
 ```typescript
 // functions/checkout_session/index.ts
 import { createCheckoutSession, type StripeCheckoutSession } from '../_shared/stripe-core/checkout-session.ts';
-import { APIResponse, corsHeaders } from '../_shared/api.ts';
+import { APIResponse } from '../_shared/api.ts';
+import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(async (req: Request) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
-
+Deno.serve(serveWithAuth(async (req: Request, ctx) => {
   try {
     const { priceId, resultPagePath, customer } = await req.json();
 
     const { data, error }: StripeCheckoutSession = await createCheckoutSession(
-      { priceId, resultPagePath, customer },
+      { priceId, resultPagePath, customer, supabaseUserId: ctx.userId },
       { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
     );
 
@@ -301,7 +298,7 @@ Deno.serve(async (req: Request) => {
   } catch (error) {
     return APIResponse(error, 500);
   }
-});
+}));
 ```
 
 The `functions/deno.json` import map resolves the `stripe` and `@supabase/supabase-js` specifiers for all functions and shared modules:

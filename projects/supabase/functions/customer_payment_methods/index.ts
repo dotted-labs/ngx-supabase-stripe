@@ -2,7 +2,7 @@ import { getCustomerPaymentMethods, type StripeCustomerPaymentMethods } from '..
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(serveWithAuth(async (req: Request) => {
+Deno.serve(serveWithAuth(async (req: Request, _ctx) => {
   try {
     const { customerId, type, limit } = await req.json();
 

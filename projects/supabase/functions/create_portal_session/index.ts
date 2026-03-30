@@ -2,7 +2,7 @@ import { createPortalSession, type StripePortalSession } from '../_shared/stripe
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
 
-Deno.serve(serveWithAuth(async (req) => {
+Deno.serve(serveWithAuth(async (req, _ctx) => {
   try {
     const { customerId, returnUrl } = await req.json();
 

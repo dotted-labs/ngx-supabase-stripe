@@ -2,7 +2,7 @@ import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
 import { createCustomer, type StripeCustomer } from '../_shared/stripe-core/create-customer.ts';
 
-Deno.serve(serveWithAuth(async (req) => {
+Deno.serve(serveWithAuth(async (req, _ctx) => {
   try {
     const { customerEmail } = await req.json();
 

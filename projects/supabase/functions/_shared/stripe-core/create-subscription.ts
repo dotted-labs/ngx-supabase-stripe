@@ -12,7 +12,7 @@ export async function createSubscription(
 
   try {
     const stripe = createStripeInstance(stripeConfig);
-    const { priceId, resultPagePath, customer } = params;
+    const { priceId, resultPagePath, customer, supabaseUserId } = params;
 
     console.log('🔌 [createSubscription]: Creating subscription', priceId, resultPagePath, customer);
 
@@ -27,6 +27,8 @@ export async function createSubscription(
       mode: 'subscription',
       payment_method_types: ['card', 'paypal', 'amazon_pay'],
       return_url: buildEmbeddedCheckoutReturnUrl(resultPagePath),
+      client_reference_id: supabaseUserId,
+      metadata: { supabase_user_id: supabaseUserId },
     };
 
     // Configure customer options
