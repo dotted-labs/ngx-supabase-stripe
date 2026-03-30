@@ -11,4 +11,16 @@ export const APIResponse = <T>(response: T, status: number = 200) => {
     },
     status
   });
+};
+
+/** JSON body without CORS — server-to-server (e.g. Stripe webhooks). */
+export function jsonResponse(body: unknown, status: number): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+export function emptyResponse(status: number): Response {
+  return new Response(null, { status });
 }

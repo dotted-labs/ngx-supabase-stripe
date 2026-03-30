@@ -1,6 +1,7 @@
 import { createCheckoutSession, type StripeCheckoutSession } from '../_shared/stripe-core/checkout-session.ts';
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
+import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
 
 Deno.serve(serveWithAuth(async (req: Request, ctx) => {
   try {
@@ -8,7 +9,7 @@ Deno.serve(serveWithAuth(async (req: Request, ctx) => {
 
     const { data, error }: StripeCheckoutSession = await createCheckoutSession(
       { priceId, resultPagePath, customer, supabaseUserId: ctx.userId },
-      { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
+      getStripeSecretKeyOrThrow()
     );
 
     if (error) {

@@ -244,6 +244,7 @@ supabase/functions/
 | `create_customer` | Creates a new Stripe customer | `customerEmail` |
 | `customer_payment_method` | Retrieves a specific payment method for a customer | `customerId`, `paymentMethodId` |
 | `customer_payment_methods` | Lists all payment methods for a customer | `customerId`, `type?`, `limit?` |
+| `stripe_webhook` | Stripe-signed HTTP webhook: `checkout.session.completed` → RPC `stripe_checkout_completed` |
 
 #### Deploying the Edge Functions
 
@@ -267,10 +268,12 @@ supabase/functions/
    supabase functions deploy create_customer
    supabase functions deploy customer_payment_method
    supabase functions deploy customer_payment_methods
+   supabase functions deploy stripe_webhook
    ```
 
 4. **Set the required environment variable** in your Supabase dashboard under **Settings > Edge Functions**:
    - `STRIPE_SECRET_KEY` — your Stripe secret key
+   - For `stripe_webhook` only: `STRIPE_WEBHOOK_SECRET`, `SUPABASE_SERVICE_ROLE_KEY` (and `SUPABASE_URL` is usually injected automatically)
 
 #### Edge Function Examples
 

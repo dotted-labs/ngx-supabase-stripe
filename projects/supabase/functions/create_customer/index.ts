@@ -1,14 +1,13 @@
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
 import { createCustomer, type StripeCustomer } from '../_shared/stripe-core/create-customer.ts';
+import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
 
 Deno.serve(serveWithAuth(async (req, _ctx) => {
   try {
     const { customerEmail } = await req.json();
 
-    const { data, error } = await createCustomer(customerEmail, {
-      stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')!
-    });
+    const { data, error } = await createCustomer(customerEmail, getStripeSecretKeyOrThrow());
 
     if (error) {
       return APIResponse<StripeCustomer['error']>(error, 500);
