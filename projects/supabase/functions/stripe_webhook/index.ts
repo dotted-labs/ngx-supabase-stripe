@@ -1,11 +1,9 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import Stripe from 'stripe';
-import { emptyResponse, jsonResponse } from '../_shared/api.ts';
+import { jsonResponse } from '../_shared/api.ts';
 import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
+import { handleStripeWebhookEvent } from '../_shared/webhooks/dispatch/stripe-webhook-dispatcher.ts';
 import { verifyStripeWebhook } from '../_shared/webhooks/verify.ts';
-import { buildCheckoutCompletedPayload } from '../_shared/webhooks/checkout-session-completed/checkout-session-completed.ts';
-import { invokeStripeCheckoutCompletedRpc } from '../_shared/webhooks/checkout-session-completed/checkout-session-completed-rpc.ts';
-import { handleCheckoutGrantRpcResult } from '../_shared/webhooks/checkout-session-completed/checkout-grant-rpc-result-handler.ts';
 import { loadStripeWebhookEnv } from '../_shared/webhooks/webhook-env.ts';
 
 Deno.serve(async (req: Request) => {
@@ -33,44 +31,10 @@ Deno.serve(async (req: Request) => {
   console.log('🔌 [stripe_webhook]: Event:', event);
   console.log('🔌 [stripe_webhook]: session type from event:', event.type);
 
-  if (event.type !== 'checkout.session.completed') {
-    console.log('🔌 [stripe_webhook]: event type is not checkout.session.completed, skipping');
-    return emptyResponse(200);
-  }
-
-  const session = event.data.object as Stripe.Checkout.Session;
-
-
   try {
-    const payload = await buildCheckoutCompletedPayload(getStripeSecretKeyOrThrow(), session);
-
-    if (!payload.supabaseUserId) {
-      console.warn('[stripe_webhook] Missing supabase_user_id / client_reference_id', {
-        stripe_event_id: event.id,
-        session_id: payload.sessionId || session.id,
-      });
-      return emptyResponse(200);
-    }
-
-    const outcome = await invokeStripeCheckoutCompletedRpc({
-      supabaseUrl,
-      serviceRoleKey,
-      supabaseUserId: payload.supabaseUserId,
-      stripeEventId: event.id,
-      lineItems: payload.lineItems,
-      sessionId: payload.sessionId,
-      mode: payload.mode,
-      subscriptionId: payload.subscriptionId,
-      customerId: payload.customerId,
-    });
-
-    return handleCheckoutGrantRpcResult(outcome, {
-      stripeEventId: event.id,
-      sessionId: payload.sessionId,
-      supabaseUserId: payload.supabaseUserId,
-    });
+    return await handleStripeWebhookEvent({ event, supabaseUrl, serviceRoleKey });
   } catch (e) {
-    console.error('[stripe_webhook] Handler error:', e);
+    console.error('[stripe_webhook] Dispatcher error:', e);
     return jsonResponse({ error: 'Internal error' }, 500);
   }
 });
