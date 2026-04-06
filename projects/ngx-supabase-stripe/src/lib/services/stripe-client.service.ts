@@ -122,10 +122,8 @@ export class StripeClientService {
   }
 
   /**
-   * Create a checkout session
-   * @param priceId The price ID for the subscription
-   * @param successUrl The URL to redirect to on success
-   * @param cancelUrl The URL to redirect to on cancel
+   * Create a checkout session. The edge function sets `metadata.supabase_user_id` and
+   * `client_reference_id` from the authenticated user (JWT); do not send user id in the body.
    */
   public async createCheckoutSession(
     priceId: string,
@@ -155,8 +153,7 @@ export class StripeClientService {
   }
 
   /**
-   * Create a subscription
-   * @param priceId The price ID for the subscription
+   * Create a subscription checkout session. Supabase user id is attached on the server from the JWT.
    */
   public async createSubscription(priceId: string, returnPath: string, customer: StripeCustomerPublic | null): Promise<{ clientSecret: string | null; error: Error | null }> {
     try {

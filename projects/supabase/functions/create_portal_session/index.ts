@@ -1,14 +1,15 @@
 import { createPortalSession, type StripePortalSession } from '../_shared/stripe-core/create-portal-session.ts';
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
+import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
 
-Deno.serve(serveWithAuth(async (req) => {
+Deno.serve(serveWithAuth(async (req, _ctx) => {
   try {
     const { customerId, returnUrl } = await req.json();
 
     const {data, error}: StripePortalSession = await createPortalSession(
       { customerId, returnUrl },
-      { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
+      getStripeSecretKeyOrThrow()
     );
 
     if (error) {

@@ -10,7 +10,7 @@ export async function createCheckoutSession(
   stripeConfig: StripeEnvironmentConfig
 ): Promise<StripeCheckoutSession> {
   try {
-    const { priceId, resultPagePath, customer } = params;
+    const { priceId, resultPagePath, customer, supabaseUserId } = params;
     const stripe = createStripeInstance(stripeConfig);
 
     const price = await stripe.prices.retrieve(priceId);
@@ -29,6 +29,8 @@ export async function createCheckoutSession(
       mode,
       payment_method_types: ['card', 'paypal', 'amazon_pay'],
       return_url: buildEmbeddedCheckoutReturnUrl(resultPagePath),
+      client_reference_id: supabaseUserId,
+      metadata: { supabase_user_id: supabaseUserId },
     };
 
     // Configure customer options

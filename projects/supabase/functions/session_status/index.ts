@@ -1,14 +1,15 @@
 import { getSessionStatus, type StripeSessionStatus } from '../_shared/stripe-core/session-status.ts';
 import { APIResponse } from '../_shared/api.ts';
 import { serveWithAuth } from '../_shared/auth-middleware.ts';
+import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
 
-Deno.serve(serveWithAuth(async (req) => {
+Deno.serve(serveWithAuth(async (req, _ctx) => {
   try {
     const { sessionId } = await req.json();
     
     const { data, error }: StripeSessionStatus = await getSessionStatus(
       { sessionId },
-      { stripeSecretKey: Deno.env.get('STRIPE_SECRET_KEY')! }
+      getStripeSecretKeyOrThrow()
     );
 
     if (error) {

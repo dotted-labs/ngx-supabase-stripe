@@ -71,11 +71,21 @@ export async function verifyJwt(req: Request): Promise<VerifiedAuth> {
   return { ok: true, claims: data.claims as Record<string, unknown> };
 }
 
+export type AuthContext = { userId: string };
+
+function userIdFromClaims(claims: Record<string, unknown>): string | null {
+  const sub = claims['sub'];
+  if (typeof sub !== 'string' || !sub.trim()) {
+    return null;
+  }
+  return sub;
+}
+
 /**
- * OPTIONS skips auth. All other methods require a valid Bearer JWT.
+ * OPTIONS skips auth. All other methods require a valid Bearer JWT with a subject (auth user id).
  */
 export function serveWithAuth(
-  handler: (req: Request) => Promise<Response>,
+  handler: (req: Request, ctx: AuthContext) => Promise<Response>,
 ): (req: Request) => Promise<Response> {
   return async (req: Request) => {
     if (req.method === 'OPTIONS') {
@@ -87,6 +97,11 @@ export function serveWithAuth(
       return auth.response;
     }
 
-    return handler(req);
+    const userId = userIdFromClaims(auth.claims);
+    if (!userId) {
+      return APIResponse({ msg: 'Invalid JWT: missing subject' }, 401);
+    }
+
+    return handler(req, { userId });
   };
 }
