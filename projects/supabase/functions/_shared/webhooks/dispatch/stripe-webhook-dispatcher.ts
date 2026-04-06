@@ -1,6 +1,6 @@
 import { emptyResponse } from '../../api.ts';
 import type { StripeEventHandler, StripeWebhookHandlerContext } from './stripe-event-handler.ts';
-import { checkoutSessionCompletedHandler } from './checkout-session-completed-handler.ts';
+import { checkoutSessionCompletedHandler } from './checkout-session-completed/checkout-session-completed-handler.ts';
 
 const ignoredStripeEventHandler: StripeEventHandler = {
   execute(_ctx) {

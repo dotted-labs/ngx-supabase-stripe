@@ -1,10 +1,10 @@
 import Stripe from 'stripe';
-import { emptyResponse, jsonResponse } from '../../api.ts';
-import { getStripeSecretKeyOrThrow } from '../../stripe-core/utils.ts';
-import { buildCheckoutCompletedPayload } from '../checkout-session-completed/checkout-session-completed.ts';
-import { invokeStripeCheckoutCompletedRpc } from '../checkout-session-completed/checkout-session-completed-rpc.ts';
-import { handleCheckoutGrantRpcResult } from '../checkout-session-completed/checkout-grant-rpc-result-handler.ts';
-import type { StripeEventHandler } from './stripe-event-handler.ts';
+import { emptyResponse, jsonResponse } from '../../../api.ts';
+import { getStripeSecretKeyOrThrow } from '../../../stripe-core/utils.ts';
+import { buildCheckoutCompletedPayload } from '../../checkout-session-completed/checkout-session-completed.ts';
+import { invokeStripeCheckoutCompletedRpc } from '../../checkout-session-completed/checkout-session-completed-rpc.ts';
+import { handleCheckoutGrantRpcResult } from '../../checkout-session-completed/checkout-grant-rpc-result-handler.ts';
+import type { StripeEventHandler } from '../stripe-event-handler.ts';
 
 export const checkoutSessionCompletedHandler: StripeEventHandler = {
   async execute(ctx) {
