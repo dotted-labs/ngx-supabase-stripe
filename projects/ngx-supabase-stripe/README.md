@@ -267,7 +267,6 @@ supabase/functions/
    supabase functions deploy create_customer
    supabase functions deploy customer_payment_method
    supabase functions deploy customer_payment_methods
-   supabase functions deploy stripe_webhook
    ```
 
 4. **Set the required environment variable** in your Supabase dashboard under **Settings > Edge Functions**:
