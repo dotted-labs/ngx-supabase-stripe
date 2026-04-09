@@ -28,7 +28,11 @@ export async function createSubscription(
       payment_method_types: ['card', 'paypal', 'amazon_pay'],
       return_url: buildEmbeddedCheckoutReturnUrl(resultPagePath),
       client_reference_id: supabaseUserId,
-      metadata: { supabase_user_id: supabaseUserId },
+      subscription_data: {
+        metadata: {
+          supabase_user_id: supabaseUserId
+        }
+      }
     };
 
     // Configure customer options

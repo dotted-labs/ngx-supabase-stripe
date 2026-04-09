@@ -310,7 +310,7 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 # JWT is verified in-function via _shared/auth-middleware.ts (getClaims); see Supabase JWT Signing Keys docs.
 [functions.checkout_session]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/deno.json"
 entrypoint = "./functions/checkout_session/index.ts"
 
@@ -322,13 +322,13 @@ entrypoint = "./functions/session_status/index.ts"
 
 [functions.create_subscription]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/deno.json"
 entrypoint = "./functions/create_subscription/index.ts"
 
 [functions.create_portal_session]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/deno.json"
 entrypoint = "./functions/create_portal_session/index.ts"
 
@@ -340,12 +340,12 @@ entrypoint = "./functions/create_customer/index.ts"
 
 [functions.customer_payment_method]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/deno.json"
 entrypoint = "./functions/customer_payment_method/index.ts"
 
 [functions.customer_payment_methods]
 enabled = true
-verify_jwt = true
+verify_jwt = false
 import_map = "./functions/deno.json"
 entrypoint = "./functions/customer_payment_methods/index.ts"
