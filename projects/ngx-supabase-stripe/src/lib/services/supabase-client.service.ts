@@ -75,6 +75,16 @@ export class SupabaseClientService {
   }
 
   /**
+   * Stripe subscriptions for the JWT-authenticated Supabase user (empty if anonymous)
+   */
+  public getStripeSubscriptionsForAuthenticatedUser() {
+    return this.client
+      .schema(this.config.supabaseSchema)
+      .rpc('get_stripe_subscriptions_for_authenticated_user')
+      .select('*');
+  }
+
+  /**
    * Select a Stripe subscription
    * @param subscriptionId The subscription ID
    */
@@ -123,6 +133,26 @@ export class SupabaseClientService {
     return this.client
       .schema(this.config.supabaseSchema)
       .rpc('get_stripe_product', { product_id: productId })
+      .select('*');
+  }
+
+  /**
+   * Stripe products tied to the authenticated user's subscriptions
+   */
+  public async selectStripeProductsForAuthenticatedUser() {
+    return this.client
+      .schema(this.config.supabaseSchema)
+      .rpc('get_stripe_products_for_authenticated_user')
+      .select('*');
+  }
+
+  /**
+   * Single Stripe product only if it belongs to the authenticated user's subscriptions
+   */
+  public async selectStripeProductForAuthenticatedUser(productId: string) {
+    return this.client
+      .schema(this.config.supabaseSchema)
+      .rpc('get_stripe_product_for_authenticated_user', { product_id: productId })
       .select('*');
   }
 
