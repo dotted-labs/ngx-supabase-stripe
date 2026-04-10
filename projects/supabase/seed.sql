@@ -261,6 +261,137 @@ BEGIN
 END;
 $$;
 
+-- Subscriptions for the current Supabase session (auth.uid); empty if anonymous
+CREATE OR REPLACE FUNCTION public.get_stripe_subscriptions_for_authenticated_user()
+RETURNS TABLE (
+  id text,
+  customer text,
+  currency text,
+  current_period_start timestamp,
+  current_period_end timestamp,
+  attrs jsonb
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+  SELECT
+    s.id,
+    s.customer,
+    s.currency,
+    s.current_period_start,
+    s.current_period_end,
+    s.attrs
+  FROM stripe.subscriptions s
+  WHERE auth.uid() IS NOT NULL
+    AND (s.attrs->'metadata'->>'supabase_user_id') = (auth.uid())::text;
+$$;
+
+-- Stripe products referenced by the current user's subscriptions (via attrs)
+CREATE OR REPLACE FUNCTION public.get_stripe_products_for_authenticated_user()
+RETURNS TABLE (
+  id text,
+  name text,
+  active boolean,
+  default_price text,
+  description text,
+  attrs jsonb
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+  WITH user_sub_attrs AS (
+    SELECT s.attrs AS a
+    FROM stripe.subscriptions s
+    WHERE auth.uid() IS NOT NULL
+      AND (s.attrs->'metadata'->>'supabase_user_id') = (auth.uid())::text
+  ),
+  product_ids AS (
+    SELECT DISTINCT (u.a->'plan'->>'product') AS pid
+    FROM user_sub_attrs u
+    WHERE (u.a->'plan'->>'product') IS NOT NULL
+    UNION
+    SELECT DISTINCT (elem->'plan'->>'product') AS pid
+    FROM user_sub_attrs u,
+      LATERAL jsonb_array_elements(COALESCE(u.a->'items'->'data', '[]'::jsonb)) AS elem
+    WHERE (elem->'plan'->>'product') IS NOT NULL
+    UNION
+    SELECT DISTINCT (elem->'price'->>'product') AS pid
+    FROM user_sub_attrs u,
+      LATERAL jsonb_array_elements(COALESCE(u.a->'items'->'data', '[]'::jsonb)) AS elem
+    WHERE (elem->'price'->>'product') IS NOT NULL
+  )
+  SELECT
+    p.id,
+    p.name,
+    p.active,
+    p.default_price,
+    p.description,
+    p.attrs
+  FROM stripe.products p
+  INNER JOIN product_ids pi ON p.id = pi.pid
+  WHERE auth.uid() IS NOT NULL;
+$$;
+
+-- Single product only if tied to the current user's subscriptions
+CREATE OR REPLACE FUNCTION public.get_stripe_product_for_authenticated_user(product_id text)
+RETURNS TABLE (
+  id text,
+  name text,
+  active boolean,
+  default_price text,
+  description text,
+  attrs jsonb
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+  WITH user_sub_attrs AS (
+    SELECT s.attrs AS a
+    FROM stripe.subscriptions s
+    WHERE auth.uid() IS NOT NULL
+      AND (s.attrs->'metadata'->>'supabase_user_id') = (auth.uid())::text
+  ),
+  product_ids AS (
+    SELECT DISTINCT (u.a->'plan'->>'product') AS pid
+    FROM user_sub_attrs u
+    WHERE (u.a->'plan'->>'product') IS NOT NULL
+    UNION
+    SELECT DISTINCT (elem->'plan'->>'product') AS pid
+    FROM user_sub_attrs u,
+      LATERAL jsonb_array_elements(COALESCE(u.a->'items'->'data', '[]'::jsonb)) AS elem
+    WHERE (elem->'plan'->>'product') IS NOT NULL
+    UNION
+    SELECT DISTINCT (elem->'price'->>'product') AS pid
+    FROM user_sub_attrs u,
+      LATERAL jsonb_array_elements(COALESCE(u.a->'items'->'data', '[]'::jsonb)) AS elem
+    WHERE (elem->'price'->>'product') IS NOT NULL
+  )
+  SELECT
+    p.id,
+    p.name,
+    p.active,
+    p.default_price,
+    p.description,
+    p.attrs
+  FROM stripe.products p
+  WHERE auth.uid() IS NOT NULL
+    AND p.id = product_id
+    AND EXISTS (SELECT 1 FROM product_ids pi WHERE pi.pid = p.id);
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_stripe_subscriptions_for_authenticated_user() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_stripe_subscriptions_for_authenticated_user() TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_stripe_products_for_authenticated_user() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_stripe_products_for_authenticated_user() TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_stripe_product_for_authenticated_user(text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_stripe_product_for_authenticated_user(text) TO service_role;
+
 -- =====================================================
 -- SETUP COMPLETE
 -- =====================================================

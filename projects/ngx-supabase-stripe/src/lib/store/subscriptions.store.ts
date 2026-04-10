@@ -1,9 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { StripeSubscription } from '../models/database.model';
+import { StripePrice, StripeProduct, StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
-import { ProductsStore, StripeProductPublic } from './products.store';
+import { parseProduct, ProductsStore, StripeProductPublic } from './products.store';
 import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
 export type StripeSubscriptionCancellationDetails = {
@@ -105,27 +105,47 @@ export const SubscriptionsStore = signalStore(
     },
 
     /**
-     * Load all subscriptions for the current customer
+     * Load subscriptions for the authenticated Supabase session (Stripe metadata.supabase_user_id)
      */
     async loadSubscriptions() {
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { data: subscriptions, error } = await supabaseService.getStripeSubscriptions();
+        const [subsResult, userProductsResult] = await Promise.all([
+          supabaseService.getStripeSubscriptionsForAuthenticatedUser(),
+          supabaseService.selectStripeProductsForAuthenticatedUser(),
+        ]);
+        const { data: subscriptions, error } = subsResult;
+        const { data: userStripeProducts, error: userProductsError } = userProductsResult;
+
+        if (userProductsError) {
+          console.warn('🔍 [SubscriptionsStore] user-scoped products RPC', userProductsError);
+        }
+
+        const prices = (productsStore.prices() ?? []) as StripePrice[];
+        const userProductsById = new Map<string, StripeProductPublic>(
+          (userStripeProducts ?? []).map((p) => [
+            p.id as string,
+            parseProduct(p as StripeProduct, prices),
+          ]),
+        );
+
         console.log('🔍 [SubscriptionsStore] loaded subscriptions', subscriptions);
 
         const parsedSubscriptions = subscriptions?.map((subscription) => {
           const parsedSubscription = parseSubscription(subscription as StripeSubscription);
-          
-          // Get the product associated with this subscription
           const productId = parsedSubscription.plan.productId;
-          if (productId && productsStore.products()) {
-            const product = productsStore.products()?.find(p => p.id === productId);
-            if (product) {
-              parsedSubscription.product = product;
+          if (productId) {
+            const fromSession = userProductsById.get(productId);
+            if (fromSession) {
+              parsedSubscription.product = fromSession;
+            } else {
+              const product = productsStore.products()?.find((p) => p.id === productId);
+              if (product) {
+                parsedSubscription.product = product;
+              }
             }
           }
-          
           return parsedSubscription;
         });
 

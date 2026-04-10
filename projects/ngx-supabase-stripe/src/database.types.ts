@@ -129,6 +129,39 @@ export type Database = {
           attrs: Json
         }[]
       }
+      get_stripe_product_for_authenticated_user: {
+        Args: { product_id: string }
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_products_for_authenticated_user: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_subscriptions_for_authenticated_user: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
     }
     CompositeTypes: {
       [_ in never]: never
@@ -449,6 +482,39 @@ export type Database = {
         }[]
       }
       get_stripe_subscriptions: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          customer: string
+          currency: string
+          current_period_start: string
+          current_period_end: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_product_for_authenticated_user: {
+        Args: { product_id: string }
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_products_for_authenticated_user: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_subscriptions_for_authenticated_user: {
         Args: Record<PropertyKey, never>
         Returns: {
           id: string
