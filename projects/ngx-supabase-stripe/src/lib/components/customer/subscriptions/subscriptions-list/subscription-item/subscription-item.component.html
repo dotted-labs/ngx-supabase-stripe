@@ -1,4 +1,4 @@
-<div class="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow-lg hover:shadow-xl transition-all duration-300 border border-base-300">
+<div class="card bg-gradient-to-br from-base-100/10 to-base-200/10 shadow-lg hover:shadow-xl transition-all duration-300">
   <div class="card-body p-4">
     <!-- Header con título y precio -->
     <div class="flex justify-between items-start">
@@ -18,11 +18,11 @@
               {{ subscription().product?.name || 'Subscription Plan' }}
             </h3>
             <div class="flex items-center gap-2 mt-1">
-              <span class="badge {{ utils.getStatusBadgeClass(subscription().status) }} badge-lg">
+              <span class="badge {{ utils.getStatusBadgeClass(subscription().status) }} badge-xs">
                 {{ subscription().status }}
               </span>
               @if (subscription().cancel.cancel_at_period_end) {
-                <span class="badge badge-warning badge-lg">Cancelada</span>
+                <span class="badge badge-warning badge-xs">Cancelada</span>
               }
             </div>
           </div>
@@ -56,7 +56,7 @@
     </div>
 
     <div class="flex justify-end w-full">
-      <button class="btn btn-primary" [disabled]="isStatusLoading()" (click)="manageSubscription()">
+      <button class="btn btn-primary btn-sm" [disabled]="isStatusLoading()" (click)="manageSubscription()">
         @if (isStatusLoading()) {
           <span class="loading loading-spinner loading-sm"></span>
           Cargando...
