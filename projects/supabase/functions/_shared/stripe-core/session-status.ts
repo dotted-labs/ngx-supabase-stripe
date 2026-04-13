@@ -12,9 +12,11 @@ export async function getSessionStatus(
   try {
     const stripe = createStripeInstance(stripeConfig);
     const { sessionId } = params;
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log('[getSessionStatus] session', session);
 
     return {
-      data: await stripe.checkout.sessions.retrieve(sessionId),
+      data: session,
       error: null
     };
   } catch (error) {

@@ -7,7 +7,6 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
   imports: [SubscriptionReturnPageComponent, RouterModule],
   templateUrl: './subscriptions-result.component.html',
-  styleUrl: './subscriptions-result.component.css'
 })
 export class SubscriptionsResultComponent {
   private readonly router = inject(Router);
