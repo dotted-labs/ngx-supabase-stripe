@@ -17,6 +17,7 @@ export * from './lib/store/portal-account.store';
 // Export services
 export * from './lib/services/stripe-client.service';
 export * from './lib/services/supabase-client.service';
+export * from './lib/services/products.service';
 
 // Export components
 export * from './lib/components/embedded-checkout/embedded-checkout.component';

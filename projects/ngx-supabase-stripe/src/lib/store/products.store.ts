@@ -1,18 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { StripePrice, StripeProduct } from '../models/database.model';
-import { SupabaseClientService } from '../services/supabase-client.service';
 import { Currency } from '../models/currency.model';
+import { StripePricePublic, StripeProductPublic } from '../models/product-public.model';
+import { ProductsService } from '../services/products.service';
 
-export type StripeProductPublic = Omit<StripeProduct, 'attrs'> & {
-  images: string[];
-  prices: {
-    details: StripePricePublic;
-    recurringInterval: string;
-  }[];
-}
-
-export type StripePricePublic = Omit<StripePrice, 'attrs'>;
+export type { StripePricePublic, StripeProductPublic } from '../models/product-public.model';
 
 export type ProductsStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -22,7 +14,7 @@ type ProductsState = {
   status: ProductsStatus;
   error: string | null;
   currency: Currency;
-}
+};
 
 const initialProductsState: ProductsState = {
   products: null,
@@ -39,24 +31,41 @@ export const ProductsStore = signalStore(
     isStatusLoading: computed(() => state.status() === 'loading'),
     isStatusSuccess: computed(() => state.status() === 'success'),
     isStatusError: computed(() => state.status() === 'error'),
-    oneTimeproductsByCurrency: computed(() => state.products()?.filter(product => 
-      product.prices.some(price => (price.details.type === 'one_time' && price.details.currency === state.currency()))
-    ) || []),
-    recurringProductsByCurrency: computed(() => state.products()?.filter(product => 
-      product.prices.some(price => (price.details.type === 'recurring' && price.details.currency === state.currency()))
-    ) || []),
-    productsByCurrency: computed(() => state.products()?.filter(product => 
-      product.prices.some(price => (price.details.currency === state.currency()))
-    ) || []),
+    oneTimeproductsByCurrency: computed(
+      () =>
+        state
+          .products()
+          ?.filter((product) =>
+            product.prices.some(
+              (price) => price.details.type === 'one_time' && price.details.currency === state.currency(),
+            ),
+          ) || [],
+    ),
+    recurringProductsByCurrency: computed(
+      () =>
+        state
+          .products()
+          ?.filter((product) =>
+            product.prices.some(
+              (price) => price.details.type === 'recurring' && price.details.currency === state.currency(),
+            ),
+          ) || [],
+    ),
+    productsByCurrency: computed(
+      () =>
+        state
+          .products()
+          ?.filter((product) => product.prices.some((price) => price.details.currency === state.currency())) || [],
+    ),
     hasProducts: computed(() => state.products() !== null && state.products()!.length > 0),
-    isError: computed(() => state.error())
+    isError: computed(() => state.error()),
   })),
-  withMethods((store, supabaseService = inject(SupabaseClientService)) => ({
+  withMethods((store, productsService = inject(ProductsService)) => ({
     /**
      * Get products by IDs from the current loaded products
      */
     getProductsByIds(ids: string[]): StripeProductPublic[] {
-      return store.products()?.filter(product => product.id && ids.includes(product.id)) || [];
+      return store.products()?.filter((product) => product.id && ids.includes(product.id)) || [];
     },
 
     /**
@@ -73,22 +82,15 @@ export const ProductsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { data: product, error: productError } = await supabaseService.selectStripeProduct(id);
-        
+        const { data: products, error: productError } = await productsService.fetchProductById(id);
+
         if (productError) {
           console.error('🎮 [ProductsStore]: Error loading product', productError);
           patchState(store, { status: 'error', error: (productError as Error).message });
-        }
-
-        const products: StripeProductPublic[] = [];
-        
-        if (product && product.length > 0) {
-          const productParsed = parseProduct(product[0], store.prices() as StripePrice[]);
-          products.push(productParsed);
+          return;
         }
 
         patchState(store, { status: 'success', products });
-        
       } catch (error) {
         patchState(store, { status: 'error', error: (error as Error).message });
       }
@@ -101,42 +103,29 @@ export const ProductsStore = signalStore(
       patchState(store, { status: 'loading', error: null });
 
       try {
-        const { data: prices, error: pricesError } = await supabaseService.selectStripePrices();
+        const { data, error } = await productsService.fetchFullCatalog();
 
-        if (pricesError) {
-          console.error('🎮 [ProductsStore]: Error loading prices', pricesError);
-          patchState(store, { status: 'error', error: (pricesError as Error).message });
-        }
-        
-        patchState(store, { prices: prices || [] });
-
-        const { data: stripeProducts, error: productsError } = await supabaseService.selectStripeProducts();
-
-        if (productsError) {
-          console.error('🎮 [ProductsStore]: Error loading products', productsError);
+        if (error) {
+          console.error('🎮 [ProductsStore]: Error loading catalog', error);
           patchState(store, {
             status: 'error',
-            error: (productsError as Error).message,
+            error: (error as Error).message,
           });
+          return;
         }
 
-        if (stripeProducts) {
-          {
-            const products: StripeProductPublic[] = [];
-
-            stripeProducts.forEach(product => {
-              products.push(parseProduct(product, store.prices() as StripePrice[]));
-            });
-
-            console.log('🎮 [ProductsStore] products: ', products);
-
-            patchState(store, {
-              status: 'success',
-              products: products
-            });
-          }
+        if (!data) {
+          patchState(store, { status: 'success', prices: [], products: [] });
+          return;
         }
 
+        console.log('🎮 [ProductsStore] products: ', data.products);
+
+        patchState(store, {
+          status: 'success',
+          prices: data.prices,
+          products: data.products,
+        });
       } catch (error) {
         patchState(store, {
           status: 'error',
@@ -144,20 +133,25 @@ export const ProductsStore = signalStore(
         });
       }
     },
+
     async loadProductsByIds(ids: string[]) {
       patchState(store, { status: 'loading', error: null });
-      
+
       try {
-        const { data: products, error: productsError } = await supabaseService.selectStripeProductsByIds(ids);
+        const { data: products, error: productsError } = await productsService.fetchProductsByIds(ids);
 
         if (productsError) {
           console.error('🎮 [ProductsStore]: Error loading products', productsError);
           patchState(store, { status: 'error', error: (productsError as Error).message });
+          return;
         }
 
-        if (products) {
-          const products: StripeProductPublic[] = [];
-        }
+        console.log('🎮 [ProductsStore] products: ', products);
+
+        patchState(store, {
+          status: 'success',
+          products,
+        });
       } catch (error) {
         patchState(store, { status: 'error', error: (error as Error).message });
       }
@@ -168,7 +162,7 @@ export const ProductsStore = signalStore(
      */
     reset() {
       patchState(store, initialProductsState);
-    }
+    },
   })),
   withHooks((store) => ({
     async onInit() {
@@ -181,19 +175,6 @@ export const ProductsStore = signalStore(
         console.log('🎮 [ProductsStore] loading products...');
         await store.loadProducts();
       }
-    }
-  }))
-)
-
-export function parseProduct(product: StripeProduct, prices: StripePrice[] = []): StripeProductPublic {
-  const { attrs, ...mainProperties } = product;
-  return {
-    ...mainProperties,
-    images: (attrs as any)?.images || [],
-    prices: prices.filter(price => price.product === product.id).map(price => ({
-      details: price,
-      recurringInterval: (price?.attrs as any)?.recurring?.interval || 'no-recurring'
-    }))
-  };
-}
-
+    },
+  })),
+);

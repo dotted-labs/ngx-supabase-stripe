@@ -2,8 +2,9 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { StripePrice, StripeProduct, StripeSubscription } from '../models/database.model';
 import { StripeClientService } from '../services/stripe-client.service';
+import { ProductsService } from '../services/products.service';
 import { SupabaseClientService } from '../services/supabase-client.service';
-import { parseProduct, ProductsStore, StripeProductPublic } from './products.store';
+import { ProductsStore, StripeProductPublic } from './products.store';
 import { CustomerStore, StripeCustomerPublic } from './customer.store';
 
 export type StripeSubscriptionCancellationDetails = {
@@ -59,9 +60,10 @@ export const SubscriptionsStore = signalStore(
     hasSubscriptions: computed(() => state.subscriptions() !== null && state.subscriptions()!.length > 0),
     isError: computed(() => state.error()),
   })),
-  withMethods((store, stripeService = inject(StripeClientService), 
-               supabaseService = inject(SupabaseClientService), 
+  withMethods((store, stripeService = inject(StripeClientService),
+               supabaseService = inject(SupabaseClientService),
                productsStore = inject(ProductsStore),
+               productsService = inject(ProductsService),
                customerStore = inject(CustomerStore)) => ({
     /**
      * Create a subscription
@@ -126,7 +128,7 @@ export const SubscriptionsStore = signalStore(
         const userProductsById = new Map<string, StripeProductPublic>(
           (userStripeProducts ?? []).map((p) => [
             p.id as string,
-            parseProduct(p as StripeProduct, prices),
+            productsService.toStripeProductPublic(p as StripeProduct, prices),
           ]),
         );
 
