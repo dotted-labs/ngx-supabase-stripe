@@ -125,6 +125,13 @@ export class SupabaseClientService {
       .select('*');
   }
 
+  public async selectStripeProductsByIds(ids: string[]) {
+    return this.client
+      .schema(this.config.supabaseSchema)
+      .rpc('get_stripe_products_by_ids', { product_ids: ids })
+      .select('*');
+  }
+
   /**
    * Select a Stripe product
    * @param productId The product ID

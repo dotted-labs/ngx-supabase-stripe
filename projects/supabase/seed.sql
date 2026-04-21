@@ -336,6 +336,34 @@ AS $$
   WHERE auth.uid() IS NOT NULL;
 $$;
 
+-- Stripe products matching the given Stripe product ids (order not preserved)
+CREATE OR REPLACE FUNCTION public.get_stripe_products_by_ids(product_ids text[])
+RETURNS TABLE (
+  id text,
+  name text,
+  active boolean,
+  default_price text,
+  description text,
+  attrs jsonb
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+  SELECT
+    p.id,
+    p.name,
+    p.active,
+    p.default_price,
+    p.description,
+    p.attrs
+  FROM stripe.products p
+  WHERE product_ids IS NOT NULL
+    AND cardinality(product_ids) > 0
+    AND p.id = ANY (product_ids);
+$$;
+
 -- Single product only if tied to the current user's subscriptions
 CREATE OR REPLACE FUNCTION public.get_stripe_product_for_authenticated_user(product_id text)
 RETURNS TABLE (
@@ -391,6 +419,8 @@ GRANT EXECUTE ON FUNCTION public.get_stripe_products_for_authenticated_user() TO
 GRANT EXECUTE ON FUNCTION public.get_stripe_products_for_authenticated_user() TO service_role;
 GRANT EXECUTE ON FUNCTION public.get_stripe_product_for_authenticated_user(text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_stripe_product_for_authenticated_user(text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_stripe_products_by_ids(text[]) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_stripe_products_by_ids(text[]) TO service_role;
 
 -- =====================================================
 -- SETUP COMPLETE

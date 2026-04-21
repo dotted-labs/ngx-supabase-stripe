@@ -151,6 +151,17 @@ export type Database = {
           attrs: Json
         }[]
       }
+      get_stripe_products_by_ids: {
+        Args: { product_ids: string[] }
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
       get_stripe_subscriptions_for_authenticated_user: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -505,6 +516,17 @@ export type Database = {
       }
       get_stripe_products_for_authenticated_user: {
         Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          active: boolean
+          default_price: string
+          description: string
+          attrs: Json
+        }[]
+      }
+      get_stripe_products_by_ids: {
+        Args: { product_ids: string[] }
         Returns: {
           id: string
           name: string

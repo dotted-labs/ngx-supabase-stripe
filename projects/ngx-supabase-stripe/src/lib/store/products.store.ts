@@ -56,7 +56,6 @@ export const ProductsStore = signalStore(
      * Get products by IDs from the current loaded products
      */
     getProductsByIds(ids: string[]): StripeProductPublic[] {
-      console.log('🎮 [ProductsStore] Loading products by ids: ', ids);
       return store.products()?.filter(product => product.id && ids.includes(product.id)) || [];
     },
 
@@ -143,6 +142,24 @@ export const ProductsStore = signalStore(
           status: 'error',
           error: (error as Error).message,
         });
+      }
+    },
+    async loadProductsByIds(ids: string[]) {
+      patchState(store, { status: 'loading', error: null });
+      
+      try {
+        const { data: products, error: productsError } = await supabaseService.selectStripeProductsByIds(ids);
+
+        if (productsError) {
+          console.error('🎮 [ProductsStore]: Error loading products', productsError);
+          patchState(store, { status: 'error', error: (productsError as Error).message });
+        }
+
+        if (products) {
+          const products: StripeProductPublic[] = [];
+        }
+      } catch (error) {
+        patchState(store, { status: 'error', error: (error as Error).message });
       }
     },
 
