@@ -5,8 +5,8 @@
   
   @if (checkoutStore.isStatusError()) {
     <div class="error">
-      <p>Error: {{ checkoutStore.error() }}</p>
+      <p><span i18n="@@stripe.common.error_label">Error:</span> {{ checkoutStore.error() }}</p>
     </div>
   }
   <div id="embedded-checkout"></div>
-</div> 
+</div>

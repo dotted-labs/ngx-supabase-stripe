@@ -14,7 +14,7 @@
 
 @if (!productsStore.hasProducts() && !productsStore.isStatusLoading()) {
   <div class="alert alert-info">
-    <span>No products available</span>
+    <span i18n="@@stripe.product.no_products">No products available</span>
   </div>
 }
 
@@ -29,6 +29,4 @@
       </lib-product-item>
     }
   </div>
-} 
-
-
+}

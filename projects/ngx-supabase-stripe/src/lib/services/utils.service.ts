@@ -48,4 +48,38 @@ export class UtilsService {
         return 'badge-ghost';
     }
   }
+
+  public translateStripeStatus(status: string): string {
+    const labels: Record<string, string> = {
+      active: $localize`:@@stripe.status.active:Active`,
+      canceled: $localize`:@@stripe.status.canceled:Canceled`,
+      cancelled: $localize`:@@stripe.status.canceled:Canceled`,
+      incomplete: $localize`:@@stripe.status.incomplete:Incomplete`,
+      incomplete_expired: $localize`:@@stripe.status.incomplete_expired:Incomplete expired`,
+      past_due: $localize`:@@stripe.status.past_due:Past due`,
+      trialing: $localize`:@@stripe.status.trialing:Trialing`,
+      unpaid: $localize`:@@stripe.status.unpaid:Unpaid`,
+      paused: $localize`:@@stripe.status.paused:Paused`,
+      succeeded: $localize`:@@stripe.status.succeeded:Succeeded`,
+      failed: $localize`:@@stripe.status.failed:Failed`,
+      pending: $localize`:@@stripe.status.pending:Pending`,
+      processing: $localize`:@@stripe.status.processing:Processing`,
+      paid: $localize`:@@stripe.status.paid:Paid`,
+      requires_payment_method: $localize`:@@stripe.status.requires_payment_method:Requires payment method`,
+      requires_confirmation: $localize`:@@stripe.status.requires_confirmation:Requires confirmation`,
+      requires_action: $localize`:@@stripe.status.requires_action:Requires action`,
+      requires_capture: $localize`:@@stripe.status.requires_capture:Requires capture`,
+    };
+    return labels[status] ?? status;
+  }
+
+  public translateBillingInterval(interval: string): string {
+    const labels: Record<string, string> = {
+      day: $localize`:@@stripe.billing.daily:Daily`,
+      week: $localize`:@@stripe.billing.weekly:Weekly`,
+      month: $localize`:@@stripe.billing.monthly:Monthly`,
+      year: $localize`:@@stripe.billing.yearly:Yearly`,
+    };
+    return labels[interval] ?? interval;
+  }
 }

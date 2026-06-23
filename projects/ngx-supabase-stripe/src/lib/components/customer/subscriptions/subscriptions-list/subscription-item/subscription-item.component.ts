@@ -22,6 +22,9 @@ export class SubscriptionItemComponent {
 
   public readonly isStatusLoading = computed(() => this.portalAccountStore.isStatusLoading());
 
+  protected readonly subscriptionProductAlt = $localize`:@@stripe.subscription.product_alt:Subscription product`;
+  protected readonly subscriptionPlanFallback = $localize`:@@stripe.subscription.plan_fallback:Subscription plan`;
+
   public readonly productImage = computed(() => {
     return this.subscription().product?.images?.[0] || 'https://img.daisyui.com/images/profile/demo/yellingcat@192.webp';
   });

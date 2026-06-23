@@ -2,6 +2,8 @@
  * Public API Surface of ngx-supabase-stripe
  */
 
+import './localize-init';
+
 // Export configurations
 export * from './lib/config/ngx-supabase-stripe.config';
 export * from './lib/config/stripe.config';

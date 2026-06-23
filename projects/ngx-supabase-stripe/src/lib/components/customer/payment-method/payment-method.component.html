@@ -8,13 +8,12 @@
           <!-- Card Header -->
           <div class="flex justify-between items-start mb-6">
             <div class="flex items-center gap-2">
-              <!--<span class="text-3xl filter drop-shadow-lg" [ngxBrandIcon]="paymentMethod()"></span>-->
               <div class="font-bold text-lg text-primary-content" [ngxBrandName]="paymentMethod()"></div>
               @if (cardCountry) {
                 <div class="text-xs text-primary-content/60 uppercase">{{ cardCountry }}</div>
               }
               @if (isExpired) {
-                <div class="badge badge-error badge-sm animate-pulse">Expirada</div>
+                <div class="badge badge-error badge-sm animate-pulse" i18n="@@stripe.payment_method.expired">Expired</div>
               }
             </div>
           </div>
@@ -29,13 +28,13 @@
           <!-- Card Bottom Info -->
           <div class="flex justify-start items-end">
             <div class="flex-1">
-              <div class="text-xs text-primary-content/60 mb-1">TITULAR</div>
+              <div class="text-xs text-primary-content/60 mb-1" i18n="@@stripe.payment_method.cardholder">CARDHOLDER</div>
               <div class="font-medium text-sm text-primary-content truncate max-w-32">{{ holderName }}</div>
             </div>
             
             @if (expirationDate) {
               <div class="flex-1">
-                <div class="text-xs text-primary-content/60 mb-1">VÁLIDA HASTA</div>
+                <div class="text-xs text-primary-content/60 mb-1" i18n="@@stripe.payment_method.valid_thru">VALID THRU</div>
                 <div class="font-mono text-sm text-primary-content">{{ expirationDate }}</div>
               </div>
             }
@@ -63,7 +62,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              Información de Contacto
+              <span i18n="@@stripe.payment_method.contact_info">Contact information</span>
             </h4>
             
             <div class="space-y-2">
@@ -98,7 +97,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Dirección de Facturación
+              <span i18n="@@stripe.payment_method.billing_address">Billing address</span>
             </h4>
             
             <div class="text-sm text-base-content/70 space-y-1">
@@ -127,7 +126,7 @@
 
       <!-- Card Creation Date -->
       <div class="flex items-center justify-between text-sm text-base-content/60 px-2">
-        <span>Método agregado:</span>
+        <span i18n="@@stripe.payment_method.added_on">Payment method added:</span>
         <span>{{ paymentMethod().created * 1000 | date:'short' }}</span>
       </div>
     </div>
@@ -137,8 +136,6 @@
 <!-- Compact Version -->
 @if (mode() === 'compact') {
   <div class="flex items-center gap-2">
-    <!--<span class="text-xl filter drop-shadow-sm" [ngxBrandIcon]="paymentMethod()"></span>-->
-    
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-2">
         <span class="font-medium" [ngxBrandName]="paymentMethod()"></span>
@@ -150,9 +147,9 @@
     </div>
 
     @if (isExpired) {
-      <div class="badge badge-error badge-sm animate-pulse">Expirada</div>
+      <div class="badge badge-error badge-sm animate-pulse" i18n="@@stripe.payment_method.expired">Expired</div>
     } @else {
-      <div class="badge badge-success badge-sm">Activa</div>
+      <div class="badge badge-success badge-sm" i18n="@@stripe.payment_method.active">Active</div>
     }
   </div>
 }

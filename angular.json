@@ -23,6 +23,14 @@
             }
           },
           "defaultConfiguration": "production"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "ngx-supabase-stripe:build:development",
+            "outputPath": "projects/ngx-supabase-stripe/src/i18n",
+            "format": "json"
+          }
         }
       }
     },

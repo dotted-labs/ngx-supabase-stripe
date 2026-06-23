@@ -1,4 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
+import type { StripeConstructorOptions } from '@stripe/stripe-js';
 
 /**
  * Stripe configuration interface
@@ -15,6 +16,12 @@ export interface StripeConfig {
    * When omitted, components use `window.location.origin`.
    */
   embeddedCheckoutBaseUrl?: string;
+
+  /**
+   * BCP 47 locale for Stripe.js (e.g. 'en', 'es'). Localizes Embedded Checkout UI only.
+   * Should match the locale passed to loadStripeMessages() in the consuming app.
+   */
+  locale?: StripeConstructorOptions['locale'];
 }
 
 export const STRIPE_CONFIG = new InjectionToken<StripeConfig>('STRIPE_CONFIG');

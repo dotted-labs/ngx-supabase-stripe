@@ -33,6 +33,9 @@ export class PaymentIntentsTableComponent {
   public readonly onRefresh = output<void>();
   
   public readonly utils = inject(UtilsService);
+
+  protected readonly liveModeLabel = $localize`:@@stripe.payment_intents.mode.live:Live`;
+  protected readonly testModeLabel = $localize`:@@stripe.payment_intents.mode.test:Test`;
   
   public readonly hasPaymentIntents = computed(() => 
     this.paymentIntents() && this.paymentIntents().length > 0

@@ -13,7 +13,7 @@
     <div class="flex justify-between items-center">
       <h2 class="card-title">{{ getProductName() }}</h2>
       <span class="badge badge-soft {{ utils.getStatusBadgeClass(subscription().status) }} subscription-status">
-        {{ subscription().status }}
+        {{ utils.translateStripeStatus(subscription().status) }}
       </span>
     </div>
     
@@ -22,9 +22,7 @@
     </div>
     
     <div class="card-actions justify-end">
-      <button class="btn btn-primary" (click)="manageSubscription()">
-        Manage Subscription
-      </button>
+      <button class="btn btn-primary" (click)="manageSubscription()" i18n="@@stripe.subscription.manage">Manage subscription</button>
     </div>
     </div>
   </div>

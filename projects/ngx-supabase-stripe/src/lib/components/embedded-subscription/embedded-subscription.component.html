@@ -1,13 +1,12 @@
-<div class="subscription-container">  
+<div class="checkout-container">
   @if (subscriptionsStore.isStatusLoading()) {
     <lib-embedded-skeleton />
   }
   
   @if (subscriptionsStore.isStatusError()) {
     <div class="error">
-      <p>Error: {{ subscriptionsStore.error() }}</p>
+      <p><span i18n="@@stripe.common.error_label">Error:</span> {{ subscriptionsStore.error() }}</p>
     </div>
   }
-  
-  <div id="embedded-checkout" class="mt-4"></div>
-</div> 
+  <div id="embedded-checkout"></div>
+</div>

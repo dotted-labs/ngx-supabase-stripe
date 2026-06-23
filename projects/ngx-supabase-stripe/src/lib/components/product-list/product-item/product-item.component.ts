@@ -21,6 +21,9 @@ export class ProductItemComponent {
   public readonly utils = inject(UtilsService);
   private readonly sanitizer = inject(DomSanitizer);
 
+  protected readonly perMonthSuffix = $localize`:@@stripe.product.per_month:/mo`;
+  protected readonly perYearSuffix = $localize`:@@stripe.product.per_year:/yr`;
+
   public price = computed(() => this.product().prices.find(price => price.details.currency === this.currency()));
 
   public sanitizedImage = computed(() => {

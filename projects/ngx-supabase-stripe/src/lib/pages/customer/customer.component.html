@@ -7,13 +7,13 @@
   <!-- Payment Intents Section with Tabs -->
   <section class="flex flex-col">
     <header class="mb-4">
-      <h2 class="text-2xl font-bold text-gray-800">Payment Intents</h2>
-      <p class="text-gray-600">Payment intents history. Select a tab to see the list or table view.</p>
+      <h2 class="text-2xl font-bold text-gray-800" i18n="@@stripe.customer.payment_intents_title">Payment Intents</h2>
+      <p class="text-gray-600" i18n="@@stripe.customer.payment_intents_description">Payment intents history. Select a tab to see the list or table view.</p>
     </header>
 
     <div role="tablist" class="tabs tabs-box w-fit mb-4">
-      <a role="tab" class="tab" [class.tab-active]="activeTab() === 'list'" (click)="setActiveTab('list')">Lista</a>
-      <a role="tab" class="tab" [class.tab-active]="activeTab() === 'table'" (click)="setActiveTab('table')">Tabla</a>
+      <a role="tab" class="tab" [class.tab-active]="activeTab() === 'list'" (click)="setActiveTab('list')" i18n="@@stripe.customer.tab_list">List</a>
+      <a role="tab" class="tab" [class.tab-active]="activeTab() === 'table'" (click)="setActiveTab('table')" i18n="@@stripe.customer.tab_table">Table</a>
     </div>
 
     @if (activeTab() === 'list') {

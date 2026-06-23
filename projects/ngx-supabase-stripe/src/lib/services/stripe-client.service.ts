@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { loadStripe, Stripe, StripeEmbeddedCheckout } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeEmbeddedCheckout, StripeConstructorOptions } from '@stripe/stripe-js';
 import type { Stripe as StripeTypes } from 'stripe';
 import type { FunctionInvokeOptions } from '@supabase/supabase-js';
 import { STRIPE_CONFIG } from '../config/stripe.config';
@@ -20,7 +20,10 @@ export class StripeClientService {
   embeddedCheckout: StripeEmbeddedCheckout | null = null;
 
   constructor() {
-    this.stripe = loadStripe(this.config.publishableKey);
+    const options: StripeConstructorOptions | undefined = this.config.locale
+      ? { locale: this.config.locale }
+      : undefined;
+    this.stripe = loadStripe(this.config.publishableKey, options);
     console.log('🔌 [StripeClientService]: Loaded Stripe Client from @stripe/stripe-js');
   }
 
@@ -47,7 +50,7 @@ export class StripeClientService {
       return {
         ok: false,
         error: new Error(
-          'No Supabase Auth session. Sign in before checkout (e.g. signInWithPassword, signInWithOAuth, or magic link).',
+          $localize`:@@stripe.errors.no_auth_session:No Supabase Auth session. Sign in before checkout (e.g. signInWithPassword, signInWithOAuth, or magic link).`,
         ),
       };
     }

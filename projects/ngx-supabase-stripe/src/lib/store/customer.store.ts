@@ -237,7 +237,7 @@ export const CustomerStore = signalStore(
       } else {
         patchState(state, { 
           paymentMethodsStatus: 'error', 
-          paymentMethodsError: 'Payment method not found' 
+          paymentMethodsError: $localize`:@@stripe.errors.payment_method_not_found:Payment method not found` 
         });
       }
     },
