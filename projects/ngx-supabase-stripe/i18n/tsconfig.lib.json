@@ -3,5 +3,5 @@
   "compilerOptions": {
     "outDir": "../../../out-tsc/i18n"
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "messages.*.json" ]
 }

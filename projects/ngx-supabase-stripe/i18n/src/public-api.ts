@@ -9,11 +9,16 @@ export type StripeMessagesFile = {
   translations: Record<string, string>;
 };
 
-export async function loadStripeMessages(locale: string): Promise<StripeMessagesFile> {
-  switch (locale) {
-    case 'es':
-      return esMessages as StripeMessagesFile;
-    default:
-      return enMessages as StripeMessagesFile;
-  }
-}
+const MESSAGES: Record<string, StripeMessagesFile> = {
+  en: enMessages as StripeMessagesFile,
+  es: esMessages as StripeMessagesFile,
+};
+
+/**
+ * Loads stripe translation messages for the given locale.
+ * Falls back to English when the locale is not available.
+ * The app consumer must merge the result into `loadTranslations()` before bootstrap.
+ */
+export const loadStripeMessages = async (locale: string): Promise<StripeMessagesFile> => {
+  return MESSAGES[locale] ?? enMessages as StripeMessagesFile;
+};
