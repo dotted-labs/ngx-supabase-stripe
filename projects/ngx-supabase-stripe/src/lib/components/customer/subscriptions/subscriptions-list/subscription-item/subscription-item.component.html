@@ -1,13 +1,13 @@
 <div class="card bg-gradient-to-br from-base-100/10 to-base-200/10 shadow-lg hover:shadow-xl transition-all duration-300">
   <div class="card-body p-4">
-    <!-- Header con título y precio -->
+    <!-- Header with title and price -->
     <div class="flex justify-between items-start">
       <div class="flex flex-row justify-start items-start gap-3">
-        <!-- Imagen de la suscripción -->
+        <!-- Subscription image -->
         <div class="avatar">
           <div class="w-24 rounded">
             <img [src]="sanitizeImageUrl(productImage())" 
-              [alt]="subscription().product?.name || 'Subscription product'"
+              [alt]="subscription().product?.name || subscriptionProductAlt"
               class="w-full h-full object-cover rounded-lg" />
           </div>
         </div>  
@@ -15,27 +15,20 @@
         <div class="flex flex-col justify-start items-start gap-2">
           <div class="flex flex-row justify-start items-start gap-2">
             <h3 class="text-2xl font-bold text-base-content">
-              {{ subscription().product?.name || 'Subscription Plan' }}
+              {{ subscription().product?.name || subscriptionPlanFallback }}
             </h3>
             <div class="flex items-center gap-2 mt-1">
               <span class="badge {{ utils.getStatusBadgeClass(subscription().status) }} badge-xs">
-                {{ subscription().status }}
+                {{ utils.translateStripeStatus(subscription().status) }}
               </span>
               @if (subscription().cancel.cancel_at_period_end) {
-                <span class="badge badge-warning badge-xs">Cancelada</span>
+                <span class="badge badge-warning badge-xs" i18n="@@stripe.subscription.canceled_badge">Canceled</span>
               }
             </div>
           </div>
           <div class="flex flex-row justify-start items-start gap-4">
-            <!--<div class="flex flex-row justify-start items-center gap-1">
-              <div class="text-base-content/70 text-sm font-medium">Start:</div>
-              <div class="text-base-content font-semibold">
-                {{ utils.formatDate(subscription().current_period_start ?? '') }}
-              </div>
-            </div>-->
-            
             <div class="flex flex-row justify-start items-center gap-1">
-              <div class="text-base-content/70 text-sm font-medium">Subscription active until:</div>
+              <div class="text-base-content/70 text-sm font-medium" i18n="@@stripe.subscription.active_until">Subscription active until:</div>
               <div class="text-base-content font-semibold">
                 {{ utils.formatDate(subscription().current_period_end ?? '') }}
               </div>
@@ -44,13 +37,13 @@
         </div>
       </div>
       
-      <!-- Precio principal -->
+      <!-- Main price -->
       <div class="text-right">
         <div class="text-2xl font-bold text-primary">
           {{ utils.formatAmount(subscription().plan.amount, subscription().currency ?? 'EUR') }}
         </div>
         <div class="text-base-content/70 text-md capitalize">
-          {{ subscription().plan.interval }}ly
+          {{ utils.translateBillingInterval(subscription().plan.interval) }}
         </div>
       </div>
     </div>
@@ -59,15 +52,15 @@
       <button class="btn btn-primary btn-sm" [disabled]="isStatusLoading()" (click)="manageSubscription()">
         @if (isStatusLoading()) {
           <span class="loading loading-spinner loading-sm"></span>
-          Cargando...
+          <span i18n="@@stripe.common.loading">Loading...</span>
         } @else {
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          Gestionar Suscripción
+          <span i18n="@@stripe.subscription.manage">Manage subscription</span>
         }
       </button>
     </div>
   </div>
-</div> 
+</div>

@@ -2,7 +2,6 @@
   <div class="hero-content text-center max-w-md">
     <div class="card w-full bg-base-100 shadow-2xl">
       <div class="card-body items-center text-center">
-        <!-- Success Icon -->
         <div class="mb-6">
           <div class="avatar">
             <div class="w-24 h-24 rounded-full bg-success/10 flex items-center justify-center">
@@ -24,7 +23,6 @@
           </div>
         </div>
 
-        <!-- Status Content -->
         @if (checkoutStore.isStatusLoading()) {
           <div class="flex flex-col items-center gap-4 mb-6">
             <span class="loading loading-spinner loading-lg text-primary"></span>
@@ -32,7 +30,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              <span>Cargando detalles de la suscripción...</span>
+              <span i18n="@@stripe.subscription.loading_details">Loading subscription details...</span>
             </div>
           </div>
         } @else if (checkoutStore.isStatusError()) {
@@ -44,42 +42,40 @@
           </div>
         } @else if (checkoutStore.isPaymentComplete()) {
 
-          <!-- Title and Description -->
           <h2 class="card-title text-3xl font-bold text-base-content mb-2">{{ sessionStatus()?.amount_total }}</h2>
 
           <div class="alert alert-success mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="font-medium">Tu suscripción está activa y lista para usar.</span>
+            <span class="font-medium" i18n="@@stripe.subscription.return.active">Your subscription is active and ready to use.</span>
           </div>
 
           <div class="bg-base-200 rounded-lg p-4 mb-6 w-full">
-            <h3 class="font-semibold text-sm text-base-content/80 mb-3">Beneficios incluidos:</h3>
+            <h3 class="font-semibold text-sm text-base-content/80 mb-3" i18n="@@stripe.subscription.return.benefits_title">Included benefits:</h3>
             <ul class="space-y-2">
               <li class="flex items-center text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                Acceso completo a todas las funciones
+                <span i18n="@@stripe.subscription.return.benefit_full_access">Full access to all features</span>
               </li>
               <li class="flex items-center text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                Soporte prioritario 24/7
+                <span i18n="@@stripe.subscription.return.benefit_support">24/7 priority support</span>
               </li>
               <li class="flex items-center text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-success mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                Actualizaciones automáticas
+                <span i18n="@@stripe.subscription.return.benefit_updates">Automatic updates</span>
               </li>
             </ul>
           </div>
         }
 
-        <!-- Action Buttons -->
         <div class="card-actions justify-center w-full">
           <button class="btn btn-primary btn-wide">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -90,15 +86,14 @@
                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
               />
             </svg>
-            Ir al Panel Principal
+            <span i18n="@@stripe.subscription.return.go_dashboard">Go to dashboard</span>
           </button>
         </div>
 
-        <!-- Additional Help -->
         <div class="text-center mt-4">
           <p class="text-xs text-base-content/50">
-            ¿Necesitas ayuda?
-            <a href="#" class="link link-primary">Contacta soporte</a>
+            <span i18n="@@stripe.subscription.return.need_help">Need help?</span>
+            <a href="#" class="link link-primary" i18n="@@stripe.subscription.return.contact_support">Contact support</a>
           </p>
         </div>
       </div>

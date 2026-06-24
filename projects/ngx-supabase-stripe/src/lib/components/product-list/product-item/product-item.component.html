@@ -1,5 +1,4 @@
 <div class="card bg-base-100 shadow-xl max-w-sm mx-auto rounded-3xl w-[350px]">
-  <!-- Header with image and favorite icon -->
   <div class="relative">
     @if (sanitizedImage()) {
       <figure class="bg-gradient-to-br from-base-200 to-base-300">
@@ -16,40 +15,37 @@
   </div>
 
   <div class="card-body p-6 flex flex-col h-full">
-    <!-- Product title -->
     <h2 class="card-title text-xl font-bold text-base-content">
       {{ product().name }}
     </h2>
 
-    <!-- Description (moved under title) -->
     @if (product().description) {
       <p class="text-base-content/70 text-sm mb-4 line-clamp-3">
         {{ product().description }}
       </p>
     }
 
-         <!-- Price options as text -->
     <div class="flex justify-between gap-2">
       <span class="text-xl font-bold text-base-content">
         @if (price()?.details?.type === 'recurring') {
-          {{ utils.formatAmount(price()?.details?.unit_amount ?? 0, price()?.details?.currency ?? 'EUR') }}/{{ price()?.recurringInterval === 'month' ? 'mo' : 'yr' }}
+          {{ utils.formatAmount(price()?.details?.unit_amount ?? 0, price()?.details?.currency ?? 'EUR') }}{{ price()?.recurringInterval === 'month' ? perMonthSuffix : perYearSuffix }}
         } @else {
           {{ utils.formatAmount(price()?.details?.unit_amount ?? 0, price()?.details?.currency ?? 'EUR') }}
         }
       </span>
 
-      <!-- Status badge (only show if inactive) -->
       @if (!product().active) {
         <div class="mt-4">
-          <div class="badge badge-warning badge-sm">Inactive</div>
+          <div class="badge badge-warning badge-sm" i18n="@@stripe.product.inactive">Inactive</div>
         </div>
       } @else {
         <button 
           class="btn btn-primary"
-          (click)="onSelect()">
+          (click)="onSelect()"
+          i18n="@@stripe.product.buy_now">
           Buy now
         </button>
       }
     </div>
   </div>
-</div> 
+</div>

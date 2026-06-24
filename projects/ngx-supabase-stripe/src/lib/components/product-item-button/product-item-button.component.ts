@@ -13,7 +13,7 @@ import { Currency } from '../../models/currency.model';
 export class ProductItemButtonComponent {
   public readonly product = input.required<StripeProductPublic>();
   public readonly currency = input<Currency>(Currency.EUR);
-  public readonly buttonText = input<string>('Buy now');
+  public readonly buttonText = input<string>($localize`:@@stripe.product.buy_now:Buy now`);
   public readonly buttonClass = input<string>('btn btn-primary');
   public readonly showPrice = input<boolean>(true);
   public readonly disabled = input<boolean>(false);
@@ -33,7 +33,7 @@ export class ProductItemButtonComponent {
 
   public readonly displayText = computed(() => {
     if (!this.product().active) {
-      return 'Inactive';
+      return $localize`:@@stripe.product.inactive:Inactive`;
     }
     
     if (!this.showPrice()) {
@@ -50,8 +50,10 @@ export class ProductItemButtonComponent {
       priceInfo.details?.currency ?? 'EUR'
     );
 
-    const suffix = priceInfo.details?.type === 'recurring' 
-      ? `/${priceInfo.recurringInterval === 'month' ? 'mo' : 'yr'}`
+    const suffix = priceInfo.details?.type === 'recurring'
+      ? priceInfo.recurringInterval === 'month'
+        ? $localize`:@@stripe.product.per_month:/mo`
+        : $localize`:@@stripe.product.per_year:/yr`
       : '';
 
     return `${this.buttonText()} - ${formattedPrice}${suffix}`;

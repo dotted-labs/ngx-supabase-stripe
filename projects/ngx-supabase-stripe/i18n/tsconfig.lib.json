@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.lib.json",
+  "compilerOptions": {
+    "outDir": "../../../out-tsc/i18n"
+  },
+  "include": ["src/**/*.ts", "messages.*.json" ]
+}

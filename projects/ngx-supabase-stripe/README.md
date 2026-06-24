@@ -12,14 +12,17 @@ An Angular library for integrating Supabase and Stripe into your applications, p
 - **Reactive State** - State management using NgRx signals
 - **Responsive** - Components designed to work on mobile and desktop devices
 - **Highly Customizable** - Ability to adapt the style and behavior of components
+- **Internationalization** - `$localize` messages with `en` / `es` locales via `@dotted-labs/ngx-supabase-stripe/i18n`
 
 ## Installation
 
 ### Step 1: Install the package
 
 ```bash
-npm install @dotted-labs/ngx-supabase-stripe
+npm install @dotted-labs/ngx-supabase-stripe @angular/localize
 ```
+
+Peer dependency `@angular/localize` is required for translated UI strings.
 
 ### Step 2: Configuration in app.config.ts
 
@@ -205,6 +208,65 @@ entrypoint = "./functions/checkout_session/index.ts"
 ```
 
 Edge functions require a **Supabase Auth** session: the library sends `Authorization: Bearer <access_token>` on every `functions.invoke`. Sign the user in first (`signInWithPassword`, OAuth, magic link, etc.). If there is no session, you get a clear client error instead of `{ "msg": "Invalid JWT" }` from the server.
+
+## Internationalization
+
+UI strings in this library use Angular `$localize`. The package **provides** translation files and a loader; your app **loads** them at runtime and controls locale switching.
+
+### Supported locales
+
+- `en` (source)
+- `es`
+
+Import map: `@dotted-labs/ngx-supabase-stripe/i18n`
+
+### Load translations before bootstrap
+
+In `main.ts` (or an `APP_INITIALIZER`), merge the library messages into your app:
+
+```typescript
+import '@angular/localize/init';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { loadTranslations } from '@angular/localize';
+import { loadStripeMessages } from '@dotted-labs/ngx-supabase-stripe/i18n';
+
+async function bootstrap() {
+  const locale = 'es'; // from user preference
+  const { translations } = await loadStripeMessages(locale);
+  loadTranslations(translations);
+
+  await bootstrapApplication(AppComponent, appConfig);
+}
+
+bootstrap();
+```
+
+If your app already calls `loadTranslations` for its own messages, merge both translation objects before calling `loadTranslations`.
+
+### Stripe.js locale (Embedded Checkout)
+
+Stripe Elements / Embedded Checkout UI is localized via the Stripe SDK, not `$localize`. Pass the same locale in `stripeConfig`:
+
+```typescript
+provideNgxSupabaseStripeConfig({
+  // ...
+  stripeConfig: {
+    publishableKey: 'YOUR_STRIPE_PUBLISHABLE_KEY',
+    locale: 'es', // matches loadStripeMessages locale
+  },
+})
+```
+
+### Runtime language changes
+
+`$localize` evaluates at render time. When the user switches language, your app must call `loadTranslations` again with the new locale and re-render affected views. This library does not register `LOCALE_ID` or manage locale state.
+
+### Published translation files
+
+After install, JSON files are available at:
+
+- `@dotted-labs/ngx-supabase-stripe/i18n/messages.en.json`
+- `@dotted-labs/ngx-supabase-stripe/i18n/messages.es.json`
 
 ## Available Components
 

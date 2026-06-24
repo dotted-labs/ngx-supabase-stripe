@@ -46,7 +46,7 @@ export const PortalAccountStore = signalStore(
         }
 
         if (!url) {
-          throw new Error('No se pudo crear la sesión del portal');
+          throw new Error($localize`:@@stripe.errors.portal_session_failed:Could not create portal session`);
         }
 
         patchState(store, {
@@ -58,7 +58,7 @@ export const PortalAccountStore = signalStore(
       } catch (error) {
         console.error('🚨 [PortalAccountStore]', error);
         
-        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+        const errorMessage = error instanceof Error ? error.message : $localize`:@@stripe.errors.unknown:Unknown error`;
         
         patchState(store, {
           status: 'error',

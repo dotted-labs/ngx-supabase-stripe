@@ -65,7 +65,7 @@ export const CheckoutStore = signalStore(
           if (!stripe) {
             patchState(store, {
               status: 'error',
-              error: 'No Stripe instance returned',
+              error: $localize`:@@stripe.errors.no_stripe_instance:No Stripe instance returned`,
             });
           } else {
             await stripeService.initEmbeddedCheckout(clientSecret as string);
