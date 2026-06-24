@@ -6,9 +6,7 @@
     "build": "ng build ngx-supabase-stripe",
     "watch": "ng build ngx-supabase-stripe --watch --configuration development",
     "test": "ng test stripe-demo",
-    "build:lib": "npm run sync-i18n && ng build ngx-supabase-stripe",
-    "sync-i18n": "cp projects/ngx-supabase-stripe/src/i18n/messages.*.json projects/ngx-supabase-stripe/i18n/src/",
-    "extract-i18n:lib": "echo 'extract-i18n is not supported for libraries; edit src/i18n/messages.*.json manually and run sync-i18n'",
+    "build:lib": "ng build ngx-supabase-stripe --project ngx-supabase-stripe ",
     "start:stripe-demo": "ng serve stripe-demo"
   },
   "private": true,
