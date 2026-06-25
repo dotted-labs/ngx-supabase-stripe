@@ -8,6 +8,7 @@ import { provideNgxSupabaseStripeConfig, SUPABASE_BROWSER_CLIENT } from '@ngx-su
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
+import { getStoredLocale } from './i18n/locale.storage';
 import { supabaseBrowserClient } from './supabase-browser-client';
 
 export const appConfig: ApplicationConfig = {
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
       },
       stripeConfig: {
         publishableKey: environment.stripe.publicKey,
+        locale: getStoredLocale() as 'en' | 'es',
       },
     }),
   ],
