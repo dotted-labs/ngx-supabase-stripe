@@ -336,6 +336,7 @@ export class StripeClientService {
         body: {
           customerId,
           returnUrl,
+          locale: this.config.locale,
         },
       });
 

@@ -21,6 +21,7 @@ export interface CheckoutSessionParams {
 export interface PortalSessionParams {
   customerId: string;
   returnUrl: string;
+  locale?: Stripe.BillingPortal.SessionCreateParams['locale'];
 }
 
 export interface SubscriptionParams {

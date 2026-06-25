@@ -5,10 +5,10 @@ import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
 
 Deno.serve(serveWithAuth(async (req, _ctx) => {
   try {
-    const { customerId, returnUrl } = await req.json();
+    const { customerId, returnUrl, locale } = await req.json();
 
     const {data, error}: StripePortalSession = await createPortalSession(
-      { customerId, returnUrl },
+      { customerId, returnUrl, locale },
       getStripeSecretKeyOrThrow()
     );
 
