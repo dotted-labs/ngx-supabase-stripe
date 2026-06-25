@@ -139,6 +139,7 @@ export class StripeClientService {
           priceId,
           resultPagePath,
           customer,
+          locale: this.config.locale,
         },
       });
 
@@ -165,6 +166,7 @@ export class StripeClientService {
           priceId,
           resultPagePath: returnPath,
           customer,
+          locale: this.config.locale,
         },
       });
 

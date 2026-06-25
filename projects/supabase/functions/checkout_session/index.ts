@@ -5,10 +5,10 @@ import { getStripeSecretKeyOrThrow } from '../_shared/stripe-core/utils.ts';
 
 Deno.serve(serveWithAuth(async (req: Request, ctx) => {
   try {
-    const { priceId, resultPagePath, customer } = await req.json();
+    const { priceId, resultPagePath, customer, locale } = await req.json();
 
     const { data, error }: StripeCheckoutSession = await createCheckoutSession(
-      { priceId, resultPagePath, customer, supabaseUserId: ctx.userId },
+      { priceId, resultPagePath, customer, supabaseUserId: ctx.userId, locale },
       getStripeSecretKeyOrThrow()
     );
 
