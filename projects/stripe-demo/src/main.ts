@@ -1,4 +1,3 @@
-import '@angular/localize/init';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { loadTranslations } from '@angular/localize';
 import { loadStripeMessages } from '../../ngx-supabase-stripe/i18n/src/public-api';

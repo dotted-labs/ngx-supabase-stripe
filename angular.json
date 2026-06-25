@@ -47,6 +47,7 @@
             "outputPath": "dist/stripe-demo",
             "index": "projects/stripe-demo/src/index.html",
             "browser": "projects/stripe-demo/src/main.ts",
+            "polyfills": ["@angular/localize/init"],
             "tsConfig": "projects/stripe-demo/tsconfig.app.json",
             "assets": [
               {
