@@ -1,6 +1,6 @@
 import { StripeEnvironmentConfig, CheckoutSessionParams, SupabaseStripeResponse } from './types.ts';
 import { buildEmbeddedCheckoutReturnUrl } from './return-url.ts';
-import { createStripeInstance } from './utils.ts';
+import { createStripeInstance, resolveCheckoutLocale } from './utils.ts';
 import Stripe from 'stripe';
 
 export type StripeCheckoutSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
@@ -10,8 +10,9 @@ export async function createCheckoutSession(
   stripeConfig: StripeEnvironmentConfig
 ): Promise<StripeCheckoutSession> {
   try {
-    const { priceId, resultPagePath, customer, supabaseUserId } = params;
+    const { priceId, resultPagePath, customer, supabaseUserId, locale } = params;
     const stripe = createStripeInstance(stripeConfig);
+    const checkoutLocale = resolveCheckoutLocale(locale);
 
     const price = await stripe.prices.retrieve(priceId);
     const mode: Stripe.Checkout.SessionCreateParams['mode'] = price.recurring
@@ -31,6 +32,7 @@ export async function createCheckoutSession(
       return_url: buildEmbeddedCheckoutReturnUrl(resultPagePath),
       client_reference_id: supabaseUserId,
       metadata: { supabase_user_id: supabaseUserId },
+      ...(checkoutLocale ? { locale: checkoutLocale } : {}),
     };
 
     // Configure customer options

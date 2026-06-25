@@ -15,11 +15,13 @@ export interface CheckoutSessionParams {
   resultPagePath: string;
   supabaseUserId: string;
   customer?: Stripe.Customer | null;
+  locale?: Stripe.Checkout.SessionCreateParams['locale'];
 }
 
 export interface PortalSessionParams {
   customerId: string;
   returnUrl: string;
+  locale?: Stripe.BillingPortal.SessionCreateParams['locale'];
 }
 
 export interface SubscriptionParams {
@@ -27,6 +29,7 @@ export interface SubscriptionParams {
   resultPagePath: string;
   supabaseUserId: string;
   customer?: Stripe.Customer | null;
+  locale?: Stripe.Checkout.SessionCreateParams['locale'];
 }
 
 export interface SessionStatusParams {

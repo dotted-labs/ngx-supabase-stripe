@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { StripeEnvironmentConfig, SubscriptionParams, SupabaseStripeResponse } from './types.ts';
 import { buildEmbeddedCheckoutReturnUrl } from './return-url.ts';
-import { createStripeInstance } from './utils.ts';
+import { createStripeInstance, resolveCheckoutLocale } from './utils.ts';
 
 export type StripeSubscriptionSession = SupabaseStripeResponse<Stripe.Checkout.Session>;
 
@@ -12,7 +12,8 @@ export async function createSubscription(
 
   try {
     const stripe = createStripeInstance(stripeConfig);
-    const { priceId, resultPagePath, customer, supabaseUserId } = params;
+    const { priceId, resultPagePath, customer, supabaseUserId, locale } = params;
+    const checkoutLocale = resolveCheckoutLocale(locale);
 
     console.log('🔌 [createSubscription]: Creating subscription', priceId, resultPagePath, customer);
 
@@ -32,7 +33,8 @@ export async function createSubscription(
         metadata: {
           supabase_user_id: supabaseUserId
         }
-      }
+      },
+      ...(checkoutLocale ? { locale: checkoutLocale } : {}),
     };
 
     // Configure customer options

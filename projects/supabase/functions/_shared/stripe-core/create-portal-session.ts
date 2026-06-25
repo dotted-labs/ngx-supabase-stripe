@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { StripeEnvironmentConfig, PortalSessionParams, SupabaseStripeResponse } from './types.ts';
-import { createStripeInstance } from './utils.ts';
+import { createStripeInstance, resolveCheckoutLocale } from './utils.ts';
 
 export type StripePortalSession = SupabaseStripeResponse<Stripe.BillingPortal.Session>;
 
@@ -10,12 +10,14 @@ export async function createPortalSession(
 ): Promise<StripePortalSession> {
   try {
     const stripe = createStripeInstance(stripeConfig);
-    const { customerId, returnUrl } = params;
+    const { customerId, returnUrl, locale } = params;
+    const portalLocale = resolveCheckoutLocale(locale);
 
     return {
       data: await stripe.billingPortal.sessions.create({
         customer: customerId,
-        return_url: returnUrl
+        return_url: returnUrl,
+        ...(portalLocale ? { locale: portalLocale } : {}),
       }),
       error: null
     };

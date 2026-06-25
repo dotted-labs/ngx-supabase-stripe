@@ -245,7 +245,12 @@ If your app already calls `loadTranslations` for its own messages, merge both tr
 
 ### Stripe.js locale (Embedded Checkout)
 
-Stripe Elements / Embedded Checkout UI is localized via the Stripe SDK, not `$localize`. Pass the same locale in `stripeConfig`:
+Embedded Checkout UI is localized by Stripe in two places:
+
+1. **`stripeConfig.locale`** — passed to `loadStripe()` and sent to the `checkout_session` / `create_subscription` edge functions when creating a Checkout Session. The session `locale` controls the language of the embedded iframe.
+2. **`loadStripeMessages()`** — controls library UI strings via `$localize`.
+
+Use the same locale value for both:
 
 ```typescript
 provideNgxSupabaseStripeConfig({
@@ -256,6 +261,8 @@ provideNgxSupabaseStripeConfig({
   },
 })
 ```
+
+If `stripeConfig.locale` is omitted, Stripe falls back to the browser locale for the embedded checkout iframe.
 
 ### Runtime language changes
 
